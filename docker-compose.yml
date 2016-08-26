@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  db:
+    image: rethinkdb
+  frontend:
+    build: ./frontend
+    image: frontend
+    depends_on:
+      - db
