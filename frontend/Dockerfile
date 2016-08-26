@@ -4,7 +4,7 @@ MAINTAINER ClusterHQ Marketing <marketing@clusterhq.com>
 
 RUN mkdir /myapp
 
-COPY * /myapp/
+COPY / /myapp/
 
 WORKDIR /myapp
 
