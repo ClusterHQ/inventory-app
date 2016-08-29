@@ -3,7 +3,7 @@
 <link rel="import" href="/bower_components/sc-collection/sc-collection.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animatable-behavior.html">
 
-<dom-module id="page-category-list">
+<dom-module id="page-dealer-list">
   <style>
     .heading {
       display: inline-block;
@@ -44,14 +44,14 @@
 
   <template>
     <!-- local DOM for your element -->
-    <sc-collection id="categories" resource-type="Category" resource-value="{{categories}}" resource-view="alphabeticalView" resource-view-params="null" disable-realtime="{{disableRealtime}}"></sc-collection>
+    <sc-collection id="dealerships" resource-type="Dealership" resource-value="{{dealerships}}" resource-view="alphabeticalView" resource-view-params="null" disable-realtime="{{disableRealtime}}"></sc-collection>
 
-    <template is="dom-repeat" items="{{categories}}">
-      <sc-field resource-type="Category" resource-id="{{item.id}}" resource-field="name" resource-value="{{item.name}}"></sc-field>
+    <template is="dom-repeat" items="{{dealerships}}">
+      <sc-field resource-type="Dealership" resource-id="{{item.id}}" resource-field="name" resource-value="{{item.name}}"></sc-field>
     </template>
 
     <div class="content-container">
-      <h2 class="content-row heading">Inventory Categories</h2>
+      <h2 class="content-row heading">Inventory Dealerships</h2>
       <div class="content-body">
         <div class="content-row">
           <div class="content-col">
@@ -59,9 +59,9 @@
               <tr>
                 <th>Name</th>
               </tr>
-              <template is="dom-repeat" items="[[categories]]">
+              <template is="dom-repeat" items="[[dealerships]]">
                 <tr>
-                  <td><a href="{{computeCategoryDetailsUrl(item)}}">{{item.name}}</a></td>
+                  <td><a href="{{computeDealershipsDetailsUrl(item)}}">{{item.name}}</a></td>
                 </tr>
               </template>
             </table>
@@ -69,10 +69,10 @@
         </div>
         <div class="content-row">
           <div class="content-col-half">
-            <input type="text" value="{{newCategoryName::input}}" on-keydown="keyPressed">
+            <input type="text" value="{{newDealershipName::input}}" on-keydown="keyPressed">
           </div>
           <div class="content-col-half">
-            <input type="button" class="btn" value="Add category" on-click="addCategory">
+            <input type="button" class="btn" value="Add dealership" on-click="addDealership">
             <input type="checkbox" class="checkbox" style="margin-left: 10px; margin-top: 0;" checked="{{realtime::change}}"> <span>Realtime collection</span>
           </div>
         </div>
@@ -88,7 +88,7 @@
   <script>
     // element registration
     Polymer({
-      is: 'page-category-list',
+      is: 'page-dealer-list',
 
       behaviors: [
         Polymer.NeonAnimatableBehavior
@@ -97,10 +97,10 @@
 
       properties: {
         // declare properties for the element's public API
-        categories: {
+        dealerships: {
           type: Array
         },
-        newCategoryName: {
+        newDealershipName: {
           type: String
         },
         realtime: {
@@ -117,18 +117,18 @@
         return !bool;
       },
 
-      computeCategoryDetailsUrl: function (category) {
-        return '#!/category/' + category.id;
+      computeDealershipDetailsUrl: function (dealership) {
+        return '#!/dealership/' + dealership.id;
       },
 
       goToPrevPage: function () {
-        var categoryListModel = this.$['categories'];
-        categoryListModel.fetchPreviousPage();
+        var dealershipListModel = this.$['dealerships'];
+        dealershipListModel.fetchPreviousPage();
       },
 
       goToNextPage: function () {
-        var categoryListModel = this.$['categories'];
-        categoryListModel.fetchNextPage();
+        var dealershipListModel = this.$['dealerships'];
+        dealershipListModel.fetchNextPage();
       },
 
       saveValue: function (event) {
@@ -139,24 +139,24 @@
 
       keyPressed: function (e) {
         if (e.keyCode == 13) {
-          this.addCategory();
+          this.addDealership();
         }
       },
 
-      addCategory: function () {
+      addDealership: function () {
         var self = this;
 
-        var categoryListModel = this.$['categories'];
+        var dealershipListModel = this.$['dealerships'];
 
-        var newCategory = {
-          name: this.newCategoryName
+        var newDealership = {
+          name: this.newDealershipName
         };
 
-        categoryListModel.create(newCategory, function (err, newId) {
+        dealershipListModel.create(newDealership, function (err, newId) {
           if (err) {
             // TODO: Handle error
           } else {
-            self.newCategoryName = '';
+            self.newDealershipName = '';
           }
         });
       }
