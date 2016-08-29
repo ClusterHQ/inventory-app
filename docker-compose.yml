@@ -1,10 +1,18 @@
 version: '2'
 
+volumes:
+  rethink-data:
+    driver: local
+
 services:
   db:
     image: rethinkdb
+    volumes:
+      - rethink-data:/data
     ports:
-      - '8080:8080'
+      - 28015:28015
+      - 29015:29015
+      - 8080:8080
   frontend:
     build: ./frontend
     image: frontend
@@ -12,8 +20,6 @@ services:
       - db
     ports:
       - '8000:8000'
-    links:
-      - db
     environment:
       - DATABASE_HOST=db
-#      - 'DATABASE_PORT: 28015'
+      - DATABASE_PORT=28015
