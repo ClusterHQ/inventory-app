@@ -3,7 +3,7 @@
 <link rel="import" href="/bower_components/sc-collection/sc-collection.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animatable-behavior.html">
 
-<dom-module id="page-category-details">
+<dom-module id="page-dealer-details">
   <style>
     .heading {
       display: inline-block;
@@ -44,40 +44,50 @@
 
   <template>
     <!-- Model components (data sources) for this page -->
-    <sc-field id="category-name" resource-type="Category" resource-id="{{categoryId}}" resource-field="name" resource-value="{{categoryName}}"></sc-field>
-    <sc-field id="category-desc" resource-type="Category" resource-id="{{categoryId}}" resource-field="desc" resource-value="{{categoryDesc}}"></sc-field>
-    <sc-collection id="category-products" disable-realtime="{{!realtime}}" resource-type="Product" resource-value="{{categoryProducts}}" resource-view="categoryView" resource-view-params="{{categoryViewParams}}" resource-page-offset="{{pageOffsetStart}}" resource-page-size="{{pageSize}}" resource-count="{{itemCount}}"></sc-collection>
+
+    <sc-field id="dealership-name" resource-type="Dealership" resource-id="{{dealershipId}}" resource-field="name" resource-value="{{dealershipName}}"></sc-field>
+
+    <sc-field id="dealership-desc" resource-type="Dealership" resource-id="{{dealershipId}}" resource-field="desc" resource-value="{{dealershipDesc}}"></sc-field>
+
+    <sc-collection id="dealership-vehicles" disable-realtime="{{!realtime}}" resource-type="Vehicle" resource-value="{{dealershipVehicles}}" resource-view="dealershipView" resource-view-params="{{dealershipViewParams}}" resource-page-offset="{{pageOffsetStart}}" resource-page-size="{{pageSize}}" resource-count="{{itemCount}}"></sc-collection>
 
     <!-- Generate some models dynamically -->
-    <template is="dom-repeat" items="{{categoryProducts}}" filter="hasIdFilter" observe="id">
-      <sc-field id$="{{item.id}}-qty" resource-type="Product" resource-id="{{item.id}}" resource-field="qty" resource-value="{{item.qty}}"></sc-field>
-      <sc-field id$="{{item.id}}-price" resource-type="Product" resource-id="{{item.id}}" resource-field="price" resource-value="{{item.price}}"></sc-field>
-      <sc-field id$="{{item.id}}-name" resource-type="Product" resource-id="{{item.id}}" resource-field="name" resource-value="{{item.name}}"></sc-field>
+    <template is="dom-repeat" items="{{dealershipVehicles}}" filter="hasIdFilter" observe="id">
+
+      <sc-field id$="{{item.id}}-qty" resource-type="Vehicle" resource-id="{{item.id}}" resource-field="qty" resource-value="{{item.qty}}"></sc-field>
+
+      <sc-field id$="{{item.id}}-make" resource-type="Vehicle" resource-id="{{item.id}}" resource-field="make" resource-value="{{item.make}}"></sc-field>
+
+      <sc-field id$="{{item.id}}-model" resource-type="Vehicle" resource-id="{{item.id}}" resource-field="model" resource-value="{{item.model}}"></sc-field>
+
+      <sc-field id$="{{item.id}}-year" resource-type="Vehicle" resource-id="{{item.id}}" resource-field="year" resource-value="{{item.year}}"></sc-field>
     </template>
 
     <div class="content-container">
-      <a href="/#!/"><< Back to category list</a>
-      <h2 class="content-row heading">{{categoryName}}</h2>
+      <a href="/#!/"><< Back to dealership list</a>
+      <h2 class="content-row heading">{{dealershipName}}</h2>
       <p>
-        <h4>Category description:</h4>
-        <span>{{categoryDesc}}</span>
+        <h4>Dealership description:</h4>
+        <span>{{dealershipDesc}}</span>
       </p>
       <div class="content-body">
         <div class="content-row">
           <div class="content-col">
-            <h4>Products:</h4>
+            <h4>Vehicles:</h4>
 
             <table class="table">
               <tr>
-                <th>Name</th>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
                 <th>QTY</th>
-                <th>Price</th>
               </tr>
-              <template is="dom-repeat" items="{{categoryProducts}}" filter="hasNameFilter" observe="id name qty price">
+              <template is="dom-repeat" items="{{dealershipVehicles}}" filter="hasMakeFilter" observe="id make model year qty">
                 <tr>
-                  <td><a href="{{computeProductDetailsUrl(item.id)}}">{{item.name}}</a></td>
+                  <td><a href="{{computeVehicleDetailsUrl(item.id)}}">{{item.make}}</a></td>
+                  <td>{{item.model}}</td>
+                  <td>{{item.year}}</td>
                   <td>{{item.qty}}</td>
-                  <td>{{item.price}}</td>
                 </tr>
               </template>
             </table>
@@ -86,10 +96,17 @@
 
         <div class="content-row">
           <div class="content-col-half">
-            <input type="text" value="{{newProductName::input}}" on-keydown="keyPressed">
+            Make:
+            <input type="text" value="{{newVehicleMake::input}}" on-keydown="keyPressed">
+            Model:
+            <input type="text" value="{{newVehicleModel::input}}" on-keydown="keyPressed">
+            Year:
+            <input type="text" value="{{newVehicleYear::input}}" on-keydown="keyPressed">
+            QTY:
+            <input type="text" value="{{newVehicleQty::input}}" on-keydown="keyPressed">
           </div>
           <div class="content-col-half">
-            <input type="button" class="btn" value="Add product" on-click="addProduct">
+            <input type="button" class="btn" value="Add vehicle" on-click="addVehicle">
             <input type="checkbox" class="checkbox" style="margin-left: 10px; margin-top: 0;" checked="{{realtime::change}}"> <span>Realtime collection</span>
           </div>
         </div>
@@ -106,7 +123,7 @@
   <script>
     // element registration
     Polymer({
-      is: 'page-category-details',
+      is: 'page-dealer-details',
 
       behaviors: [
         Polymer.NeonAnimatableBehavior
@@ -115,17 +132,17 @@
 
       properties: {
         // declare properties for the element's public API
-        categoryId: {
+        dealershipId: {
           type: String
         },
-        categoryViewParams: {
+        dealershipViewParams: {
           type: Object,
-          computed: 'computeCategoryViewParams(categoryId)'
+          computed: 'computeDealershipViewParams(dealershipId)'
         },
-        categoryName: {
+        dealershipName: {
           type: String
         },
-        productDesc: {
+        vehicleDesc: {
           type: String
         },
         pageOffsetStart: {
@@ -137,88 +154,102 @@
         },
         firstItemIndex: {
           type: Number,
-          computed: 'calculateFirstOffset(pageOffsetStart, categoryProducts)'
+          computed: 'calculateFirstOffset(pageOffsetStart, dealershipVehicles)'
         },
         lastItemIndex: {
           type: Number,
-          computed: 'calculateLastOffset(pageOffsetStart, categoryProducts)'
+          computed: 'calculateLastOffset(pageOffsetStart, dealershipVehicles)'
         },
         realtime: {
           type: Boolean,
           value: true
         },
-        categoryProducts: {
+        dealershipVehicles: {
           type: Array,
           value: []
         },
-        newProductName: {
+        newVehicleMake: {
           type: String,
-          value: ''
+        },
+        newVehicleModel: {
+          type: String,
+        },
+        newVehicleYear: {
+          type: Number,
+        },
+        newVehicleQty: {
+          type: Number,
         }
       },
 
-      computeCategoryViewParams: function (categoryId) {
-        return {category: categoryId};
+      computeDealershipViewParams: function (dealershipId) {
+        return {dealership: dealershipId};
       },
 
-      calculateFirstOffset: function (pageOffsetStart, categoryProducts) {
-        if (!categoryProducts.length) {
+      calculateFirstOffset: function (pageOffsetStart, dealershipVehicles) {
+        if (!dealershipVehicles.length) {
           return 0;
         }
         return pageOffsetStart + 1;
       },
 
-      calculateLastOffset: function (pageOffsetStart, categoryProducts) {
-        return pageOffsetStart + categoryProducts.length;
+      calculateLastOffset: function (pageOffsetStart, dealershipVehicles) {
+        return pageOffsetStart + dealershipVehicles.length;
       },
 
       goToPrevPage: function () {
-        var productListModel = this.$['category-products'];
-        productListModel.fetchPreviousPage();
+        var vehicleListModel = this.$['dealership-vehicles'];
+        vehicleListModel.fetchPreviousPage();
       },
 
       goToNextPage: function () {
-        var productListModel = this.$['category-products'];
-        productListModel.fetchNextPage();
+        var vehicleListModel = this.$['dealership-vehicles'];
+        vehicleListModel.fetchNextPage();
       },
 
-      computeNewProductId: function (productRows) {
-        return productRows.length + 1;
+      computeNewProductId: function (vehicleRows) {
+        return vehicleRows.length + 1;
       },
 
-      computeProductDetailsUrl: function (productId) {
-        return '#!/category/' + this.categoryId + '/product/' + productId;
-      },
-
-      hasNameFilter: function (item) {
-        return !!item.name;
+      computeVehicleDetailsUrl: function (vehicleId) {
+        return '#!/dealership/' + this.dealershipId + '/vehicle/' + vehicleId;
       },
 
       hasIdFilter: function (item) {
         return !!item.id;
       },
 
+      hasMakeFilter: function (item) {
+        return !!item.make;
+      },
+
       keyPressed: function (e) {
         if (e.keyCode == 13) {
-          this.addProduct();
+          this.addVehicle();
         }
       },
 
-      addProduct: function () {
+      addVehicle: function () {
         var self = this;
 
-        var productListModel = this.$['category-products'];
+        var vehicleListModel = this.$['dealership-vehicles'];
 
-        var newProduct = {
-          name: this.newProductName,
-          category: this.categoryId
+        var newVehicle = {
+          make: this.newVehicleMake,
+          model: this.newVehicleModel,
+          year: this.newVehicleYear,
+          qty: this.newVehicleQty,
+          dealership: this.dealershipId
         };
 
-        productListModel.create(newProduct, function (err, newId) {
+        vehicleListModel.create(newVehicle, function (err, newId) {
           if (err) {
             // TODO: Handle error
           } else {
-            self.newProductName = '';
+            self.newVehicleMake = '';
+            self.newVehicleModel = '';
+            self.newVehicleYear = '';
+            self.newVehicleQty = '';
           }
         });
       }

@@ -48,6 +48,8 @@
 
     <template is="dom-repeat" items="{{dealerships}}">
       <sc-field resource-type="Dealership" resource-id="{{item.id}}" resource-field="name" resource-value="{{item.name}}"></sc-field>
+      <sc-field resource-type="Dealership" resource-id="{{item.id}}" resource-field="addr" resource-value="{{item.addr}}"></sc-field>
+      <sc-field resource-type="Dealership" resource-id="{{item.id}}" resource-field="phone" resource-value="{{item.phone}}"></sc-field>
     </template>
 
     <div class="content-container">
@@ -57,11 +59,15 @@
           <div class="content-col">
             <table class="table">
               <tr>
-                <th>Name</th>
+                <th>Dealership</th>
+                <th>Address</th>
+                <th>Phone Number</th>
               </tr>
-              <template is="dom-repeat" items="[[dealerships]]">
+              <template is="dom-repeat" items="{{dealerships}}" observe="id name addr phone">
                 <tr>
                   <td><a href="{{computeDealershipDetailsUrl(item)}}">{{item.name}}</a></td>
+                  <td>{{item.addr}}</td>
+                  <td>{{item.phone}}</td>
                 </tr>
               </template>
             </table>
@@ -69,7 +75,12 @@
         </div>
         <div class="content-row">
           <div class="content-col-half">
+            Name:
             <input type="text" value="{{newDealershipName::input}}" on-keydown="keyPressed">
+            Address:
+            <input type="text" value="{{newDealershipAddress::input}}" on-keydown="keyPressed">
+            Phone:
+            <input type="text" value="{{newDealershipPhone::input}}" on-keydown="keyPressed">
           </div>
           <div class="content-col-half">
             <input type="button" class="btn" value="Add dealership" on-click="addDealership">
@@ -103,6 +114,12 @@
         newDealershipName: {
           type: String
         },
+        newDealershipAddress: {
+          type: String
+        },
+        newDealershipPhone: {
+          type: String
+        },
         realtime: {
           type: Boolean,
           value: true
@@ -115,6 +132,10 @@
 
       inverse: function (bool) {
         return !bool;
+      },
+
+      computeDealershipViewParams: function (dealershipId) {
+        return {dealership: dealershipId};
       },
 
       computeDealershipDetailsUrl: function (dealership) {
@@ -149,7 +170,9 @@
         var dealershipListModel = this.$['dealerships'];
 
         var newDealership = {
-          name: this.newDealershipName
+          name: this.newDealershipName,
+          addr: this.newDealershipAddress,
+          phone: this.newDealershipPhone
         };
 
         dealershipListModel.create(newDealership, function (err, newId) {
@@ -157,6 +180,8 @@
             // TODO: Handle error
           } else {
             self.newDealershipName = '';
+            self.newDealershipAddress = '';
+            self.newDealershipPhone = '';
           }
         });
       }

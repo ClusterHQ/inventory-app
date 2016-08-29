@@ -54,17 +54,17 @@ module.exports.run = function (worker) {
           model: type.string(),
           year: type.number(),
           qty:  type.number().integer(),
-          dealer: type.string()
+          dealership: type.string()
         },
         views: {
-          dealerView: {
+          dealershipView: {
             // Declare the fields from the Dearlship model which are required by the transform function.
-            paramFields: ['dealer'],
+            paramFields: ['dealership'],
             transform: function (fullTableQuery, r, vehicleFields) {
               // Because we declared the dealer field above, it is available in here.
               // This allows us to tranform/filter the Product collection based on a specific dealer
               // ID provided by the frontend.
-              return fullTableQuery.filter(r.row('dealer').eq(vehicleFields.dealer)).orderBy(r.asc('qty'))
+              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership)).orderBy(r.asc('qty'))
             }
           }
         },
