@@ -1,6 +1,6 @@
 # sc-sample-inventory
 
-## TEST CHANGE
+## TEST CHANGE, 2
 
 Scroll to the bottom for installation instructions.
 
