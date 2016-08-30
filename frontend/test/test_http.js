@@ -6,7 +6,7 @@ var assert = require('assert');
 var chai = require('chai')
   , chaiHttp = require('chai-http');
 
-/* Import the frontend server, this will also start it*/
+/* Import the frontend server*/
 var sc = require('../server');
 var server;
 
@@ -18,6 +18,7 @@ describe('HTTPTests', function() {
 
 
   before(done => {
+  	/* start the socketCluster before tests*/
   	server = sc.socketCluster;
     server.on('ready', function () {
       done();
