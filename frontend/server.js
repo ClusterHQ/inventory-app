@@ -14,3 +14,9 @@ var socketCluster = new SocketCluster({
   pingTimeout: 5000,
   pingInterval: 2000
 });
+  
+/* 
+Allows us to import this into tests
+and use the real worker and DB connections
+*/
+exports.socketCluster = socketCluster;
