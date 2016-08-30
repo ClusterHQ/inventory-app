@@ -1,5 +1,7 @@
 # sc-sample-inventory
 
+## HI
+
 Scroll to the bottom for installation instructions.
 
 A sample inventory tracking realtime single page app built with SocketCluster (http://socketcluster.io/), Google's Polymer (v1.0) Framework and RethinkDB.
