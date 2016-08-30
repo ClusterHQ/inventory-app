@@ -16,7 +16,6 @@ var expect = chai.expect;
 
 describe('HTTPTests', function() {
 
-
   before(done => {
   	/* start the socketCluster before tests*/
   	server = sc.socketCluster;
