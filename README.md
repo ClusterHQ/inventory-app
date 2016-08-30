@@ -1,6 +1,6 @@
 # sc-sample-inventory
 
-## HI 123
+## HI 123456
 
 Scroll to the bottom for installation instructions.
 
