@@ -1,6 +1,6 @@
 # sc-sample-inventory
 
-7654123
+87654123
 
 Scroll to the bottom for installation instructions.
 
