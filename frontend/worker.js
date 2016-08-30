@@ -136,4 +136,17 @@ module.exports.run = function (worker) {
     // Authentication logic
     authentication.attach(scServer, socket);
   });
+
+  /*
+  Add basic HTTP API GET for tests
+  */
+  app.get('/dealers',(req,res) => {
+    console.log('recieved dealers request')
+    /* 
+     Add something useful, like a json response of dealers
+     We can easily add tests for this.
+    */
+    res.send('Sending Dealers\n')
+  })
+
 };
