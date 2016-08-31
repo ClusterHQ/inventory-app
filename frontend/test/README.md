@@ -12,7 +12,8 @@ docker volume rm inventoryapp_rethink-data
 ## Build Slave Requirements 
 
 - Git
-- Docker
+- Docker (listing on -H unix:///var/run/docker.sock)
+  - jenkins or ssh user is in docker user group.
 - Docker-Compose
 - (DPCLI)
 

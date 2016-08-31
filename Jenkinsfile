@@ -6,7 +6,7 @@ node ('v8s-dpcli') {
    stage 'Ready test env'
    sh 'cd inventory-app/ && sudo /usr/local/bin/docker-compose -f docker-compose.yml up -d'
    stage 'Build and Run Tests'
-   def mochatest = docker.image('clusterhq/mochatest:latest')
+   def mochatest = docker.image('clusterhq/mochatest')
    mochatest.pull() // make sure we have the latest available from Docker Hub
    mochatest.inside {
       sh 'cd inventory-app/frontend/ && sudo npm install && mocha --debug test/*'
