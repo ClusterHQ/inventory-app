@@ -12,10 +12,19 @@ docker volume rm inventoryapp_rethink-data
 ## Build Slave Requirements 
 
 - Git
-- Docker (listing on -H unix:///var/run/docker.sock)
-  - jenkins or ssh user is in docker user group.
+- Docker 
 - Docker-Compose
 - (DPCLI)
+
+### Notes
+
+- Docker must listen on local unix socket
+- Jenkins user must be on docker group
+
+Issues with the `image.inside()` technique, 
+or even using `docker` and not `sudo docker`
+seemed to run into issues like this: 
+https://issues.jenkins-ci.org/browse/JENKINS-32914
 
 
 ## Testing with Jenkins Docker Piplines
