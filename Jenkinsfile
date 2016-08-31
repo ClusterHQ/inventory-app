@@ -2,7 +2,7 @@ node ('v8s') {
    stage 'Clean'
    sh 'sudo rm -rf inventory-app/'
    stage 'Git Clone'
-   sh "git clone https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
+   git url: 'https://github.com/ClusterHQ/inventory-app', branch: "${env.BRANCH_NAME}"
    stage 'Ready test env'
    sh 'sudo docker run --name some-rethinkdb -p 28015:28015  -d rethinkdb'
    stage 'Build and Run Tests'
