@@ -10,40 +10,27 @@ module.exports.attach = function (scServer, scCrudRethink) {
       console.error(err);
       return;
     }
+
+
     // If there is no User data, assume that we are starting with
     // an empty database.
     if (!result.data.length) {
       var schema = {
-        Category: {
+        Dealership: {
           foreignKeys: {
-            products: 'Product'
+            vehicles: 'Vehicle'
           }
         }
       };
 
-      var categories = {
-        1: {
-          name: 'Smartphones',
-          desc: 'Handheld mobile devices'
-        },
-        2: {
-          name: 'Tablets',
-          desc: 'Mobile tablet devices'
-        },
-        3: {
-          name: 'Desktops',
-          desc: 'Desktop computers'
-        },
-        4: {
-          name: 'Laptops',
-          desc: 'Laptops computers'
-        }
+      var dealerships = {
+        
       };
 
-      Object.keys(categories).forEach(function (id) {
-        var obj = categories[id];
+      Object.keys(dealerships).forEach(function (id) {
+        var obj = dealerships[id];
         scCrudRethink.create({
-          type: 'Category',
+          type: 'Dealership',
           value: obj
         });
       });

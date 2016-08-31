@@ -2,7 +2,7 @@
 <link rel="import" href="/bower_components/sc-field/sc-field.html">
 <link rel="import" href="/bower_components/neon-animation/neon-animatable-behavior.html">
 
-<dom-module id="page-product-details">
+<dom-module id="page-vehicle-details">
   <style>
     .heading {
       display: inline-block;
@@ -37,42 +37,26 @@
 
   <template>
     <!-- local DOM for your element -->
-    <sc-field id="product-name" resource-type="Product" resource-id="{{productId}}" resource-field="name" resource-value="{{productName}}"></sc-field>
-    <sc-field id="product-qty" resource-type="Product" resource-id="{{productId}}" resource-field="qty" resource-value="{{productQty}}"></sc-field>
-    <sc-field id="product-price" resource-type="Product" resource-id="{{productId}}" resource-field="price" resource-value="{{productPrice}}"></sc-field>
-    <sc-field id="product-desc" resource-type="Product" resource-id="{{productId}}" resource-field="desc" resource-value="{{productDesc}}"></sc-field>
+    <sc-field id="vehicle-make" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="make" resource-value="{{vehicleMake}}"></sc-field>
+    <sc-field id="vehicle-qty" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="qty" resource-value="{{vehicleQty}}"></sc-field>
+    <sc-field id="vehicle-model" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="model" resource-value="{{vehicleModel}}"></sc-field>
+    <sc-field id="vehicle-year" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="year" resource-value="{{vehicleYear}}"></sc-field>
 
     <div class="content-container">
-      <a href="{{computeCategoryDetailsUrl(categoryId)}}"><< Back to parent category</a>
-      <h2 class="content-row heading">#<span>{{productId}}</span>&nbsp;-&nbsp;<span>{{productName}}</span></h2>
+      <a href="{{computeDealershipDetailsUrl(dealershipId)}}"><< Back to parent dealership</a>
+      <h3 class="content-row heading">#<span>{{vehicleId}}</span>&nbsp;-&nbsp;<span>{{vehicleMake}}</span></h3>
       <div class="content-body">
         <div class="content-row">
           <div class="content-col">
             Qty:
           </div>
           <div class="content-col">
-            <input type="text" value="{{productQty::input}}" on-change="saveValue" data-save-to="product-qty">
+            <input type="text" value="{{vehicleQty::input}}" on-change="saveValue" data-save-to="vehicle-qty">
           </div>
         </div>
         <div class="content-row">
           <div class="content-col">
-            Price:
-          </div>
-          <div class="content-col">
-            <input type="text" value="{{productPrice::input}}" on-change="saveValue" data-save-to="product-price">
-          </div>
-        </div>
-        <div class="content-row">
-          <div class="content-col">
-            Description:
-          </div>
-          <div class="content-col">
-            <input type="text" value="{{productDesc::input}}" on-change="saveValue" data-save-to="product-desc">
-          </div>
-        </div>
-        <div class="content-row">
-          <div class="content-col">
-            <b>Press enter key to save.</b>
+            <b>Press enter key to save Qty.</b>
           </div>
         </div>
       </div>
@@ -82,7 +66,7 @@
   <script>
     // element registration
     Polymer({
-      is: 'page-product-details',
+      is: 'page-vehicle-details',
 
       behaviors: [
         Polymer.NeonAnimatableBehavior
@@ -91,28 +75,28 @@
       // add properties and methods on the element's prototype
       properties: {
         // declare properties for the element's public API
-        categoryId: {
+        dealershipId: {
           type: String
         },
-        productId: {
+        vehicleId: {
           type: String
         },
-        productName: {
+        vehicleMake: {
           type: String
         },
-        productQty: {
+        vehicleQty: {
           type: Number
         },
-        productPrice: {
+        vehicleYear: {
           type: Number
         },
-        productDesc: {
+        vehicleModel: {
           type: String
         }
       },
 
-      computeCategoryDetailsUrl: function (categoryId) {
-        return '#!/category/' + categoryId;
+      computeDealershipDetailsUrl: function (dealershipId) {
+        return '#!/dealership/' + dealershipId;
       },
 
       saveValue: function (event) {
