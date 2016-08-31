@@ -1,6 +1,6 @@
 # sc-sample-inventory
 
-2999010987654123
+12999010987654123
 
 Scroll to the bottom for installation instructions.
 
