@@ -1,14 +1,21 @@
 "use strict";
 /* Test HTTP API */
 
+/* NOTE ABOUT TESTING
+   These tests are meant to run against a deployment of the app
+   which means to run docker-compose up and then run the tests
+   and then docker-compose stop/rm
+*/
+
 /* import libs for tests*/
 var assert = require('assert');
 var chai = require('chai')
   , chaiHttp = require('chai-http');
 
 /* Import the frontend server*/
-var sc = require('../server');
-var server;
+//var sc = require('../server');
+//var server;
+//See NOTE ABOUT TESTING AT TOP OF PAGE^^ 
 
 /* Setup needed test functions from chai*/
 chai.use(chaiHttp);
@@ -16,19 +23,20 @@ var expect = chai.expect;
 
 describe('HTTPTests', function() {
 
+  //before(done => {
+  //	/* start the socketCluster before tests*/
+  //	server = sc.socketCluster;
+  //  server.on('ready', function () {
+  //    done();
+  //  });
+  //});
+  //See NOTE ABOUT TESTING AT TOP OF PAGE^^ 
 
-  before(done => {
-  	/* start the socketCluster before tests*/
-  	server = sc.socketCluster;
-    server.on('ready', function () {
-      done();
-    });
-  });
-
-  after(done => {
-    server.killWorkers();
-    done();
-  });
+  //after(done => {
+  //  server.killWorkers();
+  //  done();
+  //});
+  //See NOTE ABOUT TESTING AT TOP OF PAGE^^ 
 
   /*All tests here*/
   describe('GET /dealers', function() {
