@@ -1,5 +1,5 @@
 import rethinkdb as rdb
-import json
+import json, random
 from urllib.request import urlretrieve
 from os import environ
 
@@ -43,10 +43,8 @@ def import_data(tname, fname):
             address = json.loads(dealer[13][0])
             new_dealer = {
                 "name": dealer[8],
-                "street": dealer[9],
-                "city": address["city"],
-                "state": address["state"],
-                "zip": dealer[11]
+                "addr": '{0} {1}, {2} {3}'.format(dealer[9], address["city"], address["state"], dealer[11]),
+                "phone": '555-555-5555'
             }
             rdb.table(tname).insert(new_dealer).run(dbconn)
             print("Added dealer {0}".format(new_dealer['name']))
