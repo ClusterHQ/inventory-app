@@ -28,10 +28,12 @@ module.exports.run = function (worker) {
   var crudOptions = {
     defaultPageSize: 5,
     schema: {
-      Category: {
+      Dealership: {
         fields: {
           id: type.string(),
           name: type.string(),
+          addr: type.string().optional(),
+          phone: type.string().optional(),
           desc: type.string().optional()
         },
         views: {
@@ -45,24 +47,24 @@ module.exports.run = function (worker) {
           pre: mustBeLoggedIn
         }
       },
-      Product: {
+      Vehicle: {
         fields: {
           id: type.string(),
-          name: type.string(),
-          qty: type.number().integer().optional(),
-          price: type.number().optional(),
-          desc: type.string().optional(),
-          category: type.string()
+          make: type.string(),
+          model: type.string(),
+          year: type.number(),
+          qty:  type.number().integer(),
+          dealership: type.string()
         },
         views: {
-          categoryView: {
-            // Declare the fields from the Product model which are required by the transform function.
-            paramFields: ['category'],
-            transform: function (fullTableQuery, r, productFields) {
-              // Because we declared the category field above, it is evailable in here.
-              // This allows us to tranform/filter the Product collection based on a specific category
+          dealershipView: {
+            // Declare the fields from the Dearlship model which are required by the transform function.
+            paramFields: ['dealership'],
+            transform: function (fullTableQuery, r, vehicleFields) {
+              // Because we declared the dealer field above, it is available in here.
+              // This allows us to tranform/filter the Product collection based on a specific dealer
               // ID provided by the frontend.
-              return fullTableQuery.filter(r.row('category').eq(productFields.category)).orderBy(r.asc('qty'))
+              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership)).orderBy(r.asc('qty'))
             }
           }
         },
