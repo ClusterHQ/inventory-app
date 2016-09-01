@@ -4,7 +4,7 @@ from urllib.request import urlretrieve
 from os import environ
 
 ### The name of the table that will be created in the RethinkDB instance
-table_name = 'dealers'
+table_name = 'Dealership'
 file_name = 'data.json'
 
 ### Define the host for the database (default to localhost)
