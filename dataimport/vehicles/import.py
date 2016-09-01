@@ -1,6 +1,7 @@
 import rethinkdb as rdb
 from urllib.request import urlretrieve
 from os import environ
+from random import randint
 import csv
 
 ### The name of the table that will be created in the RethinkDB instance
@@ -25,7 +26,7 @@ def download_data(fname):
         'filename': fname
     }
     urlretrieve(**args)
-    print('Finished downloading dealership data to file: {0}'.format(fname))
+    print('Finished downloading vehicles data to file: {0}'.format(fname))
 
 def create_table_if_not_exists(tname):
     if tname in rdb.table_list().run(dbconn):
@@ -34,26 +35,32 @@ def create_table_if_not_exists(tname):
         rdb.table_create(tname).run(dbconn)
         print('Created {0} table in RethinkDB instance'.format(tname))
 
+def get_random_dealer_id():
+    dealers = rdb.table("Dealership").run(dbconn)
+    dealers = list(dealers)
+    dealer = randint(0, len(dealers)-1)
+    return (dealers[dealer]['id'], dealers[dealer]['name'])
+
 def import_data(tname, fname):
     with open(fname) as csvfile:
         ### Load the JSON data
         vehicles = csv.reader(csvfile, delimiter=',')
 
-        ## ****LEFT OFF HERE, TODO Below ******
-
-        ### Iterate over dealerships and add them to the database
-        for dealer in dealerdata["data"]:
-            address = json.loads(dealer[13][0])
-            new_dealer = {
-                "name": dealer[8],
-                "street": dealer[9],
-                "city": address["city"],
-                "state": address["state"],
-                "zip": dealer[11]
+        ### Iterate over vehicles and add them to the database
+        for row in vehicles:
+            d_id, d_name = get_random_dealer_id()
+            new_vehicle = {
+                "dealership":  d_id,
+                "make":  row[1],
+                "model":  row[2],
+                "qty": row[3],
+                "year": row[0]
             }
-            rdb.table(tname).insert(new_dealer).run(dbconn)
-            print("Added dealer {0}".format(new_dealer['name']))
-
+            rdb.table(tname).insert(new_vehicle).run(dbconn)
+            print("Added Vehicle {0} {1} {2} to dealership {3}".format(new_vehicle['make'],
+                                                     new_vehicle['model'],
+                                                     new_vehicle['year'],
+                                                     d_name))
 download_data(file_name)
 create_table_if_not_exists(table_name)
 import_data(table_name, file_name)
