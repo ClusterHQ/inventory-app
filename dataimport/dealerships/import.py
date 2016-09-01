@@ -1,5 +1,5 @@
 import rethinkdb as rdb
-import json, random
+import json
 from urllib.request import urlretrieve
 from os import environ
 
