@@ -2,30 +2,24 @@
 
 ```
 cd inventory-app/
-docker-compose -f docker-compose.yml up -d
-docker run --net=host --rm -v ${PWD}:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"
-docker-compose -f docker-compose.yml stop
-docker-compose -f docker-compose.yml rm -f
-docker volume rm inventoryapp_rethink-data
+docker run --name some-rethink -p 28015:28015  -d rethinkdb
+npm install frontend/
+mocha --debug frontend/test/non-dockerized/test_http.js
+docker rm -f some-rethink
 ```
 
 ## Build Slave Requirements 
 
 - Git
 - Docker 
-- Docker-Compose
+- npm
+- node.js
+- rethinkDB
 - (DPCLI)
 
 ### Notes
 
 - Docker must listen on local unix socket
-- Jenkins user must be on docker group
-
-Issues with the `image.inside()` technique, 
-or even using `docker` and not `sudo docker`
-seemed to run into issues like this: 
-https://issues.jenkins-ci.org/browse/JENKINS-32914
-
 
 ## Testing with Jenkins Docker Piplines
 
