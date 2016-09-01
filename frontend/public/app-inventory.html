@@ -1,8 +1,8 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/app-router.html">
-<link rel="import" href="/pages/page-product-details.html">
-<link rel="import" href="/pages/page-category-details.html">
-<link rel="import" href="/pages/page-category-list.html">
+<link rel="import" href="/pages/page-vehicle-details.html">
+<link rel="import" href="/pages/page-dealer-details.html">
+<link rel="import" href="/pages/page-dealer-list.html">
 <link rel="import" href="/pages/page-login.html">
 
 <script type="text/javascript" src="/bower_components/page/page.js"></script>
@@ -13,9 +13,9 @@
 
     <template is="dom-if" if="{{isAuthenticated}}">
       <app-router>
-        <page-product-details path="/category/:categoryId/product/:productId"></page-product-details>
-        <page-category-details path="/category/:categoryId"></page-category-details>
-        <page-category-list path="*"></page-category-list>
+        <page-vehicle-details path="/dealership/:dealershipId/vehicle/:vehicleId"></page-vehicle-details>
+        <page-dealer-details path="/dealership/:dealershipId"></page-dealer-details>
+        <page-dealer-list path="*"></page-category-list>
       </app-router>
     </template>
     <template is="dom-if" if="{{!isAuthenticated}}">
