@@ -5,17 +5,23 @@
 The below jenkins nodes have Docker + Flocker + Flocker Docker Plugin on AWS
 
 ### Static Nodes (these may change or go away over time)
- - Master - i-966fcaa7: ec2-54-173-56-41.compute-1.amazonaws.com
- - Ubuntu Slave - i-1968cd28: ec2-54-173-232-99.compute-1.amazonaws.com 
+- Master - i-966fcaa7: ec2-54-173-56-41.compute-1.amazonaws.com
+
+- Ubuntu Slave - i-1968cd28: ec2-54-173-232-99.compute-1.amazonaws.com 
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
- - Ubuntu Slave - i-3f75d00e: ec2-52-91-245-179.compute-1.amazonaws.com
+
+- Ubuntu Slave - i-3f75d00e: ec2-52-91-245-179.compute-1.amazonaws.com
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
+
 - Ubuntu Slave - i-2c71d41d: ec2-54-204-214-18.compute-1.amazonaws.com
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
+
 - Centos 7 Slave i-ac7ada9d: ec2-54-167-231-174.compute-1.amazonaws.com
    - (with dpcli, docker, docker-compose)
+
 - Centos 7 Slave i-a17ada90: ec2-54-166-52-251.compute-1.amazonaws.com
    - (with dpcli, docker, docker-compose)
+
 - Centos 7 Slave i-a37ada92: ec2-52-90-190-14.compute-1.amazonaws.com
    - (with dpcli, docker, docker-compose)
 
@@ -55,9 +61,11 @@ volumes:
 
 ```
 $ docker inspect -f "{{.Mounts}}" ubuntu_jenkins-seperates_1
-[{ubuntu_jenkins_plugins /flocker/6b5a81b0-8ffe-414c-ae4d-8b37304839b4 /var/jenkins_home/plugins flocker rw true rprivate} 
-{ubuntu_jenkins_home /flocker/8fe9ab50-0c14-4c62-bf83-e21dc9cfb8c8 /var/jenkins_home flocker rw true rprivate} 
-{ubuntu_jenkins_backups /flocker/0a59e071-4dd4-4fb1-89cf-afa625005bec /jenkins_backups flocker rw true rprivate}]
+[
+ {ubuntu_jenkins_plugins /flocker/6b5a81b0-8ffe-414c-ae4d-8b37304839b4 /var/jenkins_home/plugins flocker rw true rprivate} 
+ {ubuntu_jenkins_home /flocker/8fe9ab50-0c14-4c62-bf83-e21dc9cfb8c8 /var/jenkins_home flocker rw true rprivate} 
+ {ubuntu_jenkins_backups /flocker/0a59e071-4dd4-4fb1-89cf-afa625005bec /jenkins_backups flocker rw true rprivate}
+]
 ```
 
 ## Tests/Builds
@@ -79,12 +87,12 @@ http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-mult
 
 This is just to get us off the ground running. Pipeline syntax. This can be found here https://github.com/ClusterHQ/inventory-app/blob/master/Jenkinsfile. We will eventually switch this to use `docker.image('mysql').withRun {c ->` see https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/chapter-docker-workflow.html 
 
-In the above pipeline, there are Build Slaves labeled with ‘v8s-dpcli’, this denotes that they are available to use for voluminous use cases, meaning docker, docker-compose, and fs3 will be installed on them.
+In the above pipeline, there are Build Slaves labeled with ‘v8s-dpcli’, this denotes that they are available to use for voluminous use cases, meaning docker, docker-compose, and fs3/dpcli will be installed on them.
 
-Right now ‘v8s’ nodes only have nodejs, npm, docker, and flocker on them, only use them if not interested in fs3.
+Right now ‘v8s’ nodes only have nodejs, npm, docker, and flocker on them, only use them if not interested in fs3/dpcli.
 
 
-### fs3 Slaves with CentOS 7/DPCLI (use cloud-init scripts)
+### fs3/dpcli Slaves with CentOS 7/DPCLI (use cloud-init scripts)
 
 NOTE: this is different than the one used for PoCs, it assumes ZFS is installed on it already. E.g. like the base AMI used by engineering.
 
