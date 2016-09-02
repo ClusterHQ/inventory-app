@@ -3,6 +3,7 @@ var express = require('express');
 var serveStatic = require('serve-static');
 var path = require('path');
 var dummyData = require('./sc_modules/dummy-data');
+var httpHandler = require('./sc_modules/http-handler')
 var authentication = require('./sc_modules/authentication');
 var scCrudRethink = require('sc-crud-rethink');
 
@@ -140,15 +141,8 @@ module.exports.run = function (worker) {
   });
 
   /*
-  Add basic HTTP API GET for tests
+  Add basic HTTP REST API
   */
-  app.get('/dealers',(req,res) => {
-    console.log('recieved dealers request')
-    /* 
-     Add something useful, like a json response of dealers
-     We can easily add tests for this.
-    */
-    res.send('Sending Dealers\n')
-  })
+  httpHandler.attach(app);
 
 };
