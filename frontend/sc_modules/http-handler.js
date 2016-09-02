@@ -2,7 +2,7 @@ module.exports.attach = function (expressApp) {
     // Setup HTTP/REST API for Server Side.
 
     // Simple GET /dealers for testing HTTP
-	expressApp.get('/dealers',(req,res) => {
+    expressApp.get('/dealers',(req,res) => {
         console.log('recieved dealers request')
         /* 
          Add something useful, like a json response of dealers
