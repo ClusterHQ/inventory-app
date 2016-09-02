@@ -3,12 +3,12 @@ module.exports.attach = function (expressApp) {
 
     // Simple GET /dealers for testing HTTP
 	expressApp.get('/dealers',(req,res) => {
-    	console.log('recieved dealers request')
-    	/* 
-    	 Add something useful, like a json response of dealers
-    	 We can easily add tests for this.
-    	*/
-   		res.send('Sending Dealers\n')
+        console.log('recieved dealers request')
+        /* 
+         Add something useful, like a json response of dealers
+         We can easily add tests for this.
+        */
+   	    res.send('Sending Dealers\n')
   	})
 
    /* TODO, remove from list when complete */
