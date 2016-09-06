@@ -35,9 +35,13 @@ def create_table_if_not_exists(tname):
         rdb.table_create(tname).run(dbconn)
         print('Created {0} table in RethinkDB instance'.format(tname))
 
-def get_random_dealer_id():
+dealers = None
+def get_dealers():
+    global dealers
     dealers = rdb.table("Dealership").run(dbconn)
     dealers = list(dealers)
+
+def get_random_dealer_id():
     dealer = randint(0, len(dealers)-1)
     return (dealers[dealer]['id'], dealers[dealer]['name'])
 
@@ -63,4 +67,6 @@ def import_data(tname, fname):
                                                      d_name))
 download_data(file_name)
 create_table_if_not_exists(table_name)
+# load dealers into memory for speed.
+get_dealers()
 import_data(table_name, file_name)
