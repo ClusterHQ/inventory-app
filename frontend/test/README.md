@@ -2,7 +2,7 @@
 
 ```
 cd inventory-app/
-docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.yml up -d --build --force-recreate --remove-orphans # make sure app is always up to date.
 docker run --net=host --rm -v ${PWD}:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"
 docker-compose -f docker-compose.yml stop
 docker-compose -f docker-compose.yml rm -f
