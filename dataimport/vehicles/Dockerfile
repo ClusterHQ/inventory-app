@@ -1,6 +1,6 @@
 FROM python:slim
 
-MAINTAINER Trevor Sullivan <trevor.sullivan@clusterhq.com>
+MAINTAINER Ryan Wallner <ryan@clusterhq.com>
 
 RUN mkdir /app
 
