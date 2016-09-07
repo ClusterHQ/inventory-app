@@ -1,14 +1,52 @@
+r = require('rethinkdb');
+
 module.exports.attach = function (expressApp) {
 	// Setup HTTP/REST API for Server Side.
 
-	// Simple GET /dealers for testing HTTP
-	expressApp.get('/dealers',(req,res) => {
-		console.log('recieved dealers request')
-		/* 
-		Add something useful, like a json response of dealers
-		We can easily add tests for this.
-		*/
-		res.send('Sending Dealers\n')
+	var host = process.env.DATABASE_HOST || '127.0.0.1';
+    var port = process.env.DATABASE_PORT || 28015;
+
+    // This should be in its own function so REST calls can
+    // ensure the connection is open rather than opening it
+    // at the initial app startup, connection could get lost.
+	var conn = null;
+	r.connect({host: host, port: port}, function(err, connection) {
+    	if (err) throw err;
+    	console.log("Connected to RethinkDB");
+    	conn = connection;
+	})
+
+	// Simple GET /ping for testing HTTP
+	expressApp.get('/ping',(req,res) => {
+		console.log('recieved ping request')
+		// send back "pong"
+		res.send('pong\n')
+	})
+
+    // GET /dealerships (All Dealerships)
+	expressApp.get('/dealerships',(req,res) => {
+		console.log('recieved dealerships request')
+		r.table('Dealership').run(conn, function(err, cursor) {
+    		if (err) throw err;
+    		cursor.toArray(function(err, result) {
+        		if (err) throw err;
+        		console.log("Sending back Dealership results");
+        		res.send(JSON.stringify(result, null, 2));
+    		});
+		});
+	})
+
+	// GET /vehicles (All Vehicles)
+	expressApp.get('/vehicles',(req,res) => {
+		console.log('recieved vehicles request')
+		r.table('Vehicle').run(conn, function(err, cursor) {
+    		if (err) throw err;
+    		cursor.toArray(function(err, result) {
+        		if (err) throw err;
+        		console.log("Sending back Vehicle results");
+        		res.send(JSON.stringify(result, null, 2));
+    		});
+		});
 	})
 
 	/* TODO, remove from list when complete */
@@ -16,8 +54,7 @@ module.exports.attach = function (expressApp) {
 	//(POST) Dealership(s)
 	//(POST) vehicles to Dealership(s)
 	//(DELETE) Remove vehicles from Dealership(s)
-	//(GET) All Dealerships
 	//(GET) A Dealerships
-	//(GET) All Vehicles
 	//(GET) A Vehicle
+
 };

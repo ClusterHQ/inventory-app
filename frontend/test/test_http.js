@@ -17,34 +17,60 @@ var expect = chai.expect;
 describe('HTTPTests', function() {
 
   /*All tests here*/
-  describe('GET /dealers', function() {
+  describe('Testing /ping endpoint', function() {
 
-  	it('should return "200"', function(done) {
+    it('/ping should return "200"', function(done) {
       chai.request('http://localhost:8000')
-      .get('/dealers')
+      .get('/ping')
       .end(function(err, res) {
         expect(res).to.have.status(200);
         done();  
       });
     });
 
-  	it('should return text/html; charset=utf-8', function(done) {
+    it('/ping should return text/html; charset=utf-8', function(done) {
       chai.request('http://localhost:8000')
-      .get('/dealers')
+      .get('/ping')
       .end(function(err, res) {
         expect(res).to.be.html;
         done();  
       });
     });
 
-  	it('should return "Sending Dealers"', function(done) {
+    it('/ping should return "pong"', function(done) {
       chai.request('http://localhost:8000')
-      .get('/dealers')
+      .get('/ping')
       .end(function(err, res) {
-        expect(res.text).to.equal('Sending Dealers\n');
+        expect(res.text).to.equal('pong\n');
         done();  
       });
     });
+  });
+
+  describe('Testing /dealerships endpoint', function() {
+
+    it('/dealerships should return "200"', function(done) {
+      chai.request('http://localhost:8000')
+      .get('/dealerships')
+      .end(function(err, res) {
+        expect(res).to.have.status(200);
+        done();  
+      });
+    });
+
+  });
+
+  describe('Testing /vehicles endpoint', function() {
+
+    it('/vehicles should return "200"', function(done) {
+      chai.request('http://localhost:8000')
+      .get('/vehicles')
+      .end(function(err, res) {
+        expect(res).to.have.status(200);
+        done();  
+      });
+    });
+
   });
   /*end tests*/
 });
