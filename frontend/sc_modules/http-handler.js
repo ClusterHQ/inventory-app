@@ -4,16 +4,16 @@ module.exports.attach = function (expressApp) {
 	// Setup HTTP/REST API for Server Side.
 
 	var host = process.env.DATABASE_HOST || '127.0.0.1';
-    var port = process.env.DATABASE_PORT || 28015;
+    	var port = process.env.DATABASE_PORT || 28015;
 
-    // This should be in its own function so REST calls can
-    // ensure the connection is open rather than opening it
-    // at the initial app startup, connection could get lost.
+	// This should be in its own function so REST calls can
+	// ensure the connection is open rather than opening it
+	// at the initial app startup, connection could get lost.
 	var conn = null;
 	r.connect({host: host, port: port}, function(err, connection) {
-    	if (err) throw err;
-    	console.log("Connected to RethinkDB");
-    	conn = connection;
+    		if (err) throw err;
+    		console.log("Connected to RethinkDB");
+    		conn = connection;
 	})
 
 	// Simple GET /ping for testing HTTP
@@ -23,7 +23,7 @@ module.exports.attach = function (expressApp) {
 		res.send('pong\n')
 	})
 
-    // GET /dealerships (All Dealerships)
+	// GET /dealerships (All Dealerships)
 	expressApp.get('/dealerships',(req,res) => {
 		console.log('recieved dealerships request')
 		r.table('Dealership').run(conn, function(err, cursor) {
@@ -32,7 +32,7 @@ module.exports.attach = function (expressApp) {
         		if (err) throw err;
         		console.log("Sending back Dealership results");
         		res.send(JSON.stringify(result, null, 2));
-    		});
+    			});
 		});
 	})
 
@@ -45,7 +45,7 @@ module.exports.attach = function (expressApp) {
         		if (err) throw err;
         		console.log("Sending back Vehicle results");
         		res.send(JSON.stringify(result, null, 2));
-    		});
+    			});
 		});
 	})
 
