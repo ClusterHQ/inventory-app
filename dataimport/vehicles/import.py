@@ -43,7 +43,11 @@ def get_dealers():
 
 def get_random_dealer_id():
     dealer = randint(0, len(dealers)-1)
-    return (dealers[dealer]['id'], dealers[dealer]['name'])
+    if 'id' in dealers[dealer] and 'name' in dealers[dealer]:
+        return (dealers[dealer]['id'], dealers[dealer]['name'])
+    else:
+        # recursive call to get valid dealer
+        get_random_dealer_id()
 
 def import_data(tname, fname):
     with open(fname) as csvfile:
