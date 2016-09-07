@@ -122,5 +122,5 @@ Test are running on the slave hosts right now and only using `docker run` to spi
 When we modify Jenkins to run tests inside the container we will have to see about a few things
 How to connect to RethinkDB in the other docker container
 How to get correct environment variables for Git.
-Right now, we assume these are added as env variables for the Git robot user and accessible within the pipeline syntax vis `env.` via the Jenkins configurations for `environment`.
+Right now, we assume these are added as env variables for the Git robot user and accessible within the pipeline syntax vis `env.` via the Jenkins configurations for `environment` or through init/cloud-init like scripts for dynamic nodes created by Jenkins plugins.
 
