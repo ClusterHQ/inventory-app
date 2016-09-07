@@ -4,7 +4,7 @@ node ('v8s-dpcli') {
    stage 'Git Clone'
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
    stage 'Ready test env'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d'
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build'
    stage 'Build and Run Tests'
    sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"'
    stage 'Load the Dealer data'
