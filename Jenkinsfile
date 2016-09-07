@@ -17,6 +17,4 @@ node ('v8s-dpcli') {
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
-   stage 'Trigger Data import CI'
-
 }
