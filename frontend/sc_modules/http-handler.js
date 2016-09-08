@@ -7,6 +7,9 @@ module.exports.attach = function (expressApp) {
 	var host = process.env.DATABASE_HOST || '127.0.0.1';
 	var port = process.env.DATABASE_PORT || 28015;
 
+	// Should move this into each API request?
+	// using a function like `connect()` to wrape
+	// it made API response flaky
 	var conn = null;
 	r.connect({host: host, port: port}, function(err, connection) {
     		if (err) throw err;
@@ -23,7 +26,7 @@ module.exports.attach = function (expressApp) {
 	})
 
 	// GET /dealerships (All Dealerships)
-	expressApp.get('/dealerships',(req,res) => {
+	expressApp.get('/dealerships',(req, res) => {
 		console.log('recieved dealerships request')
 		r.table('Dealership').run(conn, function(err, cursor) {
     		if (err) throw err;
@@ -36,7 +39,7 @@ module.exports.attach = function (expressApp) {
 	})
 
 	// GET /vehicles (All Vehicles)
-	expressApp.get('/vehicles',(req,res) => {
+	expressApp.get('/vehicles',(req, res) => {
 		console.log('recieved vehicles request')
 		r.table('Vehicle').run(conn, function(err, cursor) {
     		if (err) throw err;
