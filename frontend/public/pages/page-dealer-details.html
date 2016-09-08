@@ -54,7 +54,7 @@
     <!-- Generate some models dynamically -->
     <template is="dom-repeat" items="{{dealershipVehicles}}" filter="hasIdFilter" observe="id">
 
-      <sc-field id$="{{item.id}}-qty" resource-type="Vehicle" resource-id="{{item.id}}" resource-field="qty" resource-value="{{item.qty}}"></sc-field>
+      <sc-field id$="{{item.id}}-vin" resource-type="Vehicle" resource-id="{{item.id}}" resource-field="vin" resource-value="{{item.vin}}"></sc-field>
 
       <sc-field id$="{{item.id}}-make" resource-type="Vehicle" resource-id="{{item.id}}" resource-field="make" resource-value="{{item.make}}"></sc-field>
 
@@ -80,14 +80,14 @@
                 <th>Make</th>
                 <th>Model</th>
                 <th>Year</th>
-                <th>QTY</th>
+                <th>VIN</th>
               </tr>
-              <template is="dom-repeat" items="{{dealershipVehicles}}" filter="hasMakeFilter" observe="id make model year qty">
+              <template is="dom-repeat" items="{{dealershipVehicles}}" filter="hasMakeFilter" observe="id make model year vin">
                 <tr>
                   <td><a href="{{computeVehicleDetailsUrl(item.id)}}">{{item.make}}</a></td>
                   <td>{{item.model}}</td>
                   <td>{{item.year}}</td>
-                  <td>{{item.qty}}</td>
+                  <td>{{item.vin}}</td>
                 </tr>
               </template>
             </table>
@@ -102,8 +102,8 @@
             <input type="text" value="{{newVehicleModel::input}}" on-keydown="keyPressed">
             Year:
             <input type="text" value="{{newVehicleYear::input}}" on-keydown="keyPressed">
-            QTY:
-            <input type="text" value="{{newVehicleQty::input}}" on-keydown="keyPressed">
+            VIN:
+            <input type="text" value="{{newVehicleVin::input}}" on-keydown="keyPressed">
           </div>
           <div class="content-col-half">
             <input type="button" class="btn" value="Add vehicle" on-click="addVehicle">
@@ -177,8 +177,8 @@
         newVehicleYear: {
           type: Number,
         },
-        newVehicleQty: {
-          type: Number,
+        newVehicleVin: {
+          type: String,
         }
       },
 
@@ -238,7 +238,9 @@
           make: this.newVehicleMake,
           model: this.newVehicleModel,
           year: this.newVehicleYear,
-          qty: this.newVehicleQty,
+          // VIN-like numbers can be generated
+          // (Math.random()*1e25).toString(36).toUpperCase()
+          vin: this.newVehicleVin,
           dealership: this.dealershipId
         };
 
@@ -249,7 +251,7 @@
             self.newVehicleMake = '';
             self.newVehicleModel = '';
             self.newVehicleYear = '';
-            self.newVehicleQty = '';
+            self.newVehicleVin = '';
           }
         });
       }
