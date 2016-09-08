@@ -1,0 +1,1 @@
+docker build -f "$PSScriptRoot\Dockerfile" --tag logging:0.1 "$PSScriptRoot"

@@ -1,6 +1,7 @@
-# sc-sample-inventory
+# ClusterHQ Inventory Application
 
-Scroll to the bottom for installation instructions.
+This sample application is intended to demonstrate core use cases for the ClusterHQ Flocker Hub product.
+The application's primary purpose is to track fake vehicle inventory at fake car dealerships.
 
 A sample inventory tracking realtime single page app built with SocketCluster (http://socketcluster.io/), Google's Polymer (v1.0) Framework and RethinkDB.
 It demonstrates a way of building realtime apps.
@@ -22,26 +23,84 @@ building a realtime single page app including:
 - Realtime REST-like interface
 - Pagination with realtime updates
 
-This is still work in progress.
-Keep in mind that this app is optimized for cutting-edgeness, not for backwards
-compatibility with older browsers :p
+## Components
 
-To make the most of this demo, you should open the web app in two different tabs/windows/browsers and
-make updates to the data in realtime.
+In the subsections below, we'll discuss the individual components that make up this application.
 
+### Front-End
+
+TBD
+
+### Database
+
+TBD
+
+### Logging
+
+TBD
+
+### Data Import
+
+Because the application starts fresh, with a completely empty RethinkDB instance, we need to seed the database with some useful data.
+Once the data is seeded into the database, you can use the front-end component to view the data.
+
+To seed the data, there are data import applications under the `\dataimport` directory in this project.
+
+- Dealership Import - imports a list of ~5,400 car dealerships
+- Vehicle Import - randomly creates vehicles and associates them to dealerships
+
+The data import applications are executed as one-time Docker containers.
+Running the data import containers more than once, against a given RethinkDB instance, may cause unpredictable results.
+We recommend running these scripts only once against a given RethinkDB instance. 
+To run these data import programs, use these commands:
+
+```bash
+./dataimport/dealerships/DockerBuild.sh
+./dataimport/vehicles/Dockerbuild.sh
+```
+
+## Data Models
+
+The data models at use in this project are described below.
+
+### Dealership
+
+Each car dealership has the following properties:
+
+- `[string] id` - A unique ID for the dealership, automatically assigned by RethinkDB
+- `[string] name` - The name of the car dealership
+- `[string] addr` - Street, City, State, ZIP for car dealership
+- `[string] phone` - Phone number for the car dealership
+
+### Vehicle
+
+Each vehicle has the following properties:
+
+- `[string] dealership` - (foreign key reference to `Dealership.id` field)
+- `[string] make` - The manufacturer (make) of the vehicle 
+- `[string] model` - The model of the vehicle
+- `[string] year` - The year the vehicle was manufactured
+- `[string] vin` - The unique, fake VIN of the vehicle (not actually a valid standard VIN)
 
 ## Installation
 
-To run this sample:
+### Prerequisites
+
+Before you can run this sample application, make sure that you meet these prerequisites:
 
 - Make sure you have Git installed (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- Make sure you have Node.js installed (http://nodejs.org/)
-- Make sure you have RethinkDB installed (https://www.rethinkdb.com/)
-- ```git clone https://github.com/SocketCluster/sc-sample-inventory.git```
-- Navigate to the sc-sample-inventory/ directory
-- Run ```npm install``` (no arguments)
-- Make sure you have bower installed, if not: ```npm install -g bower```
-- Run ```bower install``` (no arguments)
-- Run ```sudo rethinkdb``` (in a different terminal or in the background - Make sure RethinkDB stays running)
-- Run ```node server```
-- In your browser, go to ```http://localhost:8000/```
+- Make sure you have Docker Compose installed
+- Make sure that you have access to a Docker Host from the `docker` CLI (use `docker version` to confirm connectivity)
+
+### Sample Application Execution
+
+To start up the sample application, run through these steps:
+
+- ```git clone https://github.com/ClusterHQ/inventory-app.git```
+- Navigate to the `inventory-app/` directory
+- Run `docker-compose up -d` to run the containers silently
+
+### Accessing the Application
+
+- Navigate to `https://localhost:8000` to access the application's web front-end
+- Navigate to `https://localhost:8080` to access the RethinkDB web console (optional)
