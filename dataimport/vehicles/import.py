@@ -2,7 +2,8 @@ import rethinkdb as rdb
 from urllib.request import urlretrieve
 from os import environ
 from random import randint
-import csv
+from random import choice
+import csv, string
 
 ### The name of the table that will be created in the RethinkDB instance
 table_name = 'Vehicle'
@@ -49,6 +50,9 @@ def get_random_dealer_id():
         # recursive call to get valid dealer
         get_random_dealer_id()
 
+def get_random_vin():
+    return ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(17))
+
 def import_data(tname, fname):
     with open(fname) as csvfile:
         ### Load the JSON data
@@ -57,11 +61,12 @@ def import_data(tname, fname):
         ### Iterate over vehicles and add them to the database
         for row in vehicles:
             d_id, d_name = get_random_dealer_id()
+            vin = get_random_vin()
             new_vehicle = {
                 "dealership":  d_id,
                 "make":  row[1],
                 "model":  row[2],
-                "qty": row[3],
+                "vin": vin,
                 "year": row[0]
             }
             rdb.table(tname).insert(new_vehicle).run(dbconn)
