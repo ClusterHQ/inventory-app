@@ -11,7 +11,7 @@
 VS=$1
 EP=$2
 
-VOL=$(cat docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 /opt/clusterhq/bin/dpcli set --vhub $EP
 SNAP=$(/opt/clusterhq/bin/dpcli create snapshot \
 	--volume ${VOL:?VOL is unset} \
@@ -20,4 +20,4 @@ SNAP=$(/opt/clusterhq/bin/dpcli create snapshot \
 	build id ${BUILD_ID} build URL ${BUILD_URL} built on ${NODE_NAME}" 2>&1 | \
 	grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 /opt/clusterhq/bin/dpcli push snapshot $SNAP
-/opt/clusterhq/bin/dpcli show snapshot $VS
+/opt/clusterhq/bin/dpcli show snapshot --volumeset $VS
