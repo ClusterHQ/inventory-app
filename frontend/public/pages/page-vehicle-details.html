@@ -38,25 +38,26 @@
   <template>
     <!-- local DOM for your element -->
     <sc-field id="vehicle-make" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="make" resource-value="{{vehicleMake}}"></sc-field>
-    <sc-field id="vehicle-qty" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="qty" resource-value="{{vehicleQty}}"></sc-field>
+    <sc-field id="vehicle-vin" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="vin" resource-value="{{vehicleVin}}"></sc-field>
     <sc-field id="vehicle-model" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="model" resource-value="{{vehicleModel}}"></sc-field>
     <sc-field id="vehicle-year" resource-type="Vehicle" resource-id="{{vehicleId}}" resource-field="year" resource-value="{{vehicleYear}}"></sc-field>
 
     <div class="content-container">
       <a href="{{computeDealershipDetailsUrl(dealershipId)}}"><< Back to parent dealership</a>
-      <h3 class="content-row heading">#<span>{{vehicleId}}</span>&nbsp;-&nbsp;<span>{{vehicleMake}}</span></h3>
+      <h5 class="content-row heading">
+        #<span>{{vehicleId}}</span>&nbsp;-&nbsp;<span>{{vehicleMake}}</span>&nbsp;-&nbsp;<span>{{vehicleModel}}</span>&nbsp;-&nbsp;<span>{{vehicleYear}}</span></h3>
       <div class="content-body">
         <div class="content-row">
           <div class="content-col">
-            Qty:
+            VIN:
           </div>
           <div class="content-col">
-            <input type="text" value="{{vehicleQty::input}}" on-change="saveValue" data-save-to="vehicle-qty">
+            <input type="text" value="{{vehicleVin::input}}" on-change="saveValue" data-save-to="vehicle-vin">
           </div>
         </div>
         <div class="content-row">
           <div class="content-col">
-            <b>Press enter key to save Qty.</b>
+            <b>Press enter key to save VIN.</b>
           </div>
         </div>
       </div>
@@ -84,8 +85,8 @@
         vehicleMake: {
           type: String
         },
-        vehicleQty: {
-          type: Number
+        vehicleVin: {
+          type: String
         },
         vehicleYear: {
           type: Number

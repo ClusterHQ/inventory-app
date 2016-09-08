@@ -54,7 +54,7 @@ module.exports.run = function (worker) {
           make: type.string(),
           model: type.string(),
           year: type.number(),
-          qty:  type.number().integer(),
+          vin:  type.string(),
           dealership: type.string()
         },
         views: {
@@ -65,7 +65,7 @@ module.exports.run = function (worker) {
               // Because we declared the dealer field above, it is available in here.
               // This allows us to tranform/filter the Product collection based on a specific dealer
               // ID provided by the frontend.
-              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership)).orderBy(r.asc('qty'))
+              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership)).orderBy(r.asc('make'))
             }
           }
         },
