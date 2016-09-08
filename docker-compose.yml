@@ -26,7 +26,6 @@ services:
   logging:
     build: ./logging 
     image: inventory-logging
-    depends_on:
     ports:
       - '514:514'
       - '601:601'
