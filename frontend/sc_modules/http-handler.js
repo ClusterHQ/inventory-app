@@ -8,13 +8,12 @@ module.exports.attach = function (expressApp) {
 	var port = process.env.DATABASE_PORT || 28015;
 
 	var conn = null;
-	function connect() {
-		r.connect({host: host, port: port}, function(err, connection) {
-    			if (err) throw err;
-    			console.log("Connected to RethinkDB");
-    		   	conn = connection;
-		})
-	}
+	r.connect({host: host, port: port}, function(err, connection) {
+    		if (err) throw err;
+    		console.log("Connected to RethinkDB");
+    	   	conn = connection;
+	})
+	
 
 	// Simple GET /ping for testing HTTP
 	expressApp.get('/ping',(req,res) => {
@@ -26,7 +25,6 @@ module.exports.attach = function (expressApp) {
 	// GET /dealerships (All Dealerships)
 	expressApp.get('/dealerships',(req,res) => {
 		console.log('recieved dealerships request')
-		connect()
 		r.table('Dealership').run(conn, function(err, cursor) {
     		if (err) throw err;
     		cursor.toArray(function(err, result) {
@@ -40,7 +38,6 @@ module.exports.attach = function (expressApp) {
 	// GET /vehicles (All Vehicles)
 	expressApp.get('/vehicles',(req,res) => {
 		console.log('recieved vehicles request')
-		connect()
 		r.table('Vehicle').run(conn, function(err, cursor) {
     		if (err) throw err;
     		cursor.toArray(function(err, result) {
