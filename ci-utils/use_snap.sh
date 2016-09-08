@@ -9,6 +9,22 @@ VS=$1
 SNAP=$2
 EP=$3
 
+# Check for "needed" vars
+if [ -z "$VS" ]; then
+    echo "VS was unset, exiting"
+    exit 1
+fi  
+
+if [ -z "$SNAP" ]; then
+    echo "SNAP was unset, exiting"
+    exit 1
+fi
+
+if [ -z "$EP" ]; then
+    echo "EP was unset, exiting"
+    exit 1
+fi  
+
 # should always check for init, but not fail if init already done.
 /opt/clusterhq/bin/dpcli init || true
 /opt/clusterhq/bin/dpcli set --vhub $EP
