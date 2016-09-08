@@ -34,5 +34,5 @@ node ('v8s-dpcli') {
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
    stage 'Sync, snap, push'
-   sh "sudo sh inventory-app/ci-utils/snapnpush.sh ${vs} ${ep}"
+   sh "sudo sh inventory-app/ci-utils/snapnpush.sh ${vs} ${ep} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} ${env.NODE_NAME}"
 }
