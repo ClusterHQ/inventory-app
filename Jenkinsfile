@@ -29,7 +29,7 @@ node ('v8s-dpcli') {
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d'
    stage 'Build and run tests against snapshot data'
    sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"'
-   stage 'It's the FINAL TEARDOWN!'
+   stage 'The final teardown'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
