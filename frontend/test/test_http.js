@@ -13,12 +13,14 @@ var chai = require('chai')
 /* Setup needed test functions from chai*/
 chai.use(chaiHttp);
 var expect = chai.expect;
+
 // Database host and port.
 // Should these vars be centralized?
 var host = process.env.DATABASE_HOST || '127.0.0.1';
 var port = process.env.DATABASE_PORT || 28015;
 var conn = null
 
+// Setup the connection
 r.connect({host: host, port: port}, function(err, connection) {
       if (err) throw err;
       console.log("Connected to RethinkDB");

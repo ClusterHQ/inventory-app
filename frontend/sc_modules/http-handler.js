@@ -8,7 +8,7 @@ module.exports.attach = function (expressApp) {
 	var port = process.env.DATABASE_PORT || 28015;
 
 	// Should move this into each API request?
-	// using a function like `connect()` to wrape
+	// using a function like `connect()` to wrap
 	// it made API response flaky
 	var conn = null;
 	r.connect({host: host, port: port}, function(err, connection) {
