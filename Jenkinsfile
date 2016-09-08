@@ -18,8 +18,11 @@ node ('v8s-dpcli') {
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
    stage 'Pull snap create volume'
+   // Volumeset the snapshot belongs to
    def vs = '1734c879-641c-41cd-92b5-f47704338a1d'
+   // Snapshot used for tests
    def snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+   // Flocker Hub endpoint.
    def ep = 'http://ec2-54-234-205-145.compute-1.amazonaws.com'
    sh "sudo sh inventory-app/ci-utils/use_snap.sh ${vs} ${snap} ${ep}"
    stage "Start with snapshot"
