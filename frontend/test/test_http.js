@@ -74,7 +74,7 @@ describe('HTTPTests', function() {
       });
     });
 
-    it('/dealers should return the right amount of dealers in the db', function(done) {
+    it('/dealerships should return the right amount of dealers in the db', function(done) {
       chai.request('http://localhost:8000')
       .get('/dealerships')
       .end(function(err, res) {
