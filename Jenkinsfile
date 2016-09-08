@@ -17,4 +17,12 @@ node ('v8s-dpcli') {
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
+   stage 'Pull snapshot'
+   def vs = '1734c879-641c-41cd-92b5-f47704338a1d'
+   def snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+   def ep = 'http://ec2-54-234-205-145.compute-1.amazonaws.com'
+   sh 'sudo /opt/clusterhq/bin/dpcli set --vhub ${ep}'
+   sh 'sudo /opt/clusterhq/bin/dpcli sync volumeset ${vs}'
+   sh 'sudo /opt/clusterhq/bin/dpcli pull snapshot ${snap}'
+   sh 'sudo /opt/clusterhq/bin/dpcli show snapshot ${vs}'
 }
