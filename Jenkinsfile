@@ -21,7 +21,7 @@ node ('v8s-dpcli') {
    def vs = '1734c879-641c-41cd-92b5-f47704338a1d'
    def snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
    def ep = 'http://ec2-54-234-205-145.compute-1.amazonaws.com'
-   sh "sudo sh inventory-app/utils/use_snap.sh ${vs} ${snap} ${ep}"
+   sh "sudo sh inventory-app/ci-utils/use_snap.sh ${vs} ${snap} ${ep}"
    stage "Start with snapshot"
    sh "cat inventory-app/docker-compose.yml"
 }
