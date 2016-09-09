@@ -16,6 +16,7 @@ describe('HTTPTests', function() {
 
   	it('should return "200"', function(done) {
       request.get('http://localhost:8000/dealers', function (err, res, body){
+        if (err) throw (err);
         assert.strictEqual(res.statusCode, 200);
         done();
       });
@@ -23,6 +24,7 @@ describe('HTTPTests', function() {
 
   	it('should return text/html; charset=utf-8', function(done) {
       request.get('http://localhost:8000/dealers', function (err, res, body){
+        if (err) throw (err);
         assert.equal(res.headers['content-type'], "text/html; charset=utf-8");
         done();
       });
@@ -30,6 +32,7 @@ describe('HTTPTests', function() {
 
   	it('should return "Sending Dealers"', function(done) {
       request.get('http://localhost:8000/dealers', function (err, res, body){
+        if (err) throw (err);
         assert.equal(res.body, 'Sending Dealers\n');
         done();
       });
