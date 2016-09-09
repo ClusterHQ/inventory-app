@@ -98,6 +98,11 @@ NOTE: this is different than the one used for PoCs, it assumes ZFS is installed 
 
 ```
 #!/bin/bash
+# expose GIT USER and TOKEN for builds.
+echo "export GITUSER=<github-user>" >> /home/centos/.bashrc
+echo "export GITUSER=<github-user>" >> /root/.bashrc
+echo "export GITTOKEN=<token>" >> /home/centos/.bashrc
+echo "export GITTOKEN=<token>" >> /root/.bashrc
 curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb TOKEN TAG jenkinsdemo
 ```
 
