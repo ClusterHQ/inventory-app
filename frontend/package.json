@@ -25,8 +25,8 @@
     "socketcluster": "4.x.x",
     "socketcluster-client": "4.x.x",
     "mocha": "3.0.x",
-    "chai-http": "3.0.0",
-    "chai": "3.5.0"
+    "request": "2.74.0",
+    "assert": "1.4.1"
   },
   "keywords": [
     "websocket",
