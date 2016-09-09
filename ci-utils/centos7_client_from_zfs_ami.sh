@@ -42,7 +42,7 @@ create_zfs_pool() {
 # cloud-init: mount: mount(2) failed: No such file or directory
 # cloud-init: cannot mount 'chq': No such device or address
 # ```
-PATH=$PATH:/usr/local/sbin/
+export PATH=$PATH:/usr/local/sbin/
 cd /root
 mkdir /chq
 echo "Running: zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq ${DEVICE}"
