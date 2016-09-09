@@ -57,6 +57,6 @@ if [ -z "$WORKINGVOL" ]; then
     exit 1
 fi  
 
-/opt/clusterhq/bin/dpcli sync volumeset $VS
-/opt/clusterhq/bin/dpcli push snapshot $SNAP
-/opt/clusterhq/bin/dpcli show snapshot --volumeset $VS
+/opt/clusterhq/bin/dpcli sync volumeset $VOLUMESET
+/opt/clusterhq/bin/dpcli push snapshot $VOLSNAP
+/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET
