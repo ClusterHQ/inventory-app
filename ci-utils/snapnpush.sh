@@ -38,7 +38,7 @@ if [ -z "$EP" ]; then
     exit 1
 fi  
 
-export PATH=$PATH:/usr/local/sbin/
+echo "export PATH=$PATH:/usr/local/sbin/"
 VOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 /opt/clusterhq/bin/dpcli set --vhub $EP
 # We may be able to use just the Github branch name as the dpcli
