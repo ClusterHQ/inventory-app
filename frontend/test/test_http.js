@@ -8,12 +8,6 @@
 /* import libs for tests*/
 var assert = require('assert');
 var request = require('request');
-var chai = require('chai')
-  , chaiHttp = require('chai-http');
-
-/* Setup needed test functions from chai*/
-chai.use(chaiHttp);
-var expect = chai.expect;
 
 describe('HTTPTests', function() {
 
@@ -22,21 +16,21 @@ describe('HTTPTests', function() {
 
   	it('should return "200"', function(done) {
       request.get('http://localhost:8000/dealers', function (err, res, body){
-        expect(res.statusCode).to.equal(200);
+        assert.strictEqual(res.statusCode, 200);
         done();
       });
     });
 
   	it('should return text/html; charset=utf-8', function(done) {
       request.get('http://localhost:8000/dealers', function (err, res, body){
-        expect(res).to.be.html;
+        assert.equal(res.headers['content-type'], "text/html; charset=utf-8");
         done();
       });
     });
 
   	it('should return "Sending Dealers"', function(done) {
       request.get('http://localhost:8000/dealers', function (err, res, body){
-        expect(res.body).to.equal('Sending Dealers\n');
+        assert.equal(res.body, 'Sending Dealers\n');
         done();
       });
     });
