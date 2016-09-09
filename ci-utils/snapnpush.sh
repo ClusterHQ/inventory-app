@@ -4,7 +4,7 @@
 # volume defined in docker-compose.yml should
 # need to be snapshotted and pushed. 
 
-# This script #will take the volume and snapshot 
+# This script will take the volume and snapshot 
 # that volume with metadata about the branch 
 # and build and push it back to Flocker Hub.
 
@@ -42,7 +42,7 @@ export PATH=${PATH}:/usr/local/sbin/
 VOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 /opt/clusterhq/bin/dpcli set --vhub $EP
 # We may be able to use just the Github branch name as the dpcli
-# branch but right now we run into https://clusterhq.atlassian.net/browse/VOL-201 
+# branch but right now we run into VOL-201 
 SNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume ${VOL:?VOL is unset} --branch "${BRANCH}-build-${BUILDN}" --message "Snap for build ${BUILDN}, build id ${BUILDID} build URL ${BUILDURL} built on ${NODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 echo "Took snapshot: ${SNAP} of volume: ${VOL}"
 
