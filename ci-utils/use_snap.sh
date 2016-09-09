@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script will take a Flocker Hub endpoint, volumeset
 # and snapshot as arguments and create a volume from the
