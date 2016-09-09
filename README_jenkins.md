@@ -4,8 +4,9 @@
 
 The below jenkins nodes have Docker + Flocker + Flocker Docker Plugin on AWS
 
-### Static Nodes (these may change or go away over time)
 - Master - i-966fcaa7: ec2-54-173-56-41.compute-1.amazonaws.com
+
+### Static Nodes (these may change or go away over time)
 
 - Ubuntu Slave - i-1968cd28: ec2-54-173-232-99.compute-1.amazonaws.com 
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
@@ -15,15 +16,6 @@ The below jenkins nodes have Docker + Flocker + Flocker Docker Plugin on AWS
 
 - Ubuntu Slave - i-2c71d41d: ec2-54-204-214-18.compute-1.amazonaws.com
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
-
-- Centos 7 Slave i-ac7ada9d: ec2-54-167-231-174.compute-1.amazonaws.com
-   - (with dpcli, docker, docker-compose)
-
-- Centos 7 Slave i-a17ada90: ec2-54-166-52-251.compute-1.amazonaws.com
-   - (with dpcli, docker, docker-compose)
-
-- Centos 7 Slave i-a37ada92: ec2-52-90-190-14.compute-1.amazonaws.com
-   - (with dpcli, docker, docker-compose)
 
 ### Dynamic Nodes
  - Centos 7 (EC2 Jenkins Plugin is setup to dynamically deploy these with dpcli install cloud-init data)
@@ -94,10 +86,18 @@ Right now ‘v8s’ nodes only have nodejs, npm, docker, and flocker on them, on
 
 ### fs3/dpcli Slaves with CentOS 7/DPCLI (use cloud-init scripts)
 
+There are a few scripts in `ci-utils/` that can be used to boostrap CentOS 7 Jenkins slaves for
+them to be usable with docker, compose and dpcli. One is shown below.
+
 NOTE: this is different than the one used for PoCs, it assumes ZFS is installed on it already. E.g. like the base AMI used by engineering.
 
 ```
 #!/bin/bash
+# expose GIT USER and TOKEN for builds.
+echo "export GITUSER=<github-user>" >> /home/centos/.bashrc
+echo "export GITUSER=<github-user>" >> /root/.bashrc
+echo "export GITTOKEN=<token>" >> /home/centos/.bashrc
+echo "export GITTOKEN=<token>" >> /root/.bashrc
 curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb TOKEN TAG jenkinsdemo
 ```
 

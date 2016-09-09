@@ -54,6 +54,8 @@ describe('HTTPTests', function() {
         assert.equal(res.body, 'pong\n');
         done();
       });
+    });
+
   });
 
   describe('Testing /dealerships endpoint', function() {
@@ -69,7 +71,7 @@ describe('HTTPTests', function() {
     it('/dealerships should return the right amount of dealers in the db', function(done) {
       request.get('http://localhost:8000/dealerships', function (err, res, body){
         if (err) throw (err);
-        var dealers = JSON.parse(res.text);
+        var dealers = JSON.parse(res.body);
         r.table('Dealership').count().run(conn, function(err, results){
           assert.strictEqual(dealers.length, results, "same results from DB and HTTP response")
           done();
@@ -92,7 +94,7 @@ describe('HTTPTests', function() {
     it('/vehicles should return the right amount of vehicles in the db', function(done) {
       request.get('http://localhost:8000/vehicles', function (err, res, body){
         if (err) throw (err);
-        var vehicles = JSON.parse(res.text);
+        var vehicles = JSON.parse(res.body);
         r.table('Vehicle').count().run(conn, function(err, results){
           assert.strictEqual(vehicles.length, results, "same results from DB and HTTP response")
           done();
