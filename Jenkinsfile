@@ -1,4 +1,4 @@
-node ('v8s-dpcli') {
+node ('v8s-dpcli-prov') {
    stage 'Clean'
    sh 'sudo rm -rf inventory-app/'
    stage 'Git Clone'
