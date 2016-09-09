@@ -94,6 +94,9 @@ Right now ‘v8s’ nodes only have nodejs, npm, docker, and flocker on them, on
 
 ### fs3/dpcli Slaves with CentOS 7/DPCLI (use cloud-init scripts)
 
+There are a few scripts in `ci-utils/` that can be used to boostrap CentOS 7 Jenkins slaves for
+them to be usable with docker, compose and dpcli. One is shown below.
+
 NOTE: this is different than the one used for PoCs, it assumes ZFS is installed on it already. E.g. like the base AMI used by engineering.
 
 ```
