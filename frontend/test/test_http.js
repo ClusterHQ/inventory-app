@@ -7,12 +7,7 @@
 /* import libs for tests*/
 r = require('rethinkdb');
 var assert = require('assert');
-var chai = require('chai')
-  , chaiHttp = require('chai-http');
-
-/* Setup needed test functions from chai*/
-chai.use(chaiHttp);
-var expect = chai.expect;
+var request = require('request');
 
 // Database host and port.
 // Should these vars be centralized?
@@ -38,48 +33,42 @@ describe('HTTPTests', function() {
   describe('Testing /ping endpoint', function() {
 
     it('/ping should return "200"', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/ping')
-      .end(function(err, res) {
-        expect(res).to.have.status(200);
-        done();  
+      request.get('http://localhost:8000/ping', function (err, res, body){
+        if (err) throw (err);
+        assert.strictEqual(res.statusCode, 200);
+        done();
       });
     });
 
     it('/ping should return text/html; charset=utf-8', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/ping')
-      .end(function(err, res) {
-        expect(res).to.be.html;
-        done();  
+      request.get('http://localhost:8000/ping', function (err, res, body){
+        if (err) throw (err);
+        assert.equal(res.headers['content-type'], "text/html; charset=utf-8");
+        done();
       });
     });
 
     it('/ping should return "pong"', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/ping')
-      .end(function(err, res) {
-        expect(res.text).to.equal('pong\n');
-        done();  
+      request.get('http://localhost:8000/ping', function (err, res, body){
+        if (err) throw (err);
+        assert.equal(res.body, 'pong\n');
+        done();
       });
-    });
   });
 
   describe('Testing /dealerships endpoint', function() {
 
     it('/dealerships should return "200"', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/dealerships')
-      .end(function(err, res) {
-        expect(res).to.have.status(200);
-        done();  
+      request.get('http://localhost:8000/dealerships', function (err, res, body){
+        if (err) throw (err);
+        assert.strictEqual(res.statusCode, 200);
+        done();
       });
     });
 
     it('/dealerships should return the right amount of dealers in the db', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/dealerships')
-      .end(function(err, res) {
+      request.get('http://localhost:8000/dealerships', function (err, res, body){
+        if (err) throw (err);
         var dealers = JSON.parse(res.text);
         r.table('Dealership').count().run(conn, function(err, results){
           assert.strictEqual(dealers.length, results, "same results from DB and HTTP response")
@@ -93,18 +82,16 @@ describe('HTTPTests', function() {
   describe('Testing /vehicles endpoint', function() {
 
     it('/vehicles should return "200"', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/vehicles')
-      .end(function(err, res) {
-        expect(res).to.have.status(200);
-        done();  
+      request.get('http://localhost:8000/vehicles', function (err, res, body){
+        if (err) throw (err);
+        assert.strictEqual(res.statusCode, 200);
+        done();
       });
     });
 
     it('/vehicles should return the right amount of vehicles in the db', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/vehicles')
-      .end(function(err, res) {
+      request.get('http://localhost:8000/vehicles', function (err, res, body){
+        if (err) throw (err);
         var vehicles = JSON.parse(res.text);
         r.table('Vehicle').count().run(conn, function(err, results){
           assert.strictEqual(vehicles.length, results, "same results from DB and HTTP response")
