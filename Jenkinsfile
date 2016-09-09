@@ -4,10 +4,10 @@ node ('v8s-dpcli') {
    stage 'Git Clone'
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
    stage 'Ready test env'
-   // Clean up any left overs
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
-   sh 'sudo docker volume rm inventoryapp_rethink-data'
+   // Clean up any left overs, if there are some.
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop || true'
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f || true'
+   sh 'sudo docker volume rm inventoryapp_rethink-data || true'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans'
    stage 'Load the dealer data'
    sh 'cd inventory-app/dataimport/dealerships/ && sudo docker build --file Dockerfile --no-cache --tag clusterhq/inventory-app:dealerimport-0.1 .'
