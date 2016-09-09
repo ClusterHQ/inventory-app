@@ -8,6 +8,17 @@
 # that volume with metadata about the branch 
 # and build and push it back to Flocker Hub.
 
+# -------------------- Params ---------------------------------------
+# VS        is a Flocker Hub Volumeset, which owns snapshots and variants
+# EP        is the Flocker Hub URL endpoint used by the CLI.
+# BRANCH    is the Github Branch name being built, it is provided by the Jenkins env.
+# BRANCHN   is the Jenkins Build Number, it is provided by the Jenkins env.
+# BUILDID   is the Jenkins Build ID, it is provided by the Jenkins env.
+# BUILD URL is the Jenkins Build ID URL, it is provided by the Jenkins env.
+# NODE      is the Jenkins node the snapshot was used on in the build,
+#           it is provided by the Jenkins env.
+# --------------------- END -----------------------------------------
+
 VS=$1
 EP=$2
 BRANCH=$3

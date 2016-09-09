@@ -5,6 +5,13 @@
 # snapshot and change the `- rethink-data:` volume to
 # use that snapshot.
 
+# -------------------- Params ---------------------------------------
+# VS    is a Flocker Hub Volumeset, which owns snapshots and variants
+# SNAP  is a Flocker Hub Snapshot
+# EP    is the Flocker Hub URL endpoint used by the CLI.
+# PATH  is the /chq/UUID path returned by `dpcli create volume`
+# --------------------- END -----------------------------------------
+
 VS=$1
 SNAP=$2
 EP=$3
