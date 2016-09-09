@@ -8,7 +8,7 @@ node ('v8s-dpcli') {
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
-   sh 'sudo /usr/local/bin/docker-compose --remove-orphans -f inventory-app/docker-compose.yml up -d --build'
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans'
    stage 'Load the dealer data'
    sh 'cd inventory-app/dataimport/dealerships/ && sudo docker build --file Dockerfile --no-cache --tag clusterhq/inventory-app:dealerimport-0.1 .'
    sh 'sudo docker run --rm --net=host clusterhq/inventory-app:dealerimport-0.1'
@@ -52,7 +52,7 @@ node ('v8s-dpcli') {
    // output so we can debug whether snapshot was placed.
    sh 'cat inventory-app/docker-compose.yml'
    // Do not need to use --build since we built it earlier.
-   sh 'sudo /usr/local/bin/docker-compose --remove-orphans -f inventory-app/docker-compose.yml up -d --build'
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans'
    stage 'Build and run tests against snapshot data'
    sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"'
    stage 'The final teardown'
