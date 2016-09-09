@@ -22,7 +22,8 @@ node ('v8s-dpcli') {
    String snap;
    if (env.BRANCH_NAME == "master"){
       // **********************************************
-      //               Do not change
+      //         Do not change unless proposing
+      //         that master use a new snapshot
       // **********************************************
       // Volumeset the snapshot belongs to for master
       vs = '1734c879-641c-41cd-92b5-f47704338a1d'
@@ -31,8 +32,8 @@ node ('v8s-dpcli') {
       echo "Using Snapshot ${vs} for branch: master"
    }else{
       // **********************************************
-      // Set vs and snap here to use a diferente branch
-      //       for your build and tests in CI.
+      //  Set 'vs' and 'snap' below to use a different 
+      //     branch for your build and tests in CI.
       // **********************************************
       // Volumeset the snapshot belongs to for dev branch
       vs = '1734c879-641c-41cd-92b5-f47704338a1d'
