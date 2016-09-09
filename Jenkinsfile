@@ -54,7 +54,7 @@ node ('v8s-dpcli') {
    // Do not need to use --build since we built it earlier.
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans'
    stage 'Build and run tests against snapshot data'
-   sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"'
+   sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/*.js"'
    stage 'The final teardown'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'

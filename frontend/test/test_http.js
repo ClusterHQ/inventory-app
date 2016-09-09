@@ -1,4 +1,3 @@
-"use strict";
 /* Test HTTP API 
    These tests are meant to run against a deployment of the app
    which means to run docker-compose up and then run the tests
