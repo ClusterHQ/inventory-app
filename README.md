@@ -29,15 +29,18 @@ In the subsections below, we'll discuss the individual components that make up t
 
 ### Front-End
 
-TBD
+The web front-end component is a Dockerized Node.js application.
 
 ### Database
 
-TBD
+This sample application uses RethinkDB, an open source document-based database platform that stores JSON objects.
+RethinkDB runs inside a Docker container, along with the other application components.
+There is a web front-end that provides for data query operations and monitoring reads + writes to the RethinkDB instance / cluster at a high level.  
 
 ### Logging
 
-TBD
+Logging is an essential component of any application, including this ClusterHQ inventory tracking application. 
+Due to its simplicity, Syslog is used for logging.
 
 ### Data Import
 
