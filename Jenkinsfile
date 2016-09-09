@@ -4,7 +4,11 @@ node ('v8s-dpcli') {
    stage 'Git Clone'
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
    stage 'Ready test env'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build'
+   // Clean up any left overs
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
+   sh 'sudo docker volume rm inventoryapp_rethink-data'
+   sh 'sudo /usr/local/bin/docker-compose --remove-orphans -f inventory-app/docker-compose.yml up -d --build'
    stage 'Load the dealer data'
    sh 'cd inventory-app/dataimport/dealerships/ && sudo docker build --file Dockerfile --no-cache --tag clusterhq/inventory-app:dealerimport-0.1 .'
    sh 'sudo docker run --rm --net=host clusterhq/inventory-app:dealerimport-0.1'
@@ -48,7 +52,7 @@ node ('v8s-dpcli') {
    // output so we can debug whether snapshot was placed.
    sh 'cat inventory-app/docker-compose.yml'
    // Do not need to use --build since we built it earlier.
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build'
+   sh 'sudo /usr/local/bin/docker-compose --remove-orphans -f inventory-app/docker-compose.yml up -d --build'
    stage 'Build and run tests against snapshot data'
    sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"'
    stage 'The final teardown'
