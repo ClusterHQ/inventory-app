@@ -4,8 +4,9 @@
 
 The below jenkins nodes have Docker + Flocker + Flocker Docker Plugin on AWS
 
-### Static Nodes (these may change or go away over time)
 - Master - i-966fcaa7: ec2-54-173-56-41.compute-1.amazonaws.com
+
+### Static Nodes (these may change or go away over time)
 
 - Ubuntu Slave - i-1968cd28: ec2-54-173-232-99.compute-1.amazonaws.com 
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
@@ -15,15 +16,6 @@ The below jenkins nodes have Docker + Flocker + Flocker Docker Plugin on AWS
 
 - Ubuntu Slave - i-2c71d41d: ec2-54-204-214-18.compute-1.amazonaws.com
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
-
-- Centos 7 Slave i-ac7ada9d: ec2-54-167-231-174.compute-1.amazonaws.com
-   - (with dpcli, docker, docker-compose)
-
-- Centos 7 Slave i-a17ada90: ec2-54-166-52-251.compute-1.amazonaws.com
-   - (with dpcli, docker, docker-compose)
-
-- Centos 7 Slave i-a37ada92: ec2-52-90-190-14.compute-1.amazonaws.com
-   - (with dpcli, docker, docker-compose)
 
 ### Dynamic Nodes
  - Centos 7 (EC2 Jenkins Plugin is setup to dynamically deploy these with dpcli install cloud-init data)
