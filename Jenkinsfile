@@ -51,7 +51,7 @@ node ('v8s-dpcli-prov') {
       echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
    }
    // Flocker Hub endpoint.
-   def ep = 'http://ec2-54-234-205-145.compute-1.amazonaws.com'
+   def ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
    sh "sudo inventory-app/ci-utils/use_snap.sh ${vs} ${snap} ${ep}"
    stage "Start with snapshot"
    // output so we can debug whether snapshot was placed.
@@ -65,5 +65,5 @@ node ('v8s-dpcli-prov') {
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
    stage 'Sync, snap, push'
-   sh "sudo /bin/bash inventory-app/ci-utils/snapnpush.sh ${vs} ${ep} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} ${env.NODE_NAME}"
+   sh "sudo inventory-app/ci-utils/snapnpush.sh ${vs} ${ep} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} ${env.NODE_NAME}"
 }

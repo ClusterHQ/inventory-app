@@ -38,12 +38,11 @@ if [ -z "$EP" ]; then
     exit 1
 fi  
 
-echo "export PATH=$PATH:/usr/local/sbin/"
 VOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 /opt/clusterhq/bin/dpcli set --vhub $EP
 # We may be able to use just the Github branch name as the dpcli
 # branch but right now we run into VOL-201 
-SNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume ${VOL:?VOL is unset} --branch "${BRANCH}-build-${BUILDN}" --message "Snap for build ${BUILDN}, build id ${BUILDID} build URL ${BUILDURL} built on ${NODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+SNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $VOL --branch "${BRANCH}-build-${BUILDN}" --message "Snap for build ${BUILDN}, build id ${BUILDID} build URL ${BUILDURL} built on ${NODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 echo "Took snapshot: ${SNAP} of volume: ${VOL}"
 
 # Were we succesfull at getting VOL / SNAP?
