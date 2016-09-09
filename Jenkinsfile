@@ -48,7 +48,7 @@ node ('v8s-dpcli') {
    // output so we can debug whether snapshot was placed.
    sh 'cat inventory-app/docker-compose.yml'
    // Do not need to use --build since we built it earlier.
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d'
+   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build'
    stage 'Build and run tests against snapshot data'
    sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"'
    stage 'The final teardown'
