@@ -1,4 +1,9 @@
 node ('v8s-dpcli-prov') {
+   stage 'Make sure cloud-init done'
+   sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
+   stage 'See cloud-init log'
+   // In case of failure, its nice to have this log
+   sh 'cat /var/log/cloud-init.log'
    stage 'Clean'
    sh 'sudo rm -rf inventory-app/'
    stage 'Git Clone'
