@@ -1,4 +1,3 @@
-"use strict";
 /* Test HTTP API 
    These tests are meant to run against a deployment of the app
    which means to run docker-compose up and then run the tests
@@ -7,12 +6,7 @@
 
 /* import libs for tests*/
 var assert = require('assert');
-var chai = require('chai')
-  , chaiHttp = require('chai-http');
-
-/* Setup needed test functions from chai*/
-chai.use(chaiHttp);
-var expect = chai.expect;
+var request = require('request');
 
 describe('HTTPTests', function() {
 
@@ -20,29 +14,26 @@ describe('HTTPTests', function() {
   describe('GET /dealers', function() {
 
   	it('should return "200"', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/dealers')
-      .end(function(err, res) {
-        expect(res).to.have.status(200);
-        done();  
+      request.get('http://localhost:8000/dealers', function (err, res, body){
+        if (err) throw (err);
+        assert.strictEqual(res.statusCode, 200);
+        done();
       });
     });
 
   	it('should return text/html; charset=utf-8', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/dealers')
-      .end(function(err, res) {
-        expect(res).to.be.html;
-        done();  
+      request.get('http://localhost:8000/dealers', function (err, res, body){
+        if (err) throw (err);
+        assert.equal(res.headers['content-type'], "text/html; charset=utf-8");
+        done();
       });
     });
 
   	it('should return "Sending Dealers"', function(done) {
-      chai.request('http://localhost:8000')
-      .get('/dealers')
-      .end(function(err, res) {
-        expect(res.text).to.equal('Sending Dealers\n');
-        done();  
+      request.get('http://localhost:8000/dealers', function (err, res, body){
+        if (err) throw (err);
+        assert.equal(res.body, 'Sending Dealers\n');
+        done();
       });
     });
   });
