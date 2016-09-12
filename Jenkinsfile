@@ -66,4 +66,6 @@ node ('v8s-dpcli-prov') {
    sh 'sudo docker volume rm inventoryapp_rethink-data'
    stage 'Sync snap push'
    sh "sudo inventory-app/ci-utils/snapnpush.sh ${vs} ${ep} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} ${env.NODE_NAME}"
+   stage 'Done'
+   echo "Done"
 }

@@ -38,7 +38,6 @@ export PATH=$PATH:/usr/local/sbin/
 /opt/clusterhq/bin/dpcli set --vhub $EP
 /opt/clusterhq/bin/dpcli sync volumeset $VS
 /opt/clusterhq/bin/dpcli pull snapshot $SNAP
-/opt/clusterhq/bin/dpcli show snapshot -d $VS
 VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP 2>&1 | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 /usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml
 
