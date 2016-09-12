@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script should only be used when the
 # volume defined in docker-compose.yml should
@@ -60,3 +60,4 @@ fi
 /opt/clusterhq/bin/dpcli sync volumeset $VOLUMESET
 /opt/clusterhq/bin/dpcli push snapshot $VOLSNAP
 /opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET
+
