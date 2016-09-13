@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-# Meant to be run on nodes that have ZFS installed already
+# Purpose: This script installs the Flocker Hub Client (fs3) from Quay.io (SaaS Docker image repository)
+# This script is meant to be used on CentOS 7 nodes that have ZFS installed already.
+# Author: Ryan Wallner
 
 set -eu
 
