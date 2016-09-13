@@ -67,6 +67,7 @@ node ('v8s-dpcli-prov') {
       // Volumeset the snapshot belongs to for dev branch
       vs = '1734c879-641c-41cd-92b5-f47704338a1d'
       // Snapshot used for tests in branch
+      // e.g. 7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae
       snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
       echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
    }
