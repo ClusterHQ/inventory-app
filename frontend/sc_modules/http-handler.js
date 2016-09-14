@@ -9,7 +9,9 @@ module.exports.attach = function (expressApp) {
 
 	// Should move this into each API request?
 	// using a function like `connect()` to wrap
-	// it made API response flaky
+	// it made API response flaky.
+	// See test/dbutils.js for better version.
+	// TODO
 	var conn = null;
 	r.connect({host: host, port: port}, function(err, connection) {
     		if (err) throw err;

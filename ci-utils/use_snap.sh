@@ -6,9 +6,9 @@
 # use that snapshot.
 
 # -------------------- Params ---------------------------------------
-# VS    is a Flocker Hub Volumeset, which owns snapshots and variants
-# SNAP  is a Flocker Hub Snapshot
-# EP    is the Flocker Hub URL endpoint used by the CLI.
+# VS     is a Flocker Hub Volumeset, which owns snapshots and variants
+# SNAP   is a Flocker Hub Snapshot
+# EP     is the Flocker Hub URL endpoint used by the CLI.
 # VPATH  is the /chq/UUID path returned by `dpcli create volume`
 # --------------------- END -----------------------------------------
 

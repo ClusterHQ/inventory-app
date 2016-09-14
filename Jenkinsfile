@@ -73,32 +73,9 @@ node ('v8s-dpcli-prov') {
    }
    // Flocker Hub endpoint.
    def ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
-   // Run `use_snap.sh` which pulls and creates volume from snapshot.
-   // this script with modify in place the docker-compose.yml file
-   // and add the /chq/<UUID> volume.
-   sh "sudo inventory-app/ci-utils/use_snap.sh ${vs} ${snap} ${ep}"
 
-   stage "Start with snapshot"
-   // Start the application with the volume-from-snapshot.
-   // Output so we can debug whether snapshot was placed
-   // and start the compose app.
-   sh 'cat inventory-app/docker-compose.yml'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans'
-
-   stage 'Build and run tests against snapshot data'
-   // Run the tests against the application using the snapshot
-   // (Should have same results as above, but with using a snapshot)
-   sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/*.js"'
-
-   stage 'The final teardown'
-   // Tear down the application and database again.
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
-   sh 'sudo docker volume rm inventoryapp_rethink-data'
-
-   stage 'Sync snap push'
-   // Take a snapshot of the volume from snapshot used in tests to capture
-   // the state of the database after the tests, also include specific information
-   // about the branch, build, build number etc.
-   sh "sudo inventory-app/ci-utils/snapnpush.sh ${vs} ${ep} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
+   stage 'Run tests with snapshots'
+   // Run the tests individually taking snapshots between each of them
+   // and starting fresh each time.
+   sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
 }
