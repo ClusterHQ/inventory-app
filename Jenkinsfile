@@ -16,35 +16,6 @@ node ('v8s-dpcli-prov') {
    // Clone the inventory app with the Github Bot user.
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
 
-   stage 'Ready test env'
-   // Clean up any left overs, if there are some, sometimes docker leavs orphans.
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop || true'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f || true'
-   sh 'sudo docker volume rm inventoryapp_rethink-data || true'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans'
-
-   stage 'Load the dealer data'
-   // Here we are adding data by using scripts to insert real data.
-   // Importing dealerships into RethinkDB
-   sh 'cd inventory-app/dataimport/dealerships/ && sudo docker build --file Dockerfile --no-cache --tag clusterhq/inventory-app:dealerimport-0.1 .'
-   sh 'sudo docker run --rm --net=host clusterhq/inventory-app:dealerimport-0.1'
-
-   stage 'Load the vehicle data'
-   // Here we are adding data by using scripts to insert real data.
-   // Import Vehicles and give them a random Dealership to belong to.
-   sh 'cd inventory-app/dataimport/vehicles/ && sudo docker build --file Dockerfile --no-cache --tag clusterhq/inventory-app:vehicleimport-0.1 .'
-   sh 'sudo docker run --rm --net=host clusterhq/inventory-app:vehicleimport-0.1'
-
-   stage 'Build and run tests'
-   // Run the tests in a Docker container.
-   sh 'sudo docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && npm install && mocha --debug test/*.js"'
-
-   stage 'Teardown'
-   // Stop the application and database and clean up the Docker volume.
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop'
-   sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
-   sh 'sudo docker volume rm inventoryapp_rethink-data'
-
    stage 'Pull snap create volume'
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
    String vs;
@@ -75,7 +46,9 @@ node ('v8s-dpcli-prov') {
    def ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
 
    stage 'Run tests with snapshots'
-   // Run the tests individually taking snapshots between each of them
-   // and starting fresh each time.
+   // Run the tests individually. This script is creating a new volume
+   // from a snapshot locally and taking snapshots of the DB test results
+   // then pushing the data back up to Flocker Hub with metadata and 
+   // start fresh each time.
    sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
 }
