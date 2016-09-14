@@ -16,7 +16,7 @@ node ('v8s-dpcli-prov') {
    // Clone the inventory app with the Github Bot user.
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
 
-   stage 'Pull snap create volume'
+   stage 'Run tests with snapshots'
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
    String vs;
    String snap;
@@ -42,10 +42,10 @@ node ('v8s-dpcli-prov') {
       snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
       echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
    }
+   
    // Flocker Hub endpoint.
    def ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
 
-   stage 'Run tests with snapshots'
    // Run the tests individually. This script is creating a new volume
    // from a snapshot locally and taking snapshots of the DB test results
    // then pushing the data back up to Flocker Hub with metadata and 
