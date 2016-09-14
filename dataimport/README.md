@@ -43,3 +43,10 @@ vi docker-compose.yml
    sh 'sudo /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f'
    sh 'sudo docker volume rm inventoryapp_rethink-data'
 ```
+
+
+## Switch between Bulk import vs Record by Record
+
+Change the `Dockerfile.bulk.sav` in the appropriate directory to `Dockerfile`
+
+>Note: bulk operations were ~20s and ~29s vs ~1min and ~2min 45s for non-bulk in testing.
