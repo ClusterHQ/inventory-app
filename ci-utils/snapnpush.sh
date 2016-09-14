@@ -61,5 +61,5 @@ fi
 
 /opt/clusterhq/bin/dpcli sync volumeset $VOLUMESET
 /opt/clusterhq/bin/dpcli push snapshot $VOLSNAP
-/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET
+/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET 2>&1 | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
 
