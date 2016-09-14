@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+# Script to run tests.
+# Needs to be run as SUDO
+
+# -------------------- Params ---------------------------------------
+# VOLUMESET        is a Flocker Hub Volumeset, which owns snapshots and variants
+# HUBENDPOINT      is the Flocker Hub URL endpoint used by the CLI.
+# SNAP             is a Flocker Hub Snapshot
+# GITBRANCH        is the Github Branch name being built, it is provided by the Jenkins env.
+# JENKINSBUILDN    is the Jenkins Build Number, it is provided by the Jenkins env.
+# JENKINSBUILDID   is the Jenkins Build ID, it is provided by the Jenkins env.
+# JENKINSBUILDURL  is the Jenkins Build ID URL, it is provided by the Jenkins env.
+# JENKINSNODE      is the Jenkins node the snapshot was used on in the build,
+#                  it is provided by the Jenkins env.
+# --------------------- END -----------------------------------------
+
+
+VOLUMESET=$1
+HUBENDPOINT=$2
+SNAP=$3
+GITBRANCH=$4
+JENKINSBUILDN=$5
+JENKINSBUILDID=$6
+JENKINSBUILDURL=$7
+JENKINSNODE=$8
+
+# Test will be used as a holder for current test.
+TEST=""
+
+use_snapshot() {
+   echo "Use a specific snapshot"
+   # Run `use_snap.sh` which pulls and creates volume from snapshot.
+   # this script with modify in place the docker-compose.yml file
+   # and add the /chq/<UUID> volume.
+   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT}
+}
+
+start_app() {
+   echo "Start with snapshot\n"
+   # Start the application with the volume-from-snapshot.
+   # Output so we can debug whether snapshot was placed
+   # and start the compose app.
+   cat inventory-app/docker-compose.yml
+   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans
+}
+
+run_test() {
+   echo "Build and run tests against snapshot data\n"
+   # Run the tests against the application using the snapshot
+   # (Should have same results as above, but with using a snapshot)
+   docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/${TEST}.js"
+}
+
+teardown() {
+   echo "The final teardown\n"
+   # Tear down the application and database again.
+   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop
+   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f
+   docker volume rm inventoryapp_rethink-data
+}
+
+snapnpush() {
+   echo "Sync snap push\n"
+   # Take a snapshot of the volume from snapshot used in tests to capture
+   # the state of the database after the tests, also include specific information
+   # about the branch, build, build number etc.
+   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${HUBENDPOINT} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} ${TEST} '${JENKINSNODE}'
+}
+
+run_group() {
+   use_snapshot
+   start_app
+   run_test
+   teardown
+   snapnpush
+}
+
+
+TESTS=("test_http_ping" "test_http_dealers" "test_http_vehicles")
+for i in "${TESTS[@]}"
+do
+   TEST=$i
+   run_group
+done
