@@ -50,3 +50,15 @@ vi docker-compose.yml
 Change the `Dockerfile.bulk.sav` in the appropriate directory to `Dockerfile`
 
 >Note: bulk operations were ~20s and ~29s vs ~1min and ~2min 45s for non-bulk in testing.
+
+### Examples in Jenkins
+
+Re-instantiate the database and use a record by record import/insert into RethinkDB
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/recordbyrecord_example/
+   - Average Runtime: 12-15min
+   - https://github.com/ClusterHQ/inventory-app/tree/recordbyrecord_example
+
+Re-instantiate the database and use  a bulk import/insert into RethinkDB for tests
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/bulk_example/
+   - Average Runtime: 5-6 mins
+   - https://github.com/ClusterHQ/inventory-app/tree/bulk_example
