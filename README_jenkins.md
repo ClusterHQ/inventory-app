@@ -124,3 +124,23 @@ How to connect to RethinkDB in the other docker container
 How to get correct environment variables for Git.
 Right now, we assume these are added as env variables for the Git robot user and accessible within the pipeline syntax vis `env.` via the Jenkins configurations for `environment` or through init/cloud-init like scripts for dynamic nodes created by Jenkins plugins.
 
+
+### Average Build Times for database test isolation
+
+#### for Snapshots, Bulk Imports and Record by Record
+
+Re-instantiate the database and use a record by record import/insert into RethinkDB and run 3 isolated tests
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/recordbyrecord_example/
+  - Average Runtime: 10-12min
+  - https://github.com/ClusterHQ/inventory-app/tree/recordbyrecord_example
+
+Re-instantiate the database and use  a bulk import/insert into RethinkDB and run 3 isolated tests
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/bulk_example/
+  - Average Runtime: 5-6 mins
+  - https://github.com/ClusterHQ/inventory-app/tree/bulk_example
+
+Use a FlockerHub snapshot to repopulate the DB and run 3 isolated tests and push DB snapshots of tests state.
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/master/ 
+  - Average Runtime:  1-2 min
+  - https://github.com/ClusterHQ/inventory-app
+
