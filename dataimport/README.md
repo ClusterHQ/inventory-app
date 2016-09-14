@@ -53,12 +53,12 @@ Change the `Dockerfile.bulk.sav` in the appropriate directory to `Dockerfile`
 
 ### Examples in Jenkins
 
-Re-instantiate the database and use a record by record import/insert into RethinkDB
+Re-instantiate the database and use a record by record import/insert into RethinkDB and run 3 isolated tests
 http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/recordbyrecord_example/
-   - Average Runtime: 12-15min
-   - https://github.com/ClusterHQ/inventory-app/tree/recordbyrecord_example
+  - Average Runtime: 10-12min
+  - https://github.com/ClusterHQ/inventory-app/tree/recordbyrecord_example
 
-Re-instantiate the database and use  a bulk import/insert into RethinkDB for tests
+Re-instantiate the database and use  a bulk import/insert into RethinkDB and run 3 isolated tests
 http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/bulk_example/
-   - Average Runtime: 5-6 mins
-   - https://github.com/ClusterHQ/inventory-app/tree/bulk_example
+  - Average Runtime: 5-6 mins
+  - https://github.com/ClusterHQ/inventory-app/tree/bulk_example

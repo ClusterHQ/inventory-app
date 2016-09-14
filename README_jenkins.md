@@ -129,17 +129,17 @@ Right now, we assume these are added as env variables for the Git robot user and
 
 #### for Snapshots, Bulk Imports and Record by Record
 
-Re-instantiate the database and use a record by record import/insert into RethinkDB
+Re-instantiate the database and use a record by record import/insert into RethinkDB and run 3 isolated tests
 http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/recordbyrecord_example/
-  - Average Runtime: 12-15min
+  - Average Runtime: 10-12min
   - https://github.com/ClusterHQ/inventory-app/tree/recordbyrecord_example
 
-Re-instantiate the database and use  a bulk import/insert into RethinkDB for tests
+Re-instantiate the database and use  a bulk import/insert into RethinkDB and run 3 isolated tests
 http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/bulk_example/
   - Average Runtime: 5-6 mins
   - https://github.com/ClusterHQ/inventory-app/tree/bulk_example
 
-Use a FlockerHub snapshot to repopulate the DB and push DB snapshots of tests state.
+Use a FlockerHub snapshot to repopulate the DB and run 3 isolated tests and push DB snapshots of tests state.
 http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/master/ 
   - Average Runtime:  1-2 min
   - https://github.com/ClusterHQ/inventory-app
