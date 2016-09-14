@@ -58,6 +58,7 @@ def import_data(tname, fname):
         ### Load the JSON data
         vehicles = csv.reader(csvfile, delimiter=',')
 
+        vehicledata = []
         ### Iterate over vehicles and add them to the database
         for row in vehicles:
             d_id, d_name = get_random_dealer_id()
@@ -69,11 +70,10 @@ def import_data(tname, fname):
                 "vin": vin,
                 "year": row[0]
             }
-            rdb.table(tname).insert(new_vehicle).run(dbconn)
-            print("Added Vehicle {0} {1} {2} to dealership {3}".format(new_vehicle['make'],
-                                                     new_vehicle['model'],
-                                                     new_vehicle['year'],
-                                                     d_name))
+            vehicledata.append(new_vehicle)
+        rdb.table(tname).insert(vehicledata).run(dbconn)
+        print("Added Vehicles")
+        
 download_data(file_name)
 create_table_if_not_exists(table_name)
 # load dealers into memory for speed.
