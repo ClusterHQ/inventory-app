@@ -38,7 +38,8 @@ def import_data(tname, fname):
         ### Load the JSON data
         dealerdata = json.load(file)
 
-        ### Iterate over dealerships and add them to the database
+        # Iterate over dealerships and add them to 
+        # an array so it can be bulk added to the database
         dealers = []
         for dealer in dealerdata["data"]:
             address = json.loads(dealer[13][0])
@@ -48,6 +49,7 @@ def import_data(tname, fname):
                 "phone": '555-555-5555'
             }
             dealers.append(new_dealer)
+        # Bulk insert by passing an array to insert()
         rdb.table(tname).insert(dealers).run(dbconn)
         print("Added all dealers")
 

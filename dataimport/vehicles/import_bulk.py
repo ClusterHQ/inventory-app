@@ -58,6 +58,8 @@ def import_data(tname, fname):
         ### Load the JSON data
         vehicles = csv.reader(csvfile, delimiter=',')
 
+        # Iterate over dealerships and add them to 
+        # an array so it can be bulk added to the database
         vehicledata = []
         ### Iterate over vehicles and add them to the database
         for row in vehicles:
@@ -71,6 +73,7 @@ def import_data(tname, fname):
                 "year": row[0]
             }
             vehicledata.append(new_vehicle)
+        # Bulk insert by passing an array to insert()
         rdb.table(tname).insert(vehicledata).run(dbconn)
         print("Added Vehicles")
         
