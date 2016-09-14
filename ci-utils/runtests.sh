@@ -37,7 +37,7 @@ use_snapshot() {
 }
 
 start_app() {
-   echo "Start with snapshot\n"
+   echo "Start with snapshot"
    # Start the application with the volume-from-snapshot.
    # Output so we can debug whether snapshot was placed
    # and start the compose app.
@@ -46,14 +46,14 @@ start_app() {
 }
 
 run_test() {
-   echo "Build and run tests against snapshot data\n"
+   echo "Build and run tests against snapshot data"
    # Run the tests against the application using the snapshot
    # (Should have same results as above, but with using a snapshot)
    docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/${TEST}.js"
 }
 
 teardown() {
-   echo "The final teardown\n"
+   echo "The final teardown"
    # Tear down the application and database again.
    /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop
    /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f
@@ -61,7 +61,7 @@ teardown() {
 }
 
 snapnpush() {
-   echo "Sync snap push\n"
+   echo "Sync snap push"
    # Take a snapshot of the volume from snapshot used in tests to capture
    # the state of the database after the tests, also include specific information
    # about the branch, build, build number etc.
