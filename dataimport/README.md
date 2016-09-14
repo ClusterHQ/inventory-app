@@ -48,3 +48,5 @@ vi docker-compose.yml
 ## Switch between Bulk import vs Record by Record
 
 Change the `Dockerfile.bulk.sav` in the appropriate directory to `Dockerfile`
+
+>Note: bulk operations were ~20s and ~29s vs ~1min and ~2min 45s for non-bulk in testing.
