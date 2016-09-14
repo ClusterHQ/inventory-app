@@ -76,7 +76,7 @@ run_group() {
    snapnpush
 }
 
-
+# e.g. "test_http_ping" "test_http_dealers" "test_http_vehicles"
 TESTS=("test_http_ping" "test_http_dealers" "test_http_vehicles")
 for i in "${TESTS[@]}"
 do
