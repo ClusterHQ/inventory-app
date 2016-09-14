@@ -45,7 +45,7 @@ WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-
 # We may be able to use just the Github branch name as the dpcli
 # branch but right now we run into VOL-201 
 PATH=$PATH:/usr/local/sbin/
-VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch "${GITBRANCH}-build-${JENKINSBUILDN}" --message "Snap for build ${JENKINSBUILDN}, build id ${JENKINSBUILDID} build URL ${JENKINSBUILDURL} for test ${TEST} built on ${JENKINSNODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch "${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}" --message "Snap for build ${JENKINSBUILDN}, build id ${JENKINSBUILDID} build URL ${JENKINSBUILDURL} for test ${TEST} built on ${JENKINSNODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
 # Were we succesfull at getting VOL / SNAP?

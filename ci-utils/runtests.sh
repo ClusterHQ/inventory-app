@@ -65,7 +65,7 @@ snapnpush() {
    # Take a snapshot of the volume from snapshot used in tests to capture
    # the state of the database after the tests, also include specific information
    # about the branch, build, build number etc.
-   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${HUBENDPOINT} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} ${TEST} '${JENKINSNODE}'
+   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${HUBENDPOINT} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} ${TEST} "${JENKINSNODE}"
 }
 
 run_group() {
