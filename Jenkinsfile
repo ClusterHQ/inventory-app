@@ -1,3 +1,4 @@
+stage 'Run tests in parallel'
 parallel 'tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_http_ping')
@@ -6,8 +7,7 @@ parallel 'tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_http_dealers')
     }
-}
-, 'tests 2':{
+}, 'tests 3':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles')
     }
