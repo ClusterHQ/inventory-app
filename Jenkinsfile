@@ -10,23 +10,18 @@ parallel 'tests 1':{
 
 def run_group() {
 
-   stage 'Make sure cloud-init done'
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
-   stage 'See cloud-init log'
    // In case of failure, its nice to have this log
    sh 'cat /var/log/cloud-init.log'
 
-   stage 'Clean'
    // Remove the app in the same workspace to avoid reusing packages, node modules etc.
    sh 'sudo rm -rf inventory-app/'
 
-   stage 'Git Clone'
    // Clone the inventory app with the Github Bot user.
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
 
-   stage 'Run tests with snapshots'
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
    String vs;
    String snap;
