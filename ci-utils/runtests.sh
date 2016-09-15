@@ -88,6 +88,7 @@ run_group() {
 }
 
 check_if_failed() {
+   echo "Checking for failures..."
    if $FAILED ; then exit 1; fi
 }
 
