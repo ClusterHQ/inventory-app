@@ -34,6 +34,7 @@ module.exports.attach = function (expressApp) {
     		if (err) throw err;
     		cursor.toArray(function(err, result) {
         		if (err) throw err;
+        		//fhf
         		console.log("Sending back Dealership results");
         		res.send(JSON.stringify(result, null, 2));
     			});
