@@ -1,14 +1,21 @@
 parallel 'tests 1':{
     node('v8s-dpcli-prov'){
-      run_group()
+      run_group('test_http_ping')
     }
 }, 'tests 2':{
     node('v8s-dpcli-prov'){
-      run_group()
+      run_group('test_http_dealers')
+    }
+}
+, 'tests 2':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles')
     }
 }
 
-def run_group() {
+def run_group(test) {
+
+   def run_test = test
 
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
@@ -55,6 +62,6 @@ def run_group() {
    // from a snapshot locally and taking snapshots of the DB test results
    // then pushing the data back up to Flocker Hub with metadata and 
    // start fresh each time.
-   sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
+   sh "sudo inventory-app/ci-utils/runtests.sh ${run_test} ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
 
 }

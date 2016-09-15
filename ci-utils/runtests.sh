@@ -15,17 +15,18 @@
 #                  it is provided by the Jenkins env.
 # --------------------- END -----------------------------------------
 
-VOLUMESET=$1
-HUBENDPOINT=$2
-SNAP=$3
-GITBRANCH=$4
-JENKINSBUILDN=$5
-JENKINSBUILDID=$6
-JENKINSBUILDURL=$7
-JENKINSNODE=$8
+RUNTEST=$1
+VOLUMESET=$2
+HUBENDPOINT=$3
+SNAP=$4
+GITBRANCH=$5
+JENKINSBUILDN=$6
+JENKINSBUILDID=$7
+JENKINSBUILDURL=$8
+JENKINSNODE=$9
 
 # Test will be used as a holder for current test.
-TEST=""
+TEST=$RUNTEST
 FAILED=false
 FAILED_TESTS=()
 
