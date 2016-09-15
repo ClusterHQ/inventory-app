@@ -27,6 +27,7 @@ JENKINSNODE=$8
 # Test will be used as a holder for current test.
 TEST=""
 FAILED=false
+FAILED_TESTS=()
 
 use_snapshot() {
    echo "Use a specific snapshot"
@@ -46,7 +47,8 @@ start_app() {
 }
 
 snap_with_failure() {
-   echo "[FAILED TEST]: Taking snapshot of database and pushing it"
+   echo "[FAILED TEST ${TEST}]: Taking snapshot of database and pushing it"
+   FAILED_TESTS+=('${TEST}')
    FAILED=true
    # Take a snapshot of the volume from snapshot used in tests to capture
    # the state of the database after the tests , also include specific information
@@ -89,7 +91,10 @@ run_group() {
 
 check_if_failed() {
    echo "Checking for failures..."
-   if $FAILED ; then exit 1; fi
+   if $FAILED ; then 
+      echo "Found failed tests: ${FAILED_TESTS[@]}"
+      exit 1; 
+   fi
 }
 
 
