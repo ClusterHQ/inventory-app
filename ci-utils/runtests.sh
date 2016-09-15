@@ -48,7 +48,7 @@ start_app() {
 
 snap_with_failure() {
    echo "[FAILED TEST ${TEST}]: Taking snapshot of database and pushing it"
-   FAILED_TESTS+=('${TEST}')
+   FAILED_TESTS+=($TEST)
    FAILED=true
    # Take a snapshot of the volume from snapshot used in tests to capture
    # the state of the database after the tests , also include specific information
