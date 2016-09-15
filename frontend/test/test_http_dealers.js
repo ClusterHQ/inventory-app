@@ -30,7 +30,8 @@ describe('HTTPTests for Dealerships', function() {
         var dealers = JSON.parse(res.body);
         dbConnect.then(function(conn) {
           r.table('Dealership').count().run(conn, function(err, results){
-            assert.strictEqual(dealers.length, results, "same results from DB and HTTP response");
+            // purposely fail the build, results won't === 5
+            assert.strictEqual(5, results, "same results from DB and HTTP response");
             conn.close();
             done();
           });
