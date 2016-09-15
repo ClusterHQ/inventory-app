@@ -1,21 +1,24 @@
 stage 'Run tests in parallel'
-parallel 'tests 1':{
-    node('v8s-dpcli-prov'){
+parallel 'parallel tests 1':{
+    node('v8s-dpcli-prov', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d'){
       run_group('test_http_ping')
     }
-}, 'tests 2':{
-    node('v8s-dpcli-prov'){
+}, 'parallel tests 2':{
+    node('v8s-dpcli-prov', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d'){
       run_group('test_http_dealers')
     }
-}, 'tests 3':{
-    node('v8s-dpcli-prov'){
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d'){
       run_group('test_http_vehicles')
     }
 }
 
-def run_group(test) {
+def run_group(test, snap, vs) {
 
    def run_test = test
+   def snapshot = snap
+   def volumeset = vs
+
 
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
@@ -48,10 +51,10 @@ def run_group(test) {
       //     branch for your build and tests in CI.
       // **********************************************
       // Volumeset the snapshot belongs to for dev branch
-      vs = '1734c879-641c-41cd-92b5-f47704338a1d'
+      vs = ${volumeset}
       // Snapshot used for tests in branch
       // e.g. 7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae
-      snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+      snap = ${snapshot}
       echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
    }
    
