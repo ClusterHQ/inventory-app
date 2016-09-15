@@ -144,3 +144,36 @@ http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-mult
   - Average Runtime:  1-2 min
   - https://github.com/ClusterHQ/inventory-app
 
+## Run tests in parallel
+
+Example can be found here: http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/parallel-testing 
+
+A code snippet of passing `volumeset` and `snapshot` to a parallel test can be seen below. These 3 parallel runs each run a specific test as well as use a specific volumeset and snapshot.
+
+```
+stage 'Run tests in parallel'
+parallel 'parallel tests 1':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_ping', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+    }
+}, 'parallel tests 2':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_dealers', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+    }
+}
+```
+
+Once you do this, each test will run on its own jenkins slave and run that specific test with that specific snapshot. See some screenshots below.
+
+Tests all run in one stage and run in parallel
+![alt text](http://i.imgur.com/RP3NpVf.png)
+
+Tests can be seen running in parallel on different slaves
+![alt text](http://i.imgur.com/L8pLxS8.png)
+
+Test output will show each "stream" bases on the labels within `parallel`
+![alt text](http://i.imgur.com/QcfhYKj.png)

@@ -1,23 +1,23 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
-    node('v8s-dpcli-prov', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d'){
-      run_group('test_http_ping')
+    node('v8s-dpcli-prov'){
+      run_group('test_http_ping', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
     }
 }, 'parallel tests 2':{
-    node('v8s-dpcli-prov', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d'){
-      run_group('test_http_dealers')
+    node('v8s-dpcli-prov'){
+      run_group('test_http_dealers', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
     }
 }, 'parallel tests 3':{
-    node('v8s-dpcli-prov', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d'){
-      run_group('test_http_vehicles')
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
     }
 }
 
-def run_group(test, snap, vs) {
+def run_group(test, volsnap, volset) {
 
    def run_test = test
-   def snapshot = snap
-   def volumeset = vs
+   def snapshot = volsnap
+   def volumeset = volset
 
 
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
