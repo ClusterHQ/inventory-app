@@ -51,10 +51,10 @@ def run_group(test, volsnap, volset) {
       //     branch for your build and tests in CI.
       // **********************************************
       // Volumeset the snapshot belongs to for dev branch
-      vs = ${volumeset}
+      vs = "${volumeset}"
       // Snapshot used for tests in branch
       // e.g. 7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae
-      snap = ${snapshot}
+      snap = "${snapshot}"
       echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
    }
    
