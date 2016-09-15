@@ -15,7 +15,6 @@
 #                  it is provided by the Jenkins env.
 # --------------------- END -----------------------------------------
 
-
 VOLUMESET=$1
 HUBENDPOINT=$2
 SNAP=$3
@@ -27,6 +26,8 @@ JENKINSNODE=$8
 
 # Test will be used as a holder for current test.
 TEST=""
+FAILED=false
+FAILED_TESTS=()
 
 use_snapshot() {
    echo "Use a specific snapshot"
@@ -45,11 +46,22 @@ start_app() {
    /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans
 }
 
+snap_with_failure() {
+   echo "[FAILED TEST ${TEST}]: Taking snapshot of database and pushing it"
+   FAILED_TESTS+=($TEST)
+   FAILED=true
+   # Take a snapshot of the volume from snapshot used in tests to capture
+   # the state of the database after the tests , also include specific information
+   # about the branch, build, build number etc.
+   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${HUBENDPOINT} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} "Failed-${TEST}" "${JENKINSNODE}"
+}
+
 run_test() {
    echo "Build and run tests against snapshot data"
    # Run the tests against the application using the snapshot
    # (Should have same results as above, but with using a snapshot)
-   docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/${TEST}.js"
+   docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
+      "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/${TEST}.js" || snap_with_failure
 }
 
 teardown() {
@@ -77,6 +89,14 @@ run_group() {
    snapnpush
 }
 
+check_if_failed() {
+   echo "Checking for failures..."
+   if $FAILED ; then 
+      echo "Found failed tests: ${FAILED_TESTS[@]}"
+      exit 1; 
+   fi
+}
+
 
 TESTS=("test_http_ping" "test_http_dealers" "test_http_vehicles")
 for i in "${TESTS[@]}"
@@ -84,3 +104,4 @@ do
    TEST=$i
    run_group
 done
+check_if_failed
