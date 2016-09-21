@@ -3,13 +3,14 @@
 # This script will take a Flocker Hub endpoint, volumeset
 # and snapshot as arguments and create a volume from the
 # snapshot and change the `- rethink-data:` volume to
-# use that snapshot.
+# use that snapshot and add it to the compose file for staging
 
 # -------------------- Params ---------------------------------------
 # VS     is a Flocker Hub Volumeset, which owns snapshots and variants
 # SNAP   is a Flocker Hub Snapshot
 # EP     is the Flocker Hub URL endpoint used by the CLI.
 # VPATH  is the /chq/UUID path returned by `dpcli create volume`
+# BRANCH is the GitHub branch being built in Jenkins.
 # --------------------- END -----------------------------------------
 
 VS=$1

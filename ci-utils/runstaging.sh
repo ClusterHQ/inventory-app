@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Script to run tests.
+# Script to run staging
 # Needs to be run as SUDO
 
 # -------------------- Params ---------------------------------------
@@ -8,11 +8,7 @@
 # HUBENDPOINT      is the Flocker Hub URL endpoint used by the CLI.
 # SNAP             is a Flocker Hub Snapshot
 # GITBRANCH        is the Github Branch name being built, it is provided by the Jenkins env.
-# JENKINSBUILDN    is the Jenkins Build Number, it is provided by the Jenkins env.
-# JENKINSBUILDID   is the Jenkins Build ID, it is provided by the Jenkins env.
 # JENKINSBUILDURL  is the Jenkins Build ID URL, it is provided by the Jenkins env.
-# JENKINSNODE      is the Jenkins node the snapshot was used on in the build,
-#                  it is provided by the Jenkins env.
 # --------------------- END -----------------------------------------
 
 VOLUMESET=$1
