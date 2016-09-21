@@ -62,6 +62,9 @@ node ('v8s-dpcli-prov-staging') {
    // In case of failure, its nice to have this log
    sh 'cat /var/log/cloud-init.log'
 
+   stage 'Staging: Announce'
+   echo "Starting staging on: '${env.NODE_NAME}'"
+
    stage 'Staging: Clean'
    // Remove the app in the same workspace to avoid reusing packages, node modules etc.
    // Staging will always create a <branch_name>-inventory-app/ directory instead
@@ -74,7 +77,7 @@ node ('v8s-dpcli-prov-staging') {
    // Clone the inventory app with the Github Bot user.
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app ${env.BRANCH_NAME}-inventory-app/"
 
-   staging 'Staging: Run staging environment'
+   stage 'Staging: Run staging environment'
    String staging_vs;
    String staging_snap;
    if (env.BRANCH_NAME == "master"){
