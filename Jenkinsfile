@@ -107,5 +107,5 @@ node ('v8s-dpcli-prov-staging') {
    def staging_ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
 
    // Run staging
-   sh "sudo inventory-app/ci-utils/runstaging.sh ${staging_vs} ${staging_ep} ${staging_snap} ${env.BRANCH_NAME} ${env.BUILD_URL}"
+   sh "sudo ${env.BRANCH_NAME}-inventory-app/ci-utils/runstaging.sh ${staging_vs} ${staging_ep} ${staging_snap} ${env.BRANCH_NAME} ${env.BUILD_URL}"
 }
