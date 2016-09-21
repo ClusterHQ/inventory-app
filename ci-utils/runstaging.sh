@@ -37,7 +37,8 @@ start_app() {
    cat ${GITBRANCH}-inventory-app/docker-compose.yml
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml up -d --build --remove-orphans
    # Show the containers in the log so we know what port to access.
-   docker ps | grep "${GITBRANCH}inventoryapp"
+   # TODO - need to figure out how to limit output to just this branches running nodes.
+   docker ps
 }
 
 teardown() {
