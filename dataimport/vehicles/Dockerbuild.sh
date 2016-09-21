@@ -7,4 +7,4 @@ tag='clusterhq/inventory-app:vehicle-0.1'
 
 docker build --file Dockerfile --no-cache --tag $tag .
 
-docker run --net=inventoryapp_default -dit $tag
+docker run -e DATABASE_HOST=db --net=inventoryapp_default -dit $tag
