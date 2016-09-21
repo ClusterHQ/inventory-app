@@ -11,13 +11,16 @@ var request = require('request');
 var db = require('./dbutils');
 var dbConnect = db.connect();
 
+var apihost = process.env.FRONTEND_HOST || 'localhost'
+var apiport = process.env.FRONTEND_PORT || 8000;
+
 describe('HTTPTests for Dealerships', function() {
 
   /*All tests here*/
   describe('Testing /dealerships endpoint', function() {
 
     it('/dealerships should return "200"', function(done) {
-      request.get('http://localhost:8000/dealerships', function (err, res, body){
+      request.get('http://' + apihost + ':'+ apiport +'/dealerships', function (err, res, body){
         if (err) throw (err);
         assert.strictEqual(res.statusCode, 200);
         done();
@@ -25,7 +28,7 @@ describe('HTTPTests for Dealerships', function() {
     });
 
     it('/dealerships should return the right amount of dealers in the db', function(done) {
-      request.get('http://localhost:8000/dealerships', function (err, res, body){
+      request.get('http://' + apihost + ':'+ apiport +'/dealerships', function (err, res, body){
         if (err) throw (err);
         var dealers = JSON.parse(res.body);
         dbConnect.then(function(conn) {

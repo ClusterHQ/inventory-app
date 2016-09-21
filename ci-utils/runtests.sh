@@ -60,7 +60,7 @@ run_test() {
    echo "Build and run tests against snapshot data"
    # Run the tests against the application using the snapshot
    # (Should have same results as above, but with using a snapshot)
-   docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
+   docker run --net=inventoryapp_default -e FRONTEND_HOST="frontend" -e DATABASE_HOST="db" -e FRONTEND_PORT=8000 --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
       "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/${TEST}.js" || snap_with_failure
 }
 

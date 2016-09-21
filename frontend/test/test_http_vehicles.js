@@ -11,13 +11,16 @@ var request = require('request');
 var db = require('./dbutils')
 var dbConnect = db.connect();
 
+var apihost = process.env.FRONTEND_HOST || 'localhost';
+var apiport = process.env.FRONTEND_PORT || 8000;
+
 describe('HTTPTests for Vehicles', function() {
 
   /*All tests here*/
   describe('Testing /vehicles endpoint', function() {
 
     it('/vehicles should return "200"', function(done) {
-      request.get('http://localhost:8000/vehicles', function (err, res, body){
+      request.get('http://' + apihost + ':'+ apiport +'/vehicles', function (err, res, body){
         if (err) throw (err);
         assert.strictEqual(res.statusCode, 200);
         done();
@@ -25,7 +28,7 @@ describe('HTTPTests for Vehicles', function() {
     });
 
     it('/vehicles should return the right amount of vehicles in the db', function(done) {
-      request.get('http://localhost:8000/vehicles', function (err, res, body){
+      request.get('http://' + apihost + ':'+ apiport +'/vehicles', function (err, res, body){
         if (err) throw (err);
         var vehicles = JSON.parse(res.body);
         dbConnect.then(function(conn) {
