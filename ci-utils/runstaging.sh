@@ -38,11 +38,11 @@ start_app() {
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml up -d --build --remove-orphans
    # Show the containers in the log so we know what port to access.
    # TODO - need to figure out how to limit output to just this branches running nodes.
-   docker ps
+   docker ps --last 2
 }
 
 teardown() {
-   echo "The final teardown"
+   echo "Teardown app if running"
    # Tear down the application and database again.
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml stop
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml rm -f
