@@ -7,6 +7,8 @@ volumes:
 services:
   db:
     image: rethinkdb
+    depends_on:
+      - logging
     volumes:
       - rethink-data:/data
     ports:
@@ -18,8 +20,18 @@ services:
     image: frontend
     depends_on:
       - db
+      - logging
     ports:
       - '8000:8000'
     environment:
       - DATABASE_HOST=db
       - DATABASE_PORT=28015
+  logging:
+    build: ./logging 
+    image: inventory-logging
+    ports:
+      - '514:514'
+      - '601:601'
+      - '6514:6514'
+    environment:
+      - ENVIRONMENT=development
