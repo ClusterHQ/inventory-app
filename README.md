@@ -9,7 +9,7 @@ It demonstrates a way of building realtime apps.
 All code for the server-side worker logic is linked from worker.js - It's mostly generic so feel free to reuse/modify for your own app
 or you can use this app as a base to build yours if starting from scratch.
 
-Aside from SocketCluster, Polymer and RethinkDB, this sample app uses the following modules:
+Aside from SocketCluster, Polymer and RethinkDB, this sample app uses the following SocketCluster modules:
 - sc-collection (https://github.com/SocketCluster/sc-collection - ```bower install sc-collection --save```)
 - sc-field (https://github.com/SocketCluster/sc-field - ```bower install sc-field --save```)
 - sc-crud-rethink (https://github.com/SocketCluster/sc-crud-rethink - ```npm install sc-crud-rethink --save```)
