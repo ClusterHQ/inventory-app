@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Purpose: This script installs the Flocker Hub Client (fs3) from Quay.io (SaaS Docker image repository)
+# Purpose: This script installs the Flocker Line Interface (fli) from Quay.io (SaaS Docker image repository)
 # This script is meant to be used on CentOS 7 nodes that don't have ZFS installed.
 # Author: Ryan Wallner
 
