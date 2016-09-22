@@ -15,6 +15,7 @@
 # JENKINSBUILDN    is the Jenkins Build Number, it is provided by the Jenkins env.
 # JENKINSBUILDID   is the Jenkins Build ID, it is provided by the Jenkins env.
 # JENKINSBUILDURL  is the Jenkins Build ID URL, it is provided by the Jenkins env.
+# TEST			   is the Test that was run with the snapshot.
 # JENKINSNODE      is the Jenkins node the snapshot was used on in the build,
 #                  it is provided by the Jenkins env.
 # --------------------- END -----------------------------------------
@@ -25,7 +26,8 @@ GITBRANCH=$3
 JENKINSBUILDN=$4
 JENKINSBUILDID=$5
 JENKINSBUILDURL=$6
-JENKINSNODE=$7
+TEST=$7
+JENKINSNODE=$8
 
 # Check for "needed" vars
 if [ -z "$VOLUMESET" ]; then
@@ -43,7 +45,7 @@ WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-
 # We may be able to use just the Github branch name as the dpcli
 # branch but right now we run into VOL-201 
 PATH=$PATH:/usr/local/sbin/
-VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch "${GITBRANCH}-build-${JENKINSBUILDN}" --message "Snap for build ${JENKINSBUILDN}, build id ${JENKINSBUILDID} build URL ${JENKINSBUILDURL} built on ${JENKINSNODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch "${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}" --message "Snap for build ${JENKINSBUILDN}, build id ${JENKINSBUILDID} build URL ${JENKINSBUILDURL} for test ${TEST} built on ${JENKINSNODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
 # Were we succesfull at getting VOL / SNAP?
@@ -59,5 +61,7 @@ fi
 
 /opt/clusterhq/bin/dpcli sync volumeset $VOLUMESET
 /opt/clusterhq/bin/dpcli push snapshot $VOLSNAP
-/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET
+
+echo "Showing specific snapshots for this build"
+/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET 2>&1 | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
 

@@ -124,3 +124,58 @@ How to connect to RethinkDB in the other docker container
 How to get correct environment variables for Git.
 Right now, we assume these are added as env variables for the Git robot user and accessible within the pipeline syntax vis `env.` via the Jenkins configurations for `environment` or through init/cloud-init like scripts for dynamic nodes created by Jenkins plugins.
 
+
+### Average Build Times for database test isolation
+
+#### for Snapshots, Bulk Imports and Record by Record
+
+Re-instantiate the database and use a record by record import/insert into RethinkDB and run 3 isolated tests
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/recordbyrecord_example/
+  - Average Runtime: 10-12min
+  - https://github.com/ClusterHQ/inventory-app/tree/recordbyrecord_example
+
+Re-instantiate the database and use  a bulk import/insert into RethinkDB and run 3 isolated tests
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/bulk_example/
+  - Average Runtime: 5-6 mins
+  - https://github.com/ClusterHQ/inventory-app/tree/bulk_example
+
+Use a FlockerHub snapshot to repopulate the DB and run 3 isolated tests and push DB snapshots of tests state.
+http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/master/ 
+  - Average Runtime:  1-2 min
+  - https://github.com/ClusterHQ/inventory-app
+
+## Run tests in parallel
+
+Example can be found here: http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/parallel-testing 
+
+A code snippet of passing `volumeset` and `snapshot` to a parallel test can be seen below. These 3 parallel runs each run a specific test as well as use a specific volumeset and snapshot.
+
+```
+stage 'Run tests in parallel'
+parallel 'parallel tests 1':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_ping', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+    }
+}, 'parallel tests 2':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_dealers', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+    }
+}
+```
+
+Once you do this, each test will run on its own jenkins slave and run that specific test with that specific snapshot. See some screenshots below.
+
+Tests all run in one stage and run in parallel
+![alt text](http://i.imgur.com/RP3NpVf.png)
+
+Tests can be seen running in parallel on different slaves
+![alt text](http://i.imgur.com/L8pLxS8.png)
+
+Test output will show each "stream" bases on the labels within `parallel`
+![alt text](http://i.imgur.com/QcfhYKj.png)
+
+

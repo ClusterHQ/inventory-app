@@ -34,11 +34,11 @@ describe('HTTPTests', function() {
   });
 
   /*All tests here*/
-  describe('GET /dealers', function() {
+  describe('Testing /ping endpoint', function() {
 
   	it('should return "200"', function(done) {
       chai.request('http://localhost:8000')
-      .get('/dealers')
+      .get('/ping')
       .end(function(err, res) {
         expect(res).to.have.status(200);
         done();  
@@ -47,18 +47,18 @@ describe('HTTPTests', function() {
 
   	it('should return text/html; charset=utf-8', function(done) {
       chai.request('http://localhost:8000')
-      .get('/dealers')
+      .get('/ping')
       .end(function(err, res) {
         expect(res).to.be.html;
         done();  
       });
     });
 
-  	it('should return "Sending Dealers"', function(done) {
+  	it('should return "pong"', function(done) {
       chai.request('http://localhost:8000')
-      .get('/dealers')
+      .get('/ping')
       .end(function(err, res) {
-        expect(res.text).to.equal('Sending Dealers\n');
+        expect(res.text).to.equal('pong\n');
         done();  
       });
     });

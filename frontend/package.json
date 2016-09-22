@@ -25,6 +25,7 @@
     "socketcluster": "4.x.x",
     "socketcluster-client": "4.x.x",
     "mocha": "3.0.x",
+    "rethinkdb": "2.3.3",
     "request": "2.74.0",
     "assert": "1.4.1"
   },
