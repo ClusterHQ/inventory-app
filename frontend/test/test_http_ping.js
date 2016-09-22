@@ -1,4 +1,4 @@
-/* Test HTTP API 
+/* Test HTTP API for Ping
    These tests are meant to run against a deployment of the app
    which means to run docker-compose up and then run the tests
    and then docker-compose stop/rm
@@ -8,34 +8,35 @@
 var assert = require('assert');
 var request = require('request');
 
-describe('HTTPTests', function() {
+describe('HTTPTests for Ping', function() {
 
   /*All tests here*/
-  describe('GET /dealers', function() {
+  describe('Testing /ping endpoint', function() {
 
-  	it('should return "200"', function(done) {
-      request.get('http://localhost:8000/dealers', function (err, res, body){
+    it('/ping should return "200"', function(done) {
+      request.get('http://localhost:8000/ping', function (err, res, body){
         if (err) throw (err);
         assert.strictEqual(res.statusCode, 200);
         done();
       });
     });
 
-  	it('should return text/html; charset=utf-8', function(done) {
-      request.get('http://localhost:8000/dealers', function (err, res, body){
+    it('/ping should return text/html; charset=utf-8', function(done) {
+      request.get('http://localhost:8000/ping', function (err, res, body){
         if (err) throw (err);
         assert.equal(res.headers['content-type'], "text/html; charset=utf-8");
         done();
       });
     });
 
-  	it('should return "Sending Dealers"', function(done) {
-      request.get('http://localhost:8000/dealers', function (err, res, body){
+    it('/ping should return "pong"', function(done) {
+      request.get('http://localhost:8000/ping', function (err, res, body){
         if (err) throw (err);
-        assert.equal(res.body, 'Sending Dealers\n');
+        assert.equal(res.body, 'pong\n');
         done();
       });
     });
+
   });
   /*end tests*/
 });
