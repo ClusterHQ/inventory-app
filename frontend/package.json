@@ -27,7 +27,8 @@
     "mocha": "3.0.x",
     "rethinkdb": "2.3.3",
     "request": "2.74.0",
-    "assert": "1.4.1"
+    "assert": "1.4.1",
+    "body-parser": "1.15.2"
   },
   "keywords": [
     "websocket",

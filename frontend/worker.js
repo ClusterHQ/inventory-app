@@ -6,6 +6,7 @@ var dummyData = require('./sc_modules/dummy-data');
 var httpHandler = require('./sc_modules/http-handler')
 var authentication = require('./sc_modules/authentication');
 var scCrudRethink = require('sc-crud-rethink');
+var bodyParser = require('body-parser')
 
 module.exports.run = function (worker) {
   console.log('   >> Worker PID:', process.pid);
@@ -15,6 +16,7 @@ module.exports.run = function (worker) {
 
   // Use ExpressJS to handle serving static HTTP files
   var app = require('express')();
+  app.use(bodyParser.json())
   app.use(serveStatic(path.resolve(__dirname, 'public')));
   httpServer.on('request', app);
 
