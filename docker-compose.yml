@@ -6,6 +6,8 @@ volumes:
 
 services:
   db:
+    networks:
+      - net
     image: rethinkdb
     volumes:
       - rethink-data:/data
@@ -14,6 +16,8 @@ services:
       - 29015
       - 8080
   frontend:
+    networks:
+      - net
     build: ./frontend
     image: frontend
     depends_on:
@@ -23,3 +27,7 @@ services:
     environment:
       - DATABASE_HOST=db
       - DATABASE_PORT=28015
+
+networks:
+  net:
+    driver: bridge
