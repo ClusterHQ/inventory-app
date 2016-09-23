@@ -45,12 +45,19 @@ teardown() {
    docker volume rm ${GITBRANCH}-inventoryapp_rethink-data
 }
 
+publish_staging_env() {
+   host=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+   port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH}inventoryapp_frontend_1))
+   echo "Your staging environment is available at ${host}:${port}"
+}
+
 
 run_group() {
    echo "Bringing up staging for ${GITBRANCH}-inventory-app with snapshot: ${SNAP}"
    teardown
    use_snapshot
    start_app
+   publish_staging_env
 }
 
 run_group
