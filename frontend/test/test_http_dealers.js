@@ -49,6 +49,9 @@ describe('HTTPTests for Dealerships', function() {
       request({
         url: util.format('http://%s:%s/dealerships', apihost, apiport),
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         json: {
           name: 'New dealer',
           phone: '555-999-1122',
