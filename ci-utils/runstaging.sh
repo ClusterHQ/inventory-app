@@ -47,8 +47,12 @@ teardown() {
 
 publish_staging_env() {
    host=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
-   port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH//-}inventoryapp_frontend_1))
-   echo "Your staging environment is available at ${host}:${port}"
+   frontend_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH//-}inventoryapp_frontend_1))
+   rethinkdb_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH//-}inventoryapp_db_1 | grep 28015))
+   rethinkdb_ui_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH//-}inventoryapp_db_1 | grep 8080))
+   echo "Your staging environment is available at ${host}:${frontend_port}"
+   echo "Your staging database is available at ${host}:${rethinkdb_port}"
+   echo "Your staging database UI is available at ${host}:${rethinkdb_ui_port}"
 }
 
 
