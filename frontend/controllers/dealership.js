@@ -12,6 +12,19 @@ module.exports.addDealership = function (req, res) {
 			conn.close();
 		});
 	});
-	res.send({message: 'hello'})
+	res.send(201, { status: 'Successful' })
 }
 
+module.exports.getDealerships = function (req, res) {
+  console.log('Received GET /dealerships request')
+  dbconn.then(function(conn) {
+    rdb.table('Dealership').run(conn, function(err, cursor) {
+      if (err) throw err;
+      cursor.toArray(function(err, result) {
+          if (err) throw err;
+          console.log("Sending back Dealership results");
+          res.send(JSON.stringify(result, null, 2));
+        });
+    });
+  })
+}

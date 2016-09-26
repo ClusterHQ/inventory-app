@@ -15,37 +15,13 @@ module.exports.attach = function (expressApp) {
 	})
 
 	// GET /dealerships (All Dealerships)
-	expressApp.get('/dealerships',(req, res) => {
-		console.log('Received dealerships request')
-		dbconn.then(function(conn) {
-			rdb.table('Dealership').run(conn, function(err, cursor) {
-    		if (err) throw err;
-    		cursor.toArray(function(err, result) {
-        		if (err) throw err;
-        		console.log("Sending back Dealership results");
-        		res.send(JSON.stringify(result, null, 2));
-    			});
-			});
-		})
-	})
+	expressApp.get('/dealerships', require('../controllers/dealership.js').getDealerships)
 
 	// POST /dealerships 
 	expressApp.post('/dealerships', require('../controllers/dealership.js').addDealership)
 
 	// GET /vehicles (All Vehicles)
-	expressApp.get('/vehicles',(req, res) => {
-		console.log('recieved vehicles request')
-		dbconn.then(function(conn) { 
-			rdb.table('Vehicle').run(conn, function(err, cursor) {
-				if (err) throw err;
-				cursor.toArray(function(err, result) {
-					if (err) throw err;
-					console.log("Sending back Vehicle results");
-					res.send(JSON.stringify(result, null, 2));
-					});
-			});
-		})
-	})
+	expressApp.get('/vehicles', require('../controllers/vehicles.js').getVehicles)
 
 	/* TODO, remove from list when complete */
 
