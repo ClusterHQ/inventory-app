@@ -8,7 +8,7 @@
 r = require('rethinkdb');
 var assert = require('assert');
 var request = require('request');
-var db = require('./dbutils');
+var db = require('../db/dbutils');
 var dbConnect = db.connect();
 
 describe('HTTPTests for Dealerships', function() {
@@ -39,6 +39,13 @@ describe('HTTPTests for Dealerships', function() {
         });
       });
     });
+
+    it('/dealerships POST should return HTTP 201 Created', function () {
+      request.post('http://localhost:8000/dealerships', function (err, res, body) {
+        if (err) throw (err);
+        assert.strictEqual(res.statusCode, 201)
+      })
+    })
 
   });
   /*end tests*/

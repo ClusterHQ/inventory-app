@@ -1,10 +1,11 @@
-r = require('./rethink');
+db = require('../db/dbutils')
+rdb = require('rethinkdb')
 
 module.exports.attach = function (expressApp) {
 	// Setup HTTP/REST API for Server Side.
 
 	// Connect to RethinkDB
-	conn = r.connect();
+	dbconn = db.connect();
 
 	// Simple GET /ping for testing HTTP
 	expressApp.get('/ping',(req,res) => {
@@ -16,34 +17,37 @@ module.exports.attach = function (expressApp) {
 	// GET /dealerships (All Dealerships)
 	expressApp.get('/dealerships',(req, res) => {
 		console.log('Received dealerships request')
-		r.table('Dealership').run(conn, function(err, cursor) {
+		dbconn.then(function(conn) {
+			rdb.table('Dealership').run(conn, function(err, cursor) {
     		if (err) throw err;
     		cursor.toArray(function(err, result) {
         		if (err) throw err;
         		console.log("Sending back Dealership results");
         		res.send(JSON.stringify(result, null, 2));
     			});
-		});
+			});
+		})
 	})
 
 	// POST /dealerships 
-	expressApp.post('/dealerships', require('./controllers/dealership.js'))
+	expressApp.post('/dealerships', require('../controllers/dealership.js').addDealership)
 
 	// GET /vehicles (All Vehicles)
 	expressApp.get('/vehicles',(req, res) => {
 		console.log('recieved vehicles request')
-		r.table('Vehicle').run(conn, function(err, cursor) {
-    		if (err) throw err;
-    		cursor.toArray(function(err, result) {
-        		if (err) throw err;
-        		console.log("Sending back Vehicle results");
-        		res.send(JSON.stringify(result, null, 2));
-    			});
-		});
+		dbconn.then(function(conn) { 
+			rdb.table('Vehicle').run(conn, function(err, cursor) {
+				if (err) throw err;
+				cursor.toArray(function(err, result) {
+					if (err) throw err;
+					console.log("Sending back Vehicle results");
+					res.send(JSON.stringify(result, null, 2));
+					});
+			});
+		})
 	})
 
 	/* TODO, remove from list when complete */
-
 
 	//(POST) vehicles to Dealership(s)
 	//(DELETE) Remove vehicles from Dealership(s)
