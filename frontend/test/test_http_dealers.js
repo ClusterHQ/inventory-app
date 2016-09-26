@@ -49,7 +49,7 @@ describe('HTTPTests for Dealerships', function() {
       request({
         url: util.format('http://%s:%s/dealerships', apihost, apiport),
         method: 'POST',
-        body: {
+        json: {
           name: 'New dealer',
           phone: '555-999-1122',
           addr: '123 Street, City, State, ######-####'
