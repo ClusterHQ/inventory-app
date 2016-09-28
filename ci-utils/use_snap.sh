@@ -39,7 +39,7 @@ export PATH=$PATH:/usr/local/sbin/
 /opt/clusterhq/bin/dpcli init || true
 # vhut token is set as a secret inside the jenkins master
 /opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
-/opt/clusterhq/bin/dpcli set --vhub $EP
+/opt/clusterhq/bin/dpcli set volumehub $EP
 /opt/clusterhq/bin/dpcli sync volumeset $VS
 /opt/clusterhq/bin/dpcli pull snapshot $SNAP
 VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP 2>&1 | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
