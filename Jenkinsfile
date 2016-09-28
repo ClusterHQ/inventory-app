@@ -28,9 +28,7 @@ node ('v8s-dpcli-prov') {
       // Volumeset the snapshot belongs to for master
       vs = 'inventory-app'
       // Snapshot used for tests in branch
-      // BRANCH                  ID                                   ATTRIBUTES
-      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
-      snap = '94e07c4f-97bf-455f-8fb9-71b31fcf2313'
+      snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
       echo "Using Snapshot ${snap} for branch: master"
    }else{
       // **********************************************
@@ -40,9 +38,7 @@ node ('v8s-dpcli-prov') {
       // Volumeset the snapshot belongs to for dev branch
       vs = 'inventory-app'
       // Snapshot used for tests in branch
-      // BRANCH                  ID                                   ATTRIBUTES
-      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
-      snap = '94e07c4f-97bf-455f-8fb9-71b31fcf2313'
+      snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
       echo "Using Snapshot: ${snap} Branch: ${env.BRANCH_NAME}"
    }
    
@@ -91,9 +87,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for master
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      // BRANCH                  ID                                   ATTRIBUTES
-      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
-      staging_snap = '94e07c4f-97bf-455f-8fb9-71b31fcf2313'
+      staging_snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
       echo "Using Snapshot ${staging_snap} for branch: master"
    }else{
       // **********************************************
@@ -103,9 +97,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for dev branch
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      // BRANCH                  ID                                   ATTRIBUTES
-      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
-      staging_snap = '94e07c4f-97bf-455f-8fb9-71b31fcf2313'
+      staging_snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
       echo "Using Snapshot: ${staging_snap} Branch: ${env.BRANCH_NAME}"
    }
 
