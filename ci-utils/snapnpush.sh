@@ -41,11 +41,13 @@ if [ -z "$HUBENDPOINT" ]; then
 fi  
 
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+# vhut token is set as a secret inside the jenkins master
+/opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
 /opt/clusterhq/bin/dpcli set --vhub $HUBENDPOINT
 # We may be able to use just the Github branch name as the dpcli
 # branch but right now we run into VOL-201 
 PATH=$PATH:/usr/local/sbin/
-VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch "${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}" --message "Snap for build ${JENKINSBUILDN}, build id ${JENKINSBUILDID} build URL ${JENKINSBUILDURL} for test ${TEST} built on ${JENKINSNODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch "${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}" -a "jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
 # Were we succesfull at getting VOL / SNAP?

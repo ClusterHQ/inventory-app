@@ -26,9 +26,11 @@ node ('v8s-dpcli-prov') {
       //         that master use a new snapshot
       // **********************************************
       // Volumeset the snapshot belongs to for master
-      vs = '1734c879-641c-41cd-92b5-f47704338a1d'
-      // Snapshot used for tests in master
-      snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+      vs = 'inventory-app-volumes'
+      // Snapshot used for tests in branch
+      // BRANCH                  ID                                   ATTRIBUTES
+      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
+      snap = '32ccfdbb-319f-4274-a7e0-2e2f1465b2d9'
       echo "Using Snapshot ${snap} for branch: master"
    }else{
       // **********************************************
@@ -36,15 +38,16 @@ node ('v8s-dpcli-prov') {
       //     branch for your build and tests in CI.
       // **********************************************
       // Volumeset the snapshot belongs to for dev branch
-      vs = '1734c879-641c-41cd-92b5-f47704338a1d'
+      vs = 'inventory-app-volumes'
       // Snapshot used for tests in branch
-      // e.g. 7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae
-      snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+      // BRANCH                  ID                                   ATTRIBUTES
+      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
+      snap = '32ccfdbb-319f-4274-a7e0-2e2f1465b2d9'
       echo "Using Snapshot: ${snap} Branch: ${env.BRANCH_NAME}"
    }
    
    // Flocker Hub endpoint.
-   def ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
+   def ep = "http://ec2-54-166-4-3.compute-1.amazonaws.com"
 
    // Run the tests individually. This script is creating a new volume
    // from a snapshot locally and taking snapshots of the DB test results
@@ -86,9 +89,11 @@ node ('v8s-dpcli-prov-staging') {
       //         that master use a new snapshot
       // **********************************************
       // Volumeset the snapshot belongs to for master
-      staging_vs = '1734c879-641c-41cd-92b5-f47704338a1d'
+      staging_vs = 'inventory-app-volumes'
       // Snapshot used for tests in master
-      staging_snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+      // BRANCH                  ID                                   ATTRIBUTES
+      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
+      staging_snap = '32ccfdbb-319f-4274-a7e0-2e2f1465b2d9'
       echo "Using Snapshot ${staging_snap} for branch: master"
    }else{
       // **********************************************
@@ -96,15 +101,16 @@ node ('v8s-dpcli-prov-staging') {
       //     branch for your build and tests in CI.
       // **********************************************
       // Volumeset the snapshot belongs to for dev branch
-      staging_vs = '1734c879-641c-41cd-92b5-f47704338a1d'
-      // Snapshot used for tests in branch
-      // e.g. 7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae
-      staging_snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+      staging_vs = 'inventory-app-volumes'
+      // Snapshot used for tests in master
+      // BRANCH                  ID                                   ATTRIBUTES
+      // inventory-app-rethinkdb 32ccfdbb-319f-4274-a7e0-2e2f1465b2d9 dealers=5k,import_date=sept282016,vehicles=30k
+      staging_snap = '32ccfdbb-319f-4274-a7e0-2e2f1465b2d9'
       echo "Using Snapshot: ${staging_snap} Branch: ${env.BRANCH_NAME}"
    }
 
    // Flocker Hub endpoint.
-   def staging_ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
+   def staging_ep = "http://ec2-54-166-4-3.compute-1.amazonaws.com"
 
    // Run staging
    sh "sudo ${env.BRANCH_NAME}-inventory-app/ci-utils/runstaging.sh ${staging_vs} ${staging_ep} ${staging_snap} ${env.BRANCH_NAME} ${env.BUILD_URL}"

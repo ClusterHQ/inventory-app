@@ -15,6 +15,8 @@
 VS=$1
 SNAP=$2
 EP=$3
+BRANCH=$4
+ENV=$5
 
 # Check for "needed" vars
 if [ -z "$VS" ]; then
@@ -35,9 +37,18 @@ fi
 # should always check for init, but not fail if init already done.
 export PATH=$PATH:/usr/local/sbin/
 /opt/clusterhq/bin/dpcli init || true
+# vhut token is set as a secret inside the jenkins master
+/opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
 /opt/clusterhq/bin/dpcli set --vhub $EP
 /opt/clusterhq/bin/dpcli sync volumeset $VS
 /opt/clusterhq/bin/dpcli pull snapshot $SNAP
 VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP 2>&1 | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
-/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml
 
+if [ "${ENV}" == "staging" ]; then
+	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' ${BRANCH}-inventory-app/docker-compose.yml
+elif [ "${ENV}" == "ci" ]; then
+	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml
+else
+	echo "Environemt [${ENV}] not recognized"
+	exit 1
+fi

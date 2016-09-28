@@ -16,13 +16,14 @@ HUBENDPOINT=$2
 SNAP=$3
 GITBRANCH=$4
 JENKINSBUILDURL=$5
+ENV="staging"
 
 use_snapshot() {
    echo "Use a specific snapshot"
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   ${GITBRANCH}-inventory-app/ci-utils/use_snap_staging.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH}
+   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH} ${ENV}
 }
 
 start_app() {

@@ -23,6 +23,7 @@ JENKINSBUILDN=$5
 JENKINSBUILDID=$6
 JENKINSBUILDURL=$7
 JENKINSNODE=$8
+ENV="ci"
 
 # Test will be used as a holder for current test.
 TEST=""
@@ -34,7 +35,7 @@ use_snapshot() {
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT}
+   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH} ${ENV}
 }
 
 start_app() {
