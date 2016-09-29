@@ -40,16 +40,18 @@ start_app() {
    docker ps --last 2
 }
 
+# Used in teardown() and publish_staging_env()
+L_NO_DASH_GITBRANCH=$(echo ${GITBRANCH//-} | tr '[:upper:]' '[:lower:]')
+
 teardown() {
    echo "Teardown app if running"
    # Tear down the application and database again.
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml stop
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml rm -f
-   docker volume rm ${GITBRANCH//-}inventoryapp_rethink-data
+   docker volume rm ${L_NO_DASH_GITBRANCH}inventoryapp_rethink-data || true
 }
 
 publish_staging_env() {
-   L_NO_DASH_GITBRANCH=$(echo ${GITBRANCH//-} | tr '[:upper:]' '[:lower:]')
    host=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
    frontend_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${L_NO_DASH_GITBRANCH}inventoryapp_frontend_1))
    rethinkdb_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${L_NO_DASH_GITBRANCH}inventoryapp_db_1 | grep 28015))
