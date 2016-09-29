@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # This script should only be used when the
 # volume defined in docker-compose.yml should
 # need to be snapshotted and pushed. 
@@ -41,11 +43,13 @@ if [ -z "$HUBENDPOINT" ]; then
 fi  
 
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
-/opt/clusterhq/bin/dpcli set --vhub $HUBENDPOINT
+PATH=$PATH:/usr/local/sbin/
+/opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
+/opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
 # We may be able to use just the Github branch name as the dpcli
 # branch but right now we run into VOL-201 
-PATH=$PATH:/usr/local/sbin/
-VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch "${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}" --message "Snap for build ${JENKINSBUILDN}, build id ${JENKINSBUILDID} build URL ${JENKINSBUILDURL} for test ${TEST} built on ${JENKINSNODE}" 2>&1 | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+echo "/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch ${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN} -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/}"
+VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch ${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN} -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
 # Were we succesfull at getting VOL / SNAP?
@@ -62,6 +66,11 @@ fi
 /opt/clusterhq/bin/dpcli sync volumeset $VOLUMESET
 /opt/clusterhq/bin/dpcli push snapshot $VOLSNAP
 
+# This will only work if VOLUMESET is the UUID for
+# versions before September 25. Using human readable
+# names was added after this, so this may be blank
+# if using and older version.
+# SO we use the UUID just in case.
+IDOFSET=$(/opt/clusterhq/bin/dpcli show volumeset | grep $VOLUMESET | cut -d" " -f2)
 echo "Showing specific snapshots for this build"
-/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET 2>&1 | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
-
+/opt/clusterhq/bin/dpcli show snapshot --volumeset $IDOFSET | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"

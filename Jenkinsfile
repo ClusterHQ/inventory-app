@@ -1,15 +1,15 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_ping', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+      run_group('test_http_ping', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
     }
 }, 'parallel tests 2':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+      run_group('test_http_dealers', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
     }
 }, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+      run_group('test_http_vehicles', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
     }
 }
 
@@ -41,9 +41,9 @@ def run_group(test, volsnap, volset) {
       //         that master use a new snapshot
       // **********************************************
       // Volumeset the snapshot belongs to for master
-      vs = '1734c879-641c-41cd-92b5-f47704338a1d'
+      vs = 'inventory-app'
       // Snapshot used for tests in master
-      snap = '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae'
+      snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
       echo "Using Snapshot ${vs} for branch: master"
    }else{
       // **********************************************
@@ -59,7 +59,7 @@ def run_group(test, volsnap, volset) {
    }
    
    // Flocker Hub endpoint.
-   def ep = "http://ec2-54-234-205-145.compute-1.amazonaws.com"
+   def ep = "http://ec2-54-166-4-3.compute-1.amazonaws.com:8084"
 
    // Run the tests individually. This script is creating a new volume
    // from a snapshot locally and taking snapshots of the DB test results

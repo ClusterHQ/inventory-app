@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Script to run tests.
 # Needs to be run as SUDO
 
@@ -24,6 +26,7 @@ JENKINSBUILDN=$6
 JENKINSBUILDID=$7
 JENKINSBUILDURL=$8
 JENKINSNODE=$9
+ENV="ci"
 
 # Test will be used as a holder for current test.
 TEST=$RUNTEST
@@ -35,7 +38,7 @@ use_snapshot() {
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT}
+   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH} ${ENV}
 }
 
 start_app() {
@@ -44,7 +47,7 @@ start_app() {
    # Output so we can debug whether snapshot was placed
    # and start the compose app.
    cat inventory-app/docker-compose.yml
-   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml up -d --build --remove-orphans
+   /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml up -d --build --remove-orphans
 }
 
 snap_with_failure() {
@@ -61,16 +64,16 @@ run_test() {
    echo "Build and run tests against snapshot data"
    # Run the tests against the application using the snapshot
    # (Should have same results as above, but with using a snapshot)
-   docker run --net=host --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
+   docker run --net=inventory_net -e FRONTEND_HOST="frontend" -e DATABASE_HOST="db" -e FRONTEND_PORT=8000 --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
       "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/${TEST}.js" || snap_with_failure
 }
 
 teardown() {
    echo "The final teardown"
    # Tear down the application and database again.
-   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop
-   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f
-   docker volume rm inventoryapp_rethink-data
+   /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml stop
+   /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml rm -f
+   docker volume rm inventory_rethink-data || true
 }
 
 snapnpush() {
@@ -98,11 +101,5 @@ check_if_failed() {
    fi
 }
 
-
-TESTS=("test_http_ping" "test_http_dealers" "test_http_vehicles")
-for i in "${TESTS[@]}"
-do
-   TEST=$i
-   run_group
-done
+run_group
 check_if_failed
