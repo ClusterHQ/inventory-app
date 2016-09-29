@@ -162,6 +162,8 @@ Here are some links about why Parallel Testing is great.
 - [Codeship ParallelCI](https://codeship.com/features/parallelci)
 - [Jenkins Parallel Testing](https://www.cloudbees.com/blog/parallelism-and-distributed-builds-jenkins)
 
+> Note, sometimes parallel testing will seem slow, this is only IF parallel tests are spun off an not enough Jenkins slaves are available or Jenkins slaves do not have certain resources such as Docker containers or artifacts downloaded yet. Subsequest runs will show the power of parallelism if it needs to launch or download artifacts.
+
 ```
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
