@@ -43,7 +43,7 @@ teardown() {
    # Tear down the application and database again.
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml stop
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml rm -f
-   docker volume rm ${GITBRANCH}-inventoryapp_rethink-data
+   docker volume rm ${GITBRANCH//-}inventoryapp_rethink-data
 }
 
 publish_staging_env() {

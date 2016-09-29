@@ -47,7 +47,18 @@ VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP 2>&1 | grep -E -o  '\/ch
 if [ "${ENV}" == "staging" ]; then
 	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' ${BRANCH}-inventory-app/docker-compose.yml
 elif [ "${ENV}" == "ci" ]; then
-	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml
+	if [ ! -f inventory-app/composecopied ]; then
+		# If this is the first run, make sure we make a copy of the original
+		# because CI will run tests individually, changing the volume each time.
+    	echo "First run, copying original compose file"
+    	cp inventory-app/docker-compose.yml inventory-app/docker-compose.yml.orig
+    	touch inventory-app/composecopied
+    	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml
+    else
+    	# Copy the un-touched original before adding the Flocker Hub Volume
+    	cp inventory-app/docker-compose.yml.orig inventory-app/docker-compose.yml
+    	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml
+	fi
 else
 	echo "Environemt [${ENV}] not recognized"
 	exit 1

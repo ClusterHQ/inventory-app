@@ -68,9 +68,9 @@ run_test() {
 teardown() {
    echo "The final teardown"
    # Tear down the application and database again.
-   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop
-   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f
-   docker volume rm inventoryapp_rethink-data
+   /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml stop
+   /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml rm -f
+   docker volume rm inventory_rethink-data
 }
 
 snapnpush() {
