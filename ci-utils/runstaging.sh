@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Script to run staging
 # Needs to be run as SUDO
 
@@ -16,13 +18,14 @@ HUBENDPOINT=$2
 SNAP=$3
 GITBRANCH=$4
 JENKINSBUILDURL=$5
+ENV="staging"
 
 use_snapshot() {
    echo "Use a specific snapshot"
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   ${GITBRANCH}-inventory-app/ci-utils/use_snap_staging.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH}
+   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH} ${ENV}
 }
 
 start_app() {
@@ -37,19 +40,22 @@ start_app() {
    docker ps --last 2
 }
 
+# Used in teardown() and publish_staging_env()
+L_NO_DASH_GITBRANCH=$(echo ${GITBRANCH//-} | tr '[:upper:]' '[:lower:]')
+
 teardown() {
    echo "Teardown app if running"
    # Tear down the application and database again.
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml stop
    /usr/local/bin/docker-compose -f ${GITBRANCH}-inventory-app/docker-compose.yml rm -f
-   docker volume rm ${GITBRANCH}-inventoryapp_rethink-data
+   docker volume rm ${L_NO_DASH_GITBRANCH}inventoryapp_rethink-data || true
 }
 
 publish_staging_env() {
    host=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
-   frontend_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH//-}inventoryapp_frontend_1))
-   rethinkdb_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH//-}inventoryapp_db_1 | grep 28015))
-   rethinkdb_ui_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${GITBRANCH//-}inventoryapp_db_1 | grep 8080))
+   frontend_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${L_NO_DASH_GITBRANCH}inventoryapp_frontend_1))
+   rethinkdb_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${L_NO_DASH_GITBRANCH}inventoryapp_db_1 | grep 28015))
+   rethinkdb_ui_port=$(cut -d ":" -f 2 <<< $(sudo docker port ${L_NO_DASH_GITBRANCH}inventoryapp_db_1 | grep 8080))
    echo "Your staging environment is available at ${host}:${frontend_port}"
    echo "Your staging database is available at ${host}:${rethinkdb_port}"
    echo "Your staging database UI is available at ${host}:${rethinkdb_ui_port}"
