@@ -42,7 +42,7 @@ export PATH=$PATH:/usr/local/sbin/
 /opt/clusterhq/bin/dpcli set volumehub $EP
 /opt/clusterhq/bin/dpcli sync volumeset $VS
 /opt/clusterhq/bin/dpcli pull snapshot $SNAP
-VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP 2>&1 | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
 if [ "${ENV}" == "staging" ]; then
 	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' ${BRANCH}-inventory-app/docker-compose.yml
