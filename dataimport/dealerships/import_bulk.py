@@ -12,7 +12,7 @@ dbhost = environ['DATABASE_HOST'] if 'DATABASE_HOST' in environ.keys() else 'loc
 
 ### Connect to the RethinkDB instance
 try:
-    dbconn = rdb.connect('localhost')
+    dbconn = rdb.connect(dbhost)
     print("Connected to RethinkDB")
 except:
     print("Could not establish connection to database service on {0}.".format(dbhost))

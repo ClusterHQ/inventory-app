@@ -14,8 +14,11 @@ vi docker-compose.yml
 ```
 
 ### Start the app + db
+
+`-p inventory` gives the network name `inventory_net`, without it, the imports wont work.
+
 ```
-   docker-compose -f inventory-app/docker-compose.yml up -d --build
+   docker-compose -p inventory -f inventory-app/docker-compose.yml up -d --build
 ```
 
 ### Load the data
