@@ -8,13 +8,7 @@ The below jenkins nodes have Docker + Flocker + Flocker Docker Plugin on AWS
 
 ### Static Nodes (these may change or go away over time)
 
-- Ubuntu Slave - i-1968cd28: ec2-54-173-232-99.compute-1.amazonaws.com 
-   - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
-
 - Ubuntu Slave - i-3f75d00e: ec2-52-91-245-179.compute-1.amazonaws.com
-   - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
-
-- Ubuntu Slave - i-2c71d41d: ec2-54-204-214-18.compute-1.amazonaws.com
    - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
 
 ### Dynamic Nodes
@@ -60,6 +54,16 @@ $ docker inspect -f "{{.Mounts}}" ubuntu_jenkins-seperates_1
 ]
 ```
 
+Backups can be seens in configured Flocker Volume
+```
+ubuntu@aws-jenkins-master:~$ sudo ls /flocker/0a59e071-4dd4-4fb1-89cf-afa625005bec
+backup_20160830_1835.tar.gz  backup_20160831_2206.tar.gz  backup_20160907_1635.tar.gz  backup_20160909_2215.tar.gz
+backup_20160831_0443.tar.gz  backup_20160901_1324.tar.gz  backup_20160907_1919.tar.gz  backup_20160914_2232.tar.gz
+backup_20160831_1500.tar.gz  backup_20160901_2207.tar.gz  backup_20160909_1423.tar.gz  backup_20160915_2303.tar.gz
+backup_20160831_1551.tar.gz  backup_20160902_1645.tar.gz  backup_20160909_1958.tar.gz  backup_20160922_1349.tar.gz
+backup_20160831_1650.tar.gz  backup_20160902_1825.tar.gz  backup_20160909_2004.tar.gz  backup_20160923_1825.tar.gz
+```
+
 ## Tests/Builds
 All tests with `test-` are just to test a deployment tag, slaves etc. You can read the description of each by clicking on them. Inventory-app is only hooked up to the -multi job to build each branch.
    
@@ -69,8 +73,6 @@ All tests with `test-` are just to test a deployment tag, slaves etc. You can re
   - (test for testing Docker Cloud setting in Jenkins)
 - test-ec2-autoprovisioning
   - (test for testing EC2 Auto Provisioning (dynamic) Nodes)
-- test-static-centos-dpcli
-  - (test to make sure CentOS static slaves are working properly)
 
  
 ### Inventory App Pipeline (inventory-pipeline-multi)
@@ -84,12 +86,15 @@ In the above pipeline, there are Build Slaves labeled with ‘v8s-dpcli’, this
 Right now ‘v8s’ nodes only have nodejs, npm, docker, and flocker on them, only use them if not interested in fs3/dpcli.
 
 
-### fs3/dpcli Slaves with CentOS 7/DPCLI (use cloud-init scripts)
+### fli Slaves with CentOS 7/fli (use cloud-init scripts)
 
 There are a few scripts in `ci-utils/` that can be used to boostrap CentOS 7 Jenkins slaves for
 them to be usable with docker, compose and dpcli. One is shown below.
 
 NOTE: this is different than the one used for PoCs, it assumes ZFS is installed on it already. E.g. like the base AMI used by engineering.
+
+The script below is sent to `cloud-init` which will set some git/fli tokens/users and kick off
+a script to install `fli`.
 
 ```
 #!/bin/bash
@@ -98,6 +103,8 @@ echo "export GITUSER=<github-user>" >> /home/centos/.bashrc
 echo "export GITUSER=<github-user>" >> /root/.bashrc
 echo "export GITTOKEN=<token>" >> /home/centos/.bashrc
 echo "export GITTOKEN=<token>" >> /root/.bashrc
+# Set VHUT Token
+echo "<token>" > /root/vhut.txt
 curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb TOKEN TAG jenkinsdemo
 ```
 
@@ -150,19 +157,26 @@ Example can be found here: http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/
 
 A code snippet of passing `volumeset` and `snapshot` to a parallel test can be seen below. These 3 parallel runs each run a specific test as well as use a specific volumeset and snapshot.
 
+Here are some links about why Parallel Testing is great.
+
+- [Codeship ParallelCI](https://codeship.com/features/parallelci)
+- [Jenkins Parallel Testing](https://www.cloudbees.com/blog/parallelism-and-distributed-builds-jenkins)
+
+> Note, sometimes parallel testing will seem slow, this is only IF parallel tests are spun off an not enough Jenkins slaves are available or Jenkins slaves do not have certain resources such as Docker containers or artifacts downloaded yet. Subsequest runs will show the power of parallelism if it needs to launch or download artifacts.
+
 ```
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_ping', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+      run_group('test_http_ping', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
     }
 }, 'parallel tests 2':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+      run_group('test_http_dealers', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
     }
 }, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles', '7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae', '1734c879-641c-41cd-92b5-f47704338a1d')
+      run_group('test_http_vehicles', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
     }
 }
 ```
@@ -177,5 +191,3 @@ Tests can be seen running in parallel on different slaves
 
 Test output will show each "stream" bases on the labels within `parallel`
 ![alt text](http://i.imgur.com/QcfhYKj.png)
-
-

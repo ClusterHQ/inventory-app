@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Script to run tests.
 # Needs to be run as SUDO
 
@@ -23,6 +25,7 @@ JENKINSBUILDN=$5
 JENKINSBUILDID=$6
 JENKINSBUILDURL=$7
 JENKINSNODE=$8
+ENV="ci"
 
 # Test will be used as a holder for current test.
 TEST=""
@@ -34,7 +37,7 @@ use_snapshot() {
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT}
+   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH} ${ENV}
 }
 
 start_app() {
@@ -67,9 +70,9 @@ run_test() {
 teardown() {
    echo "The final teardown"
    # Tear down the application and database again.
-   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml stop
-   /usr/local/bin/docker-compose -f inventory-app/docker-compose.yml rm -f
-   docker volume rm inventoryapp_rethink-data
+   /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml stop
+   /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml rm -f
+   docker volume rm inventory_rethink-data || true
 }
 
 snapnpush() {
