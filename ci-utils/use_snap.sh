@@ -51,13 +51,13 @@ if [ "${ENV}" == "staging" ]; then
 	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' ${BRANCH}-inventory-app/docker-compose.yml
 elif [ "${ENV}" == "ci" ]; then
 	if [ ! -f inventory-app/composecopied ]; then
-		# If this is the first run, make sure we make a copy of the original
-		# because CI will run tests individually, changing the volume each time.
+    	# If this is the first run, make sure we make a copy of the original
+    	# because CI will run tests individually, changing the volume each time.
     	echo "First run, copying original compose file"
     	cp inventory-app/docker-compose.yml inventory-app/docker-compose.yml.orig
     	touch inventory-app/composecopied
     	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml
-    else
+	else
     	# Copy the un-touched original before adding the Flocker Hub Volume
     	cp inventory-app/docker-compose.yml.orig inventory-app/docker-compose.yml
     	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' inventory-app/docker-compose.yml

@@ -72,7 +72,7 @@ teardown() {
    # Tear down the application and database again.
    /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml stop
    /usr/local/bin/docker-compose -p inventory -f inventory-app/docker-compose.yml rm -f
-   docker volume rm inventory_rethink-data
+   docker volume rm inventory_rethink-data || true
 }
 
 snapnpush() {
