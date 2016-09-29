@@ -157,6 +157,11 @@ Example can be found here: http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/
 
 A code snippet of passing `volumeset` and `snapshot` to a parallel test can be seen below. These 3 parallel runs each run a specific test as well as use a specific volumeset and snapshot.
 
+Here are some links about why Parallel Testing is great.
+
+- [Codeship ParallelCI](https://codeship.com/features/parallelci)
+- [Jenkins Parallel Testing](https://www.cloudbees.com/blog/parallelism-and-distributed-builds-jenkins)
+
 ```
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
