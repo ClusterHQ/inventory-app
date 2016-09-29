@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Script to run tests.
 # Needs to be run as SUDO
 

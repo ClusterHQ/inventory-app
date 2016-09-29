@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # This script should only be used when the
 # volume defined in docker-compose.yml should
 # need to be snapshotted and pushed. 
@@ -64,7 +66,12 @@ fi
 /opt/clusterhq/bin/dpcli sync volumeset $VOLUMESET
 /opt/clusterhq/bin/dpcli push snapshot $VOLSNAP
 
+# This will only work if VOLUMESET is the UUID for
+# versions before September 25. Using human readable
+# names was added after this, so this may be blank
+# if using and older version.
+# SO we use the UUID just in case.
+IDOFSET=$(/opt/clusterhq/bin/dpcli show volumeset | grep $VOLUMESET | cut -d" " -f2)
 echo "Showing specific snapshots for this build"
-echo "/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET | grep ${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
-/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
+/opt/clusterhq/bin/dpcli show snapshot --volumeset $IDOFSET | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
 

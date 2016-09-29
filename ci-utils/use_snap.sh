@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # This script will take a Flocker Hub endpoint, volumeset
 # and snapshot as arguments and create a volume from the
 # snapshot and change the `- rethink-data:` volume to
@@ -10,6 +12,7 @@
 # SNAP   is a Flocker Hub Snapshot
 # EP     is the Flocker Hub URL endpoint used by the CLI.
 # VPATH  is the /chq/UUID path returned by `dpcli create volume`
+# ENV    is the deployment environment CI/CD (ci) or Staging (staging)
 # --------------------- END -----------------------------------------
 
 VS=$1

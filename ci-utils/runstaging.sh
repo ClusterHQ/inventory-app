@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Script to run staging
 # Needs to be run as SUDO
 
