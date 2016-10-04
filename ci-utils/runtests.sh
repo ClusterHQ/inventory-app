@@ -100,11 +100,16 @@ check_if_failed() {
    fi
 }
 
-
-TESTS=("test_http_ping" "test_http_dealers" "test_http_vehicles")
+# Get all tests but seperately 
+TESTS=$(ls frontend/test/ | grep "test_" | tr "\n" " ")
+IFS=` `
 for i in "${TESTS[@]}"
 do
+   # Run the test wrapped in a 
+   # create from snap, snap, push.
    TEST=$i
    run_group
 done
+unset IFS
 check_if_failed
+
