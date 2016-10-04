@@ -1,3 +1,0 @@
-pex
-tox
-requests
