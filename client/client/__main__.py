@@ -11,3 +11,12 @@ baseurl = 'http://localhost:8000/'
 import argparse #noqa
 import sys #noqa
 
+from client import  
+
+PARSER = argparse.ArgumentParser()
+SUBPARSERS = PARSER.add_subparsers()
+explode.make_parser(SUBPARSERS)
+make.make_parser(SUBPARSERS)
+encrypt.make_parser(SUBPARSERS)
+start.make_parser(SUBPARSERS)
+upload.make_parser(SUBPARSERS) 
