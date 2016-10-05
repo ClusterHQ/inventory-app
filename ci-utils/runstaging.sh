@@ -11,6 +11,7 @@ set -e
 # SNAP             is a Flocker Hub Snapshot
 # GITBRANCH        is the Github Branch name being built, it is provided by the Jenkins env.
 # JENKINSBUILDURL  is the Jenkins Build ID URL, it is provided by the Jenkins env.
+# JENKINSBUILDN    is the Jenkins Build Number
 # --------------------- END -----------------------------------------
 
 VOLUMESET=$1
@@ -18,6 +19,7 @@ HUBENDPOINT=$2
 SNAP=$3
 GITBRANCH=$4
 JENKINSBUILDURL=$5
+JENKINSBUILDN=$6
 ENV="staging"
 
 init_fli(){
@@ -35,7 +37,7 @@ use_snapshot() {
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${GITBRANCH} ${ENV}
+   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${GITBRANCH} ${ENV} ${JENKINSBUILDN}
 }
 
 start_app() {

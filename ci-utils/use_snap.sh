@@ -12,12 +12,14 @@ set -e
 # SNAP   is a Flocker Hub Snapshot
 # VPATH  is the /chq/UUID path returned by `dpcli create volume`
 # ENV    is the deployment environment CI/CD (ci) or Staging (staging)
+# BUILDN is the Jenkins Build Number
 # --------------------- END -----------------------------------------
 
 VS=$1
 SNAP=$2
 BRANCH=$3
 ENV=$4
+BUILDN=$5
 
 # Check for "needed" vars
 if [ -z "$VS" ]; then
@@ -35,7 +37,7 @@ export PATH=$PATH:/usr/local/sbin/
 /opt/clusterhq/bin/dpcli sync volumeset $VS
 IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v ${VS} | grep ${SNAP} | cut -d" " -f3)
 /opt/clusterhq/bin/dpcli pull snapshot $IDOFSNAP
-VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP volumeFrom-$SNAP-${BUILDN} | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
 if [ "${ENV}" == "staging" ]; then
 	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' ${BRANCH}-inventory-app/docker-compose.yml
