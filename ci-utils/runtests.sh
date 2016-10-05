@@ -40,6 +40,7 @@ init_fli(){
       # vhut token is set as a secret inside the jenkins master
       /opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
       /opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
+   fi
 }
 
 use_snapshot() {
