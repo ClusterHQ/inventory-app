@@ -32,8 +32,8 @@ fi
 
 # should always check for init, but not fail if init already done.
 export PATH=$PATH:/usr/local/sbin/
-IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v inventory-app | grep initial_ia_snap | cut -d" " -f3)
 /opt/clusterhq/bin/dpcli sync volumeset $VS
+IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v ${VS} | grep ${SNAP} | cut -d" " -f3)
 /opt/clusterhq/bin/dpcli pull snapshot $IDOFSNAP
 VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
