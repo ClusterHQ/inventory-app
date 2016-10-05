@@ -32,12 +32,23 @@ TEST=""
 FAILED=false
 FAILED_TESTS=()
 
+init_fli(){
+   # Check if init has been run or if its a new slave.
+   if [ ! -f /tmp/fliinitdone ]; then
+      /opt/clusterhq/bin/dpcli init --zpool chq -f || true
+      touch /tmp/fliinitdone
+      # vhut token is set as a secret inside the jenkins master
+      /opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
+      /opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
+   fi
+}
+
 use_snapshot() {
    echo "Use a specific snapshot"
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH} ${ENV}
+   inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${GITBRANCH} ${ENV} ${JENKINSBUILDN}
 }
 
 start_app() {
@@ -56,7 +67,7 @@ snap_with_failure() {
    # Take a snapshot of the volume from snapshot used in tests to capture
    # the state of the database after the tests , also include specific information
    # about the branch, build, build number etc.
-   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${HUBENDPOINT} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} "Failed-${TEST}" "${JENKINSNODE}"
+   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} "Failed-${TEST}" "${JENKINSNODE}"
 }
 
 run_test() {
@@ -80,11 +91,12 @@ snapnpush() {
    # Take a snapshot of the volume from snapshot used in tests to capture
    # the state of the database after the tests, also include specific information
    # about the branch, build, build number etc.
-   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${HUBENDPOINT} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} ${TEST} "${JENKINSNODE}"
+   inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} ${TEST} "${JENKINSNODE}"
 }
 
 run_group() {
    echo "Running test: inventory-app.test.${TEST} with snapshot: ${SNAP}"
+   init_fli
    use_snapshot
    start_app
    run_test
