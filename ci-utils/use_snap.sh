@@ -35,7 +35,17 @@ fi
 export PATH=$PATH:/usr/local/sbin/
 /opt/clusterhq/bin/dpcli sync volumeset $VS
 # BRANCH, NAME, ID, SIZE, we want ID so get 3rd
+# but sometimes values are blank... :( so we want 2nd.
+# need something like `dpcli get volume-path <volume-name>
+# BRANCH                  NAME            ID     SIZE ...
+# inventory-app-branch    initial_ia_snap <uuid> 0B   ...
+#                         initial_ia_snap <UUID> 0B   ...
 IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v ${VS} | grep ${SNAP} | head -1 | awk '{print $3}')
+if [[ "$IDOFSNAP" == *B ]]
+then
+	echo "volume didnt have branch name, using other method"
+	IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v ${VS} | grep ${SNAP} | head -1 | awk '{print $2}')
+fi
 /opt/clusterhq/bin/dpcli pull snapshot $IDOFSNAP
 VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP \
 	    volumeFrom-$SNAP-${BUILDN} | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
