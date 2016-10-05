@@ -12,7 +12,6 @@ set -e
 
 # -------------------- Params ---------------------------------------
 # VOLUMESET        is a Flocker Hub Volumeset, which owns snapshots and variants
-# HUBENDPOINT      is the Flocker Hub URL endpoint used by the CLI.
 # GITBRANCH        is the Github Branch name being built, it is provided by the Jenkins env.
 # JENKINSBUILDN    is the Jenkins Build Number, it is provided by the Jenkins env.
 # JENKINSBUILDID   is the Jenkins Build ID, it is provided by the Jenkins env.
@@ -23,13 +22,12 @@ set -e
 # --------------------- END -----------------------------------------
 
 VOLUMESET=$1
-HUBENDPOINT=$2
-GITBRANCH=$3
-JENKINSBUILDN=$4
-JENKINSBUILDID=$5
-JENKINSBUILDURL=$6
-TEST=$7
-JENKINSNODE=$8
+GITBRANCH=$2
+JENKINSBUILDN=$3
+JENKINSBUILDID=$4
+JENKINSBUILDURL=$5
+TEST=$6
+JENKINSNODE=$7
 
 # Check for "needed" vars
 if [ -z "$VOLUMESET" ]; then
@@ -37,15 +35,8 @@ if [ -z "$VOLUMESET" ]; then
     exit 1
 fi  
 
-if [ -z "$HUBENDPOINT" ]; then
-    echo "HUBENDPOINT was unset, exiting"
-    exit 1
-fi  
-
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 PATH=$PATH:/usr/local/sbin/
-/opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
-/opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
 # We may be able to use just the Github branch name as the dpcli
 # branch but right now we run into VOL-201 
 echo "/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch ${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN} -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/}"

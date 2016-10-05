@@ -10,16 +10,14 @@ set -e
 # -------------------- Params ---------------------------------------
 # VS     is a Flocker Hub Volumeset, which owns snapshots and variants
 # SNAP   is a Flocker Hub Snapshot
-# EP     is the Flocker Hub URL endpoint used by the CLI.
 # VPATH  is the /chq/UUID path returned by `dpcli create volume`
 # ENV    is the deployment environment CI/CD (ci) or Staging (staging)
 # --------------------- END -----------------------------------------
 
 VS=$1
 SNAP=$2
-EP=$3
-BRANCH=$4
-ENV=$5
+BRANCH=$3
+ENV=$4
 
 # Check for "needed" vars
 if [ -z "$VS" ]; then
@@ -32,17 +30,8 @@ if [ -z "$SNAP" ]; then
     exit 1
 fi
 
-if [ -z "$EP" ]; then
-    echo "EP was unset, exiting"
-    exit 1
-fi  
-
 # should always check for init, but not fail if init already done.
 export PATH=$PATH:/usr/local/sbin/
-/opt/clusterhq/bin/dpcli init || true
-# vhut token is set as a secret inside the jenkins master
-/opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
-/opt/clusterhq/bin/dpcli set volumehub $EP
 /opt/clusterhq/bin/dpcli sync volumeset $VS
 /opt/clusterhq/bin/dpcli pull snapshot $SNAP
 VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')

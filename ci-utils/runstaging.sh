@@ -20,12 +20,22 @@ GITBRANCH=$4
 JENKINSBUILDURL=$5
 ENV="staging"
 
+init_fli(){
+   # Check if init has been run or if its a new slave.
+   if [ ! -f inventory-app/fliinitdone ]; then
+      /opt/clusterhq/bin/dpcli init --zpool chq -f || true
+      touch inventory-app/fliinitdone
+      # vhut token is set as a secret inside the jenkins master
+      /opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
+      /opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
+}
+
 use_snapshot() {
    echo "Use a specific snapshot"
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${HUBENDPOINT} ${GITBRANCH} ${ENV}
+   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${GITBRANCH} ${ENV}
 }
 
 start_app() {
