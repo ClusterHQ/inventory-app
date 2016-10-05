@@ -74,6 +74,7 @@ publish_staging_env() {
 
 run_group() {
    echo "Bringing up staging for ${GITBRANCH}-inventory-app with snapshot: ${SNAP}"
+   init_fli
    teardown
    use_snapshot
    start_app

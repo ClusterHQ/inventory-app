@@ -96,6 +96,7 @@ snapnpush() {
 
 run_group() {
    echo "Running test: inventory-app.test.${TEST} with snapshot: ${SNAP}"
+   init_fli
    use_snapshot
    start_app
    run_test
