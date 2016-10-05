@@ -132,7 +132,7 @@ for i in "${TESTS[@]}"
 do
    # Run the test wrapped in a 
    # create from snap, snap, push.
-   TEST=$i
+   TEST=${i//.js}
    run_group
 done
 unset IFS
