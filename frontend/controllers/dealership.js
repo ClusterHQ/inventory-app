@@ -12,7 +12,8 @@ module.exports.addDealership = function (req, res) {
 			conn.close();
 		});
 	});
-	res.send(201, { status: 'Successful' })
+	var status = 201;
+	res.status(status).send({ status: 'Successful' })
 }
 
 module.exports.getDealerships = function (req, res) {

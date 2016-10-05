@@ -23,9 +23,11 @@ module.exports.attach = function (expressApp) {
 	// GET /vehicles (All Vehicles)
 	expressApp.get('/vehicles', require('../controllers/vehicles.js').getVehicles)
 
+	// POST /dealerships 
+	expressApp.post('/vehicles', require('../controllers/vehicles.js').addVehicle)
+
 	/* TODO, remove from list when complete */
 
-	//(POST) vehicles to Dealership(s)
 	//(DELETE) Remove vehicles from Dealership(s)
 	//(GET) A Dealership (by ID)
 	//(GET) A Vehicle (by ID)
