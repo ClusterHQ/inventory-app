@@ -11,12 +11,13 @@ baseurl = 'http://localhost:8000/'
 import argparse #noqa
 import sys #noqa
 
-from client import  
+from client import connection, dealerships, vehicles
 
-PARSER = argparse.ArgumentParser()
+PARSER = argparse.ArgumentParser(description='Primary argument parser', prog='Specify the desired sub-command.')
 SUBPARSERS = PARSER.add_subparsers()
-explode.make_parser(SUBPARSERS)
-make.make_parser(SUBPARSERS)
-encrypt.make_parser(SUBPARSERS)
-start.make_parser(SUBPARSERS)
-upload.make_parser(SUBPARSERS) 
+connection.make_parser(SUBPARSERS)
+dealerships.make_parser(SUBPARSERS)
+vehicles.make_parser(SUBPARSERS)
+
+args = PARSER.parse_args()
+args.func(args)

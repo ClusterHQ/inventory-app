@@ -12,3 +12,4 @@ setup(name='InventoryAppClient',
       url='https://github.com/clusterhq/inventory-app',
       packages=['client'],
      )
+
