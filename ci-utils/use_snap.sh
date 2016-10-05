@@ -32,9 +32,10 @@ fi
 
 # should always check for init, but not fail if init already done.
 export PATH=$PATH:/usr/local/sbin/
+IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v inventory-app | grep initial_ia_snap | cut -d" " -f3)
 /opt/clusterhq/bin/dpcli sync volumeset $VS
-/opt/clusterhq/bin/dpcli pull snapshot $SNAP
-VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $SNAP | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+/opt/clusterhq/bin/dpcli pull snapshot $IDOFSNAP
+VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
 if [ "${ENV}" == "staging" ]; then
 	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' ${BRANCH}-inventory-app/docker-compose.yml
