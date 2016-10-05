@@ -28,7 +28,7 @@ node ('v8s-dpcli-prov') {
       // Volumeset the snapshot belongs to for master
       vs = 'inventory-app'
       // Snapshot used for tests in branch
-      snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
+      snap = 'initial_ia_snap'
       echo "Using Snapshot ${snap} for branch: master"
    }else{
       // **********************************************
@@ -38,7 +38,7 @@ node ('v8s-dpcli-prov') {
       // Volumeset the snapshot belongs to for dev branch
       vs = 'inventory-app'
       // Snapshot used for tests in branch
-      snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
+      snap = 'initial_ia_snap'
       echo "Using Snapshot: ${snap} Branch: ${env.BRANCH_NAME}"
    }
    
@@ -53,7 +53,7 @@ node ('v8s-dpcli-prov') {
 }
 
 node ('v8s-dpcli-prov-staging') {
-    stage 'Staging: Make sure cloud-init done'
+   stage 'Staging: Make sure cloud-init done'
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
@@ -87,7 +87,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for master
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
+      staging_snap = 'initial_ia_snap'
       echo "Using Snapshot ${staging_snap} for branch: master"
    }else{
       // **********************************************
@@ -97,7 +97,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for dev branch
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
+      staging_snap = 'initial_ia_snap'
       echo "Using Snapshot: ${staging_snap} Branch: ${env.BRANCH_NAME}"
    }
 
@@ -105,5 +105,5 @@ node ('v8s-dpcli-prov-staging') {
    def staging_ep = "http://ec2-54-166-4-3.compute-1.amazonaws.com:8084"
 
    // Run staging
-   sh "sudo ${env.BRANCH_NAME}-inventory-app/ci-utils/runstaging.sh ${staging_vs} ${staging_ep} ${staging_snap} ${env.BRANCH_NAME} ${env.BUILD_URL}"
+   sh "sudo ${env.BRANCH_NAME}-inventory-app/ci-utils/runstaging.sh ${staging_vs} ${staging_ep} ${staging_snap} ${env.BRANCH_NAME} ${env.BUILD_URL} ${env.BUILD_NUMBER}"
 }
