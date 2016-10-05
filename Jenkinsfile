@@ -53,7 +53,7 @@ node ('v8s-dpcli-prov') {
 }
 
 node ('v8s-dpcli-prov-staging') {
-    stage 'Staging: Make sure cloud-init done'
+   stage 'Staging: Make sure cloud-init done'
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
