@@ -35,7 +35,7 @@ if [ -z "$VOLUMESET" ]; then
     exit 1
 fi  
 
-WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f2 -d"/")
+WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
 PATH=$PATH:/usr/local/sbin/
 # We may be able to use just the Github branch name as the dpcli
 # branch but right now we run into VOL-201 
@@ -62,7 +62,7 @@ fi
 # names was added after this, so this may be blank
 # if using and older version.
 # SO we use the UUID just in case.
-IDOFSET=$(/opt/clusterhq/bin/dpcli show volumeset | grep $VOLUMESET | cut -d" " -f2)
+#IDOFSET=$(/opt/clusterhq/bin/dpcli show volumeset | grep $VOLUMESET | cut -d" " -f2)
 echo "Showing specific snapshots for this build"
-/opt/clusterhq/bin/dpcli show snapshot --volumeset $IDOFSET | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
+/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
 
