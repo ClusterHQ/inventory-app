@@ -3,3 +3,4 @@ public/bower_components/
 .vscode/
 client/~
 client/build
+*.pyc
