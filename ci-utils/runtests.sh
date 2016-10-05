@@ -114,7 +114,7 @@ check_if_failed() {
 
 # Get all tests but seperately 
 TESTS=$(ls frontend/test/ | grep "test_" | tr "\n" " ")
-IFS=` `
+IFS=" "
 for i in "${TESTS[@]}"
 do
    # Run the test wrapped in a 
