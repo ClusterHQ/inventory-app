@@ -32,13 +32,17 @@ if [ -z "$SNAP" ]; then
     exit 1
 fi
 
-# should always check for init, but not fail if init already done.
 export PATH=$PATH:/usr/local/sbin/
 /opt/clusterhq/bin/dpcli sync volumeset $VS
-IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v ${VS} | grep ${SNAP} | cut -d" " -f3)
+# BRANCH, NAME, ID, SIZE, we want ID so get 3rd
+IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v ${VS} | grep ${SNAP} | head -1 | awk '{print $3}')
 /opt/clusterhq/bin/dpcli pull snapshot $IDOFSNAP
-VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP volumeFrom-$SNAP-${BUILDN} | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP \
+	    volumeFrom-$SNAP-${BUILDN} | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
+# Load the Volume Path into compose. Later we can use `fli-docker`
+# to eliminate the need for this being bash. 
+# Will become 1) create manifest dynamically, then `fli-docker -f manifest.yml`
 if [ "${ENV}" == "staging" ]; then
 	/usr/bin/sed -i 's@\- rethink-data:@\- '"${VPATH}"':@' ${BRANCH}-inventory-app/docker-compose.yml
 elif [ "${ENV}" == "ci" ]; then
