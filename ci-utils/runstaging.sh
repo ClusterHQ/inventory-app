@@ -24,9 +24,9 @@ ENV="staging"
 
 init_fli(){
    # Check if init has been run or if its a new slave.
-   if [ ! -f inventory-app/fliinitdone ]; then
+   if [ ! -f /tmp/fliinitdone ]; then
       /opt/clusterhq/bin/dpcli init --zpool chq -f || true
-      touch inventory-app/fliinitdone
+      touch /tmp/fliinitdone
       # vhut token is set as a secret inside the jenkins master
       /opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
       /opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
