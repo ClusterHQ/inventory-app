@@ -32,14 +32,26 @@ TEST=""
 FAILED=false
 FAILED_TESTS=()
 
+check_for_failure() {
+   if [ $? -eq 0 ]; then
+      echo "OK"
+   else
+      echo "FAIL"
+      exit 1
+   fi
+}
+
 init_fli(){
    # Check if init has been run or if its a new slave.
    if [ ! -f /tmp/fliinitdone ]; then
       /opt/clusterhq/bin/dpcli init --zpool chq -f || true
       touch /tmp/fliinitdone
+      check_for_failure
       # vhut token is set as a secret inside the jenkins master
       /opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
+      check_for_failure
       /opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
+      check_for_failure
    fi
 }
 
@@ -92,6 +104,7 @@ snapnpush() {
    # the state of the database after the tests, also include specific information
    # about the branch, build, build number etc.
    inventory-app/ci-utils/snapnpush.sh ${VOLUMESET} ${GITBRANCH} ${JENKINSBUILDN} ${JENKINSBUILDID} ${JENKINSBUILDURL} ${TEST} "${JENKINSNODE}"
+   check_for_failure
 }
 
 run_group() {
@@ -113,7 +126,8 @@ check_if_failed() {
 }
 
 # Get all tests but seperately 
-IFS=' ' read -r -a TESTS <<< $(ls frontend/test/ | grep "test_" | tr "\n" " ")
+IFS=' ' read -r -a TESTS <<< $(ls inventory-app/frontend/test/ | grep "test_" | tr "\n" " ")
+check_for_failure
 for i in "${TESTS[@]}"
 do
    # Run the test wrapped in a 
