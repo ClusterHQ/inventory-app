@@ -32,9 +32,15 @@ module.exports.attach = function (expressApp) {
 	//(GET) A Vehicle (by ID)
 	expressApp.get('/vehicles/:id', require('../controllers/vehicles.js').getVehicle)
 
+	//(DELETE) Remove vehicle
+	expressApp.delete('/vehicles/:id', require('../controllers/vehicles.js').delVehicle)
+
+	//(DELETE) Remove dealership
+	expressApp.delete('/dealerships/:name', require('../controllers/dealership.js').delDealership)
+
+
 	/* TODO, remove from list when complete */
 
-	//(DELETE) Remove vehicles from Dealership(s)
 	//(GET) Dealerships by attribute (name, address, phone)
 	//(GET) Vehicles by attribute (make, model, year, vin)
 

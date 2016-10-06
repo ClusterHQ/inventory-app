@@ -13,7 +13,7 @@ module.exports.addDealership = function (req, res) {
 		});
 	});
 	var status = 201;
-	res.status(status).send({ status: 'Successful' })
+	res.status(status).send({ status: 'Create Successful' })
 }
 
 module.exports.getDealerships = function (req, res) {
@@ -42,4 +42,17 @@ module.exports.getDealership = function (req, res) {
         });
     });
   })
+}
+
+module.exports.delDealership = function (req, res) {
+  console.log('Received DELETE /dealerships/:name request')
+  dbconn.then(function(conn) {
+    rdb.table('Dealership').filter({name: req.params.name}).delete().run(conn, function(err, cursor) {
+    	if (err) throw err;
+    	console.log(results);
+		conn.close();
+    });
+  });
+  var status = 200;
+  res.status(status).send({ status: 'Delete Successful' })
 }
