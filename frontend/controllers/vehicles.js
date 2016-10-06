@@ -31,3 +31,17 @@ module.exports.getVehicles = function (req, res) {
 		});
 	})
 }
+
+module.exports.getVehicle = function (req, res) {
+	console.log('recieved /vehicles/:id request')
+	dbconn.then(function(conn) {
+      rdb.table('Vehicle').filter({id: req.params.id}).run(conn, function(err, cursor) {
+      	if (err) throw err;
+      	cursor.toArray(function(err, result) {
+          	if (err) throw err;
+          	console.log("Sending back Vehicle results");
+          	res.send(JSON.stringify(result, null, 2));
+        	});
+    	});
+  	})
+}

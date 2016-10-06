@@ -29,3 +29,17 @@ module.exports.getDealerships = function (req, res) {
     });
   })
 }
+
+module.exports.getDealership = function (req, res) {
+  console.log('Received GET /dealerships/:name request')
+  dbconn.then(function(conn) {
+    rdb.table('Dealership').filter({name: req.params.name}).run(conn, function(err, cursor) {
+      if (err) throw err;
+      cursor.toArray(function(err, result) {
+          if (err) throw err;
+          console.log("Sending back Dealership results");
+          res.send(JSON.stringify(result, null, 2));
+        });
+    });
+  })
+}
