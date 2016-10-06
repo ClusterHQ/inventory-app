@@ -1,3 +1,6 @@
 node_modules/
 public/bower_components/
 .vscode/
+client/~
+client/build
+*.pyc
