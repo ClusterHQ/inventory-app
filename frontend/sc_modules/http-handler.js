@@ -23,7 +23,7 @@ module.exports.attach = function (expressApp) {
 	// GET /vehicles (All Vehicles)
 	expressApp.get('/vehicles', require('../controllers/vehicles.js').getVehicles)
 
-	// POST /dealerships 
+	// POST /vihicles
 	expressApp.post('/vehicles', require('../controllers/vehicles.js').addVehicle)
 
 	//(GET) A Dealership (by ID)
