@@ -8,6 +8,7 @@ var port = process.env.DATABASE_PORT || 28015;
 
 // Setup the connection
 exports.connect = function connect() {
+	console.log('Connecting to RethinkDB')
 	return r.connect({host: host, port: port}) 
 }
 

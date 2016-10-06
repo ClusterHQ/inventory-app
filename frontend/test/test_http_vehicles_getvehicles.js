@@ -8,7 +8,7 @@
 r = require('rethinkdb');
 var assert = require('assert');
 var request = require('request');
-var db = require('./dbutils')
+var db = require('../db/dbutils')
 var dbConnect = db.connect();
 
 var apihost = process.env.FRONTEND_HOST || 'localhost';
