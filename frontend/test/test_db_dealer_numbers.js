@@ -7,8 +7,7 @@
 /* import libs for tests*/
 r = require('rethinkdb');
 var assert = require('assert');
-var db = require('./dbutils');
-var dbConnect = db.connect();
+var db = require('../db/dbutils');
 
 var apihost = process.env.FRONTEND_HOST || 'localhost'
 var apiport = process.env.FRONTEND_PORT || 8000;
@@ -21,6 +20,7 @@ describe('Test Dealer Phone Numbers for Dealerships', function() {
   describe('Testing dealership phone numbers', function() {
 
     it('dealership phone numbers should be 012-345-6789', function(done) {
+        var dbConnect = db.connect();
         dbConnect.then(function(conn) {
           r.table('Dealership').run(conn, function(err, results){
             results.each(function(err, dealer) {

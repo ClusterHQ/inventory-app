@@ -18,6 +18,7 @@ module.exports.addDealership = function (req, res) {
 
 module.exports.getDealerships = function (req, res) {
   console.log('Received GET /dealerships request')
+  dbconn = db.connect();
   dbconn.then(function(conn) {
     rdb.table('Dealership').run(conn, function(err, cursor) {
       if (err) throw err;
@@ -32,6 +33,7 @@ module.exports.getDealerships = function (req, res) {
 
 module.exports.getDealership = function (req, res) {
   console.log('Received GET /dealerships/:name request')
+  dbconn = db.connect();
   dbconn.then(function(conn) {
     rdb.table('Dealership').filter({name: req.params.name}).run(conn, function(err, cursor) {
       if (err) throw err;
@@ -46,10 +48,10 @@ module.exports.getDealership = function (req, res) {
 
 module.exports.delDealership = function (req, res) {
   console.log('Received DELETE /dealerships/:name request')
+  dbconn = db.connect();
   dbconn.then(function(conn) {
     rdb.table('Dealership').filter({name: req.params.name}).delete().run(conn, function(err, cursor) {
     	if (err) throw err;
-    	console.log(results);
 		conn.close();
     });
   });

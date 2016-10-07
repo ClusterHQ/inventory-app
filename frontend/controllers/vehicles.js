@@ -20,6 +20,7 @@ module.exports.addVehicle = function (req, res) {
 
 module.exports.getVehicles = function (req, res) {
 	console.log('recieved vehicles request')
+	dbconn = db.connect();
 	dbconn.then(function(conn) { 
 		rdb.table('Vehicle').run(conn, function(err, cursor) {
 			if (err) throw err;
@@ -34,6 +35,7 @@ module.exports.getVehicles = function (req, res) {
 
 module.exports.getVehicle = function (req, res) {
 	console.log('recieved /vehicles/:id request')
+	dbconn = db.connect();
 	dbconn.then(function(conn) {
       rdb.table('Vehicle').filter({id: req.params.id}).run(conn, function(err, cursor) {
       	if (err) throw err;
@@ -48,10 +50,10 @@ module.exports.getVehicle = function (req, res) {
 
 module.exports.delVehicle = function (req, res) {
 	console.log('recieved DELETE /vehicles/:id request')
+	dbconn = db.connect();
 	dbconn.then(function(conn) {
       rdb.table('Vehicle').filter({id: req.params.id}).delete().run(conn, function(err, cursor) {
       	if (err) throw err;
-    	console.log(results);
 		conn.close();
   		});	
 	});
