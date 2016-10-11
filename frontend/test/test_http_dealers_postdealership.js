@@ -50,6 +50,25 @@ describe('POST HTTPTests for Dealerships', function() {
       })
     })
 
+    it('/dealerships POST should return HTTP 400 Bad Request', function (done) {
+      request({
+        url: util.format('http://%s:%s/dealerships', apihost, apiport),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        json: {
+          name: 'New dealer',
+          // missing 'phone'
+          addr: '123 Street, City, State, ######-####'
+        }
+    }, function (err, res, body) {
+        if (err) throw (err);
+        assert.strictEqual(res.statusCode, 400)
+        done();
+      })
+    })
+
   });
   /*end tests*/
 });

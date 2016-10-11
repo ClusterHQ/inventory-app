@@ -35,10 +35,13 @@ describe('POST HTTPTests for Dealerships', function() {
       }, function (err, res, body) {
         if (err) throw (err);
         if (res.statusCode == 201) {
+          // if POST went through, let's retreive it.
           request({
             url: util.format('http://%s:%s/dealerships/New%20dealer', apihost, apiport),
             method: 'GET'
           }, function (err, res, body) {
+            // A dealer object to compare, e.g. what we expect
+            // the response to look like.
             // JSON pars + stringify always does it alphabetically.
             var dealerObj = {
               addr: '123 Street, City, State, ######-####',
@@ -46,6 +49,8 @@ describe('POST HTTPTests for Dealerships', function() {
               name: 'New dealer',
               phone: '555-999-1122'
             }
+            // Let us remove the Dealer since we have it in memory
+            // in the top-level 'body'
             request({
               uri: util.format('http://%s:%s/dealerships/%s', apihost, apiport, 'New%20Dealer'),
               method: "DELETE"}, function (error, response, body) {
@@ -58,6 +63,7 @@ describe('POST HTTPTests for Dealerships', function() {
                 console.log(response.statusCode)
               }
             })
+            // Compare the top-level 'body', which should be the same as our dealer object
             assert.strictEqual(JSON.stringify(JSON.parse(body)[0]), JSON.stringify(dealerObj));
             done();
           })
