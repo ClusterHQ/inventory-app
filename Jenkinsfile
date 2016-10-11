@@ -6,41 +6,33 @@ parallel 'parallel tests 1':{
     }
 }, 'parallel tests 2':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers', 'initial_ia_snap', 'inventory-app')
-    }
-}, 'parallel tests 3':{
-    node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles', 'initial_ia_snap', 'inventory-app')
-    }
-}, 'parallel tests 4':{
-    node('v8s-dpcli-prov'){
       run_group('test_db_dealer_numbers', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 5':{
+}, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
       run_group('test_db_vehicle_vins', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 6':{
+}, 'parallel tests 4':{
     node('v8s-dpcli-prov'){
       run_group('test_http_dealers_getdealerships', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 7':{
+}, 'parallel tests 5':{
     node('v8s-dpcli-prov'){
       run_group('test_http_dealers_postdealerships', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 8':{
+}, 'parallel tests 6':{
     node('v8s-dpcli-prov'){
       run_group('test_http_dealers_postgetdealers', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 9':{
+}, 'parallel tests 7':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles_getvehicles', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 3':{
+}, 'parallel tests 8':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles_postgetvehicle', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 10':{
+}, 'parallel tests 9':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles_postvehicle', 'initial_ia_snap', 'inventory-app')
     }
