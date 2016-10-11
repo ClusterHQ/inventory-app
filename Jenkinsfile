@@ -1,15 +1,36 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
+    //run_group(test_to_run, Snapshot, VolumeSet)
     node('v8s-dpcli-prov'){
-      run_group('test_http_ping', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
+      run_group('test_http_ping', 'initial_ia_snap', 'inventory-app')
     }
 }, 'parallel tests 2':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
+      run_group('test_http_dealers', 'initial_ia_snap', 'inventory-app')
     }
 }, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
+      run_group('test_http_vehicles', 'initial_ia_snap', 'inventory-app')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', 'initial_ia_snap', 'inventory-app')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', 'initial_ia_snap', 'inventory-app')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', 'initial_ia_snap', 'inventory-app')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', 'initial_ia_snap', 'inventory-app')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles', 'initial_ia_snap', 'inventory-app')
     }
 }
 
@@ -42,8 +63,8 @@ def run_group(test, volsnap, volset) {
       // **********************************************
       // Volumeset the snapshot belongs to for master
       vs = 'inventory-app'
-      // Snapshot used for tests in master
-      snap = 'd6c5441a-9af2-47d5-9010-3c6e5ccad672'
+      // Snapshot used for tests in branch
+      snap = 'initial_ia_snap'
       echo "Using Snapshot ${vs} for branch: master"
    }else{
       // **********************************************
