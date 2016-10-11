@@ -1,4 +1,4 @@
-/* Test HTTP API for Dealers
+/* Test HTTP API for Vehicles
    These tests are meant to run against a deployment of the app
    which means to run docker-compose up and then run the tests
    and then docker-compose stop/rm
