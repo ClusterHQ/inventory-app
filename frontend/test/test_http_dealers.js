@@ -8,7 +8,7 @@
 r = require('rethinkdb');
 var assert = require('assert');
 var request = require('request');
-var db = require('./dbutils');
+var db = require('../db/dbutils');
 var dbConnect = db.connect();
 
 var apihost = process.env.FRONTEND_HOST || 'localhost'
@@ -44,6 +44,24 @@ describe('HTTPTests for Dealerships', function() {
         });
       });
     });
+
+    it('/dealerships POST should return HTTP 201 Created', function () {
+      request({
+        url: util.format('http://%s:%s/dealerships', apihost, apiport),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        json: {
+          name: 'New dealer',
+          phone: '555-999-1122',
+          addr: '123 Street, City, State, ######-####'
+        }
+    }, function (err, res, body) {
+        if (err) throw (err);
+        assert.strictEqual(res.statusCode, 201)
+      })
+    })
 
   });
   /*end tests*/

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Runs multiple tests in `inventory-app/frontend/test/`
+# Runs a single test passed in as first param.
 
 set -e
 
@@ -19,18 +19,19 @@ set -e
 #                  it is provided by the Jenkins env.
 # --------------------- END -----------------------------------------
 
-VOLUMESET=$1
-HUBENDPOINT=$2
-SNAP=$3
-GITBRANCH=$4
-JENKINSBUILDN=$5
-JENKINSBUILDID=$6
-JENKINSBUILDURL=$7
-JENKINSNODE=$8
+RUNTEST=$1
+VOLUMESET=$2
+HUBENDPOINT=$3
+SNAP=$4
+GITBRANCH=$5
+JENKINSBUILDN=$6
+JENKINSBUILDID=$7
+JENKINSBUILDURL=$8
+JENKINSNODE=$9
 ENV="ci"
 
 # Test will be used as a holder for current test.
-TEST=""
+TEST=$RUNTEST
 FAILED=false
 FAILED_TESTS=()
 
@@ -127,16 +128,5 @@ check_if_failed() {
    fi
 }
 
-# Get all tests but seperately 
-IFS=' ' read -r -a TESTS <<< $(ls inventory-app/frontend/test/ | grep "test_" | tr "\n" " ")
-check_for_failure
-for i in "${TESTS[@]}"
-do
-   # Run the test wrapped in a 
-   # create from snap, snap, push.
-   TEST=${i//.js}
-   run_group
-done
-unset IFS
+run_group
 check_if_failed
-

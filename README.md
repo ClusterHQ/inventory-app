@@ -1,47 +1,49 @@
-# sc-sample-inventory
+# Sample Inventory-App for FlockerHub
 
-Scroll to the bottom for installation instructions.
+A sample application to showcase FlockerHub and `fli` that tracks inventory of Dealerships and Vehicles.
+
+### Credit
+
+We are building off of https://github.com/SocketCluster/sc-sample-inventory for this application.
 
 A sample inventory tracking realtime single page app built with SocketCluster (http://socketcluster.io/), Google's Polymer (v1.0) Framework and RethinkDB.
-It demonstrates a way of building realtime apps.
 
-All code for the server-side worker logic is linked from worker.js - It's mostly generic so feel free to reuse/modify for your own app
-or you can use this app as a base to build yours if starting from scratch.
+Read more [here](README_original.md)
 
-Aside from SocketCluster, Polymer and RethinkDB, this sample app uses the following modules:
-- sc-collection (https://github.com/SocketCluster/sc-collection - ```bower install sc-collection --save```)
-- sc-field (https://github.com/SocketCluster/sc-field - ```bower install sc-field --save```)
-- sc-crud-rethink (https://github.com/SocketCluster/sc-crud-rethink - ```npm install sc-crud-rethink --save```)
+## What is FlockerHub?
 
-This sample app aims to demonstrate all the cutting edge features that one might want when
-building a realtime single page app including:
+(place holder)
 
-- Authentication (via JWT tokens)
-- Access control using backend middleware
-- Reactive data binding
-- Realtime REST-like interface
-- Pagination with realtime updates
+## What is `fli`?
 
-This is still work in progress.
-Keep in mind that this app is optimized for cutting-edgeness, not for backwards
-compatibility with older browsers :p
+(place holder)
 
-To make the most of this demo, you should open the web app in two different tabs/windows/browsers and
-make updates to the data in realtime.
+## What can you do with this respository?
 
+This application has containerized microservice of RethinkDB and a NodeJS/ExpressJS/SocketCluster application.
 
-## Installation
+This repository is setup with scripts and CI/CD tools that take advantage of FlockerHub and `fli`.
 
-To run this sample:
+#### docker and docker-compose
 
-- Make sure you have Git installed (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- Make sure you have Node.js installed (http://nodejs.org/)
-- Make sure you have RethinkDB installed (https://www.rethinkdb.com/)
-- ```git clone https://github.com/SocketCluster/sc-sample-inventory.git```
-- Navigate to the sc-sample-inventory/ directory
-- Run ```npm install``` (no arguments)
-- Make sure you have bower installed, if not: ```npm install -g bower```
-- Run ```bower install``` (no arguments)
-- Run ```sudo rethinkdb``` (in a different terminal or in the background - Make sure RethinkDB stays running)
-- Run ```node server```
-- In your browser, go to ```http://localhost:8000/```
+(place holder to explain docker/docker-compose usage)
+
+#### dataimport/
+
+(place holder to discuss components of data import)
+
+#### frontend/
+
+(place holder to explain the main application/tests)
+
+#### ci-utils/
+
+(place holder explain Jenkins integration)
+
+#### `fli-docker`
+
+(place holder what fli-docker and how to use fli-docker with this app)
+
+### Thanks
+
+Please send your questions and comments so support@clusterhq.com or feel free to add issues directly to this repository.
