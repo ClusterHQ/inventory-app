@@ -44,7 +44,7 @@ parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles_postvehicle', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 11':{
+}
 
 def run_group(test, volsnap, volset) {
 
