@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Runs multiple tests in `inventory-app/frontend/test/`
-
 set -e
 
 # Script to run tests.
