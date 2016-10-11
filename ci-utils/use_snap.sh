@@ -47,8 +47,7 @@ then
 	IDOFSNAP=$(/opt/clusterhq/bin/dpcli show snapshot -v ${VS} | grep ${SNAP} | head -1 | awk '{print $2}')
 fi
 /opt/clusterhq/bin/dpcli pull snapshot $IDOFSNAP
-VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP \
-        volumeFrom-$SNAP-${BUILDN} | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+VPATH=$(/opt/clusterhq/bin/dpcli create volume -s $IDOFSNAP volumeFrom-$SNAP-$BUILDN | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
 # load the Volume Path into compose. later we can use `fli-docker`
 # to eliminate the need for this being bash. 

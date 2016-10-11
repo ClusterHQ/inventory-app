@@ -9,17 +9,16 @@ r = require('rethinkdb');
 var assert = require('assert');
 var request = require('request');
 var db = require('../db/dbutils');
-var dbConnect = db.connect();
 
 var apihost = process.env.FRONTEND_HOST || 'localhost'
 var apiport = process.env.FRONTEND_PORT || 8000;
 
 const util = require('util');
 
-describe('HTTPTests for Dealerships', function() {
+describe('GET HTTPTests for Dealerships', function() {
 
   /*All tests here*/
-  describe('Testing /dealerships endpoint', function() {
+  describe('Testing GET operations for /dealerships endpoint', function() {
 
     it('/dealerships should return "200"', function(done) {
       request.get(util.format('http://%s:%s/dealerships', apihost, apiport), function (err, res, body){
@@ -30,6 +29,7 @@ describe('HTTPTests for Dealerships', function() {
     });
 
     it('/dealerships should return the right amount of dealers in the db', function(done) {
+      var dbConnect = db.connect();
       request.get(util.format('http://%s:%s/dealerships', apihost, apiport), function (err, res, body){
         if (err) throw (err);
         var dealers = JSON.parse(res.body);
@@ -44,24 +44,6 @@ describe('HTTPTests for Dealerships', function() {
         });
       });
     });
-
-    it('/dealerships POST should return HTTP 201 Created', function () {
-      request({
-        url: util.format('http://%s:%s/dealerships', apihost, apiport),
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        json: {
-          name: 'New dealer',
-          phone: '555-999-1122',
-          addr: '123 Street, City, State, ######-####'
-        }
-    }, function (err, res, body) {
-        if (err) throw (err);
-        assert.strictEqual(res.statusCode, 201)
-      })
-    })
 
   });
   /*end tests*/

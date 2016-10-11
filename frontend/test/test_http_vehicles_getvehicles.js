@@ -9,7 +9,6 @@ r = require('rethinkdb');
 var assert = require('assert');
 var request = require('request');
 var db = require('../db/dbutils')
-var dbConnect = db.connect();
 
 var apihost = process.env.FRONTEND_HOST || 'localhost';
 var apiport = process.env.FRONTEND_PORT || 8000;
@@ -30,6 +29,7 @@ describe('HTTPTests for Vehicles', function() {
     });
 
     it('/vehicles should return the right amount of vehicles in the db', function(done) {
+      var dbConnect = db.connect();
       request.get(util.format('http://%s:%s/vehicles', apihost, apiport), function (err, res, body){
         if (err) throw (err);
         var vehicles = JSON.parse(res.body);
