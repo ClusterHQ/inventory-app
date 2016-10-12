@@ -18,7 +18,7 @@ parallel 'parallel tests 1':{
     }
 }, 'parallel tests 5':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers_postdealerships', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_dealers_postdealership', 'initial_ia_snap', 'inventory-app')
     }
 }, 'parallel tests 6':{
     node('v8s-dpcli-prov'){
@@ -32,7 +32,7 @@ parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles_postgetvehicle', 'initial_ia_snap', 'inventory-app')
     }
-}, 'parallel tests 9':{
+}, 'parallel tests 9g':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles_postvehicle', 'initial_ia_snap', 'inventory-app')
     }
