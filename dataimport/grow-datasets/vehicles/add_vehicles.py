@@ -9,28 +9,31 @@
 import requests
 import time
 import csv, string
-from urllib.request import urlretrieve
 from random import randint
 from random import choice
 import json
+import sys
 
 def get_random_vin():
     return ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(17))
 
 def run_loop(dealer_url, vehicle_url):
+        # Request http://app:port/dealerships, select random dealer + id
+        r = requests.get(dealer_url)
+        dealers = r.json()
+
+        # Request http://app:port/vehicles, select random vehicle
+        # and add it again as more inventory of the same vehicle.
+        r = requests.get(vehicle_url)
+        vehicles = r.json()
 
         # Loops eternally 
         while True:
-            # Request http://app:port/dealerships, select random dealer + id
-            r = requests.get(dealer_url)
-            dealers = r.json()
+            # Use existing dealers so its faster.
             dealer = randint(0, len(dealers)-1)
             dealer_id = dealers[dealer]['id']
 
-            # Request http://app:port/vehicles, select random vehicle
-            # and add it again as more inventory of the same vehicle.
-            r = requests.get(vehicle_url)
-            vehicles = r.json()
+            # Use existing vehicles so its faster.
             vehicle = randint(0, len(vehicles)-1)
             vehcle_data = vehicles[vehicle]
 
@@ -57,8 +60,8 @@ def run_loop(dealer_url, vehicle_url):
 
             print(vehicle)
 
-            # Delay X seconds.
-            time.sleep(1)
+            # Delay 50 milliseconds.
+            # time.sleep(50.0 / 1000.0)
 
             # Make Request to Add Vehicle
             r = requests.post(vehicle_url, json=vehicle_dict)
@@ -68,11 +71,15 @@ def run_loop(dealer_url, vehicle_url):
                 print("Failed to add Vehicle: %s" % json.dumps(vehicle_dict))
                 print(r.status_code)
 
-def main():
-    dealer_url="http://ec2-54-237-204-239.compute-1.amazonaws.com:32787/dealerships"
-    vehicle_url="http://ec2-54-237-204-239.compute-1.amazonaws.com:32787/vehicles"
-
-    run_loop(dealer_url, vehicle_url)
+def main(args):
+    if len(args) == 0:
+        print("Usage: add_vehicles.py <http://API_URL:PORT>")
+    elif len(args) == 1:
+        dealer_url="%s/dealerships" % args[0]
+        vehicle_url="%s/vehicles" % args[0]
+        run_loop(dealer_url, vehicle_url)
+    else:
+        print("Usage: add_vehicles.py <http://API_URL:PORT>")
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

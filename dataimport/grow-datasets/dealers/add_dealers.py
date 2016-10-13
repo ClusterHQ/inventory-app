@@ -8,8 +8,8 @@
 import requests
 import time
 import json
-from urllib.request import urlretrieve
 import csv
+import sys
 from faker import Faker
 fake = Faker()
 
@@ -43,8 +43,8 @@ def run_loop(url):
             "addr": addr
         }
 
-        # Delay X Seconds
-        time.sleep(5)
+        # Delay 1 Second
+        # time.sleep(1)
 
         # POST Request to add Dealer
         r = requests.post(url, json=dealer)
@@ -55,11 +55,14 @@ def run_loop(url):
             print(r.status_code)
 
 
-def main():
-    app_url="http://ec2-54-237-204-239.compute-1.amazonaws.com:32787/dealerships"
-
-    run_loop(app_url)
-
+def main(args):
+    if len(args) == 0:
+        print("Usage: add_dealers.py <http://API_URL:PORT>")
+    elif len(args) == 1:
+        dealer_url="%s/dealerships" % args[0]
+        run_loop(dealer_url)
+    else:
+        print("Usage: add_dealers.py <http://API_URL:PORT>")
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

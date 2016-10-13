@@ -7,4 +7,4 @@ tag='clusterhq/add-dealers-loop'
 
 docker build --file Dockerfile --no-cache --tag $tag .
 
-docker run -dti $tag
+docker run -dti $tag 'http://ec2-54-237-204-239.compute-1.amazonaws.com:32787'

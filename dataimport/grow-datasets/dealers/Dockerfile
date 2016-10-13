@@ -10,4 +10,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "add_dealers.py"]
+ENTRYPOINT ["python", "add_dealers.py"]

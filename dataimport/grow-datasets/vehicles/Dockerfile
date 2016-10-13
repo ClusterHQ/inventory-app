@@ -10,4 +10,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "add_vehicles.py"]
+ENTRYPOINT ["python", "add_vehicles.py"]
