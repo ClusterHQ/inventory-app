@@ -72,7 +72,7 @@ module.exports.run = function (worker) {
               // Because we declared the dealer field above, it is available in here.
               // This allows us to tranform/filter the Product collection based on a specific dealer
               // ID provided by the frontend.
-              return fullTableQuery.orderBy({index: 'id'}).limit(20).filter(r.row('dealership').eq(vehicleFields.dealership))
+              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
             }
           }
         },
