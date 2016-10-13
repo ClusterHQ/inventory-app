@@ -87,7 +87,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for master
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = 'initial_ia_snap'
+      staging_snap = 'initial-ia-snap'
       echo "Using Snapshot ${staging_snap} for branch: master"
    }else{
       // **********************************************
@@ -97,7 +97,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for dev branch
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = 'initial_ia_snap'
+      staging_snap = 'initial-ia-larger-snap'
       echo "Using Snapshot: ${staging_snap} Branch: ${env.BRANCH_NAME}"
    }
 
