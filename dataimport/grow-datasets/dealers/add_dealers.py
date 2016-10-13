@@ -2,9 +2,6 @@
 
 # Grow dataset by POSTing to http://app:port/dealers
 
-# Dealers are added less often in real life, so we will
-# introduce an artificial delay in adding them, this allows
-# vehicles to be added more rapidly in comparison to Dealers.
 import requests
 import time
 import json
