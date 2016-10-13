@@ -38,7 +38,7 @@ node ('v8s-dpcli-prov') {
       // Volumeset the snapshot belongs to for dev branch
       vs = 'inventory-app'
       // Snapshot used for tests in branch
-      snap = 'initial_ia_snap'
+      snap = '808084cc-29bb-4ba5-8a8d-2ce829182edf'
       echo "Using Snapshot: ${snap} Branch: ${env.BRANCH_NAME}"
    }
    

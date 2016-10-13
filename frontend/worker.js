@@ -42,7 +42,12 @@ module.exports.run = function (worker) {
         views: {
           alphabeticalView: {
             transform: function (fullTableQuery, r) {
-              return fullTableQuery.orderBy(r.asc('name'));
+              // This should really return the ammount of dealerships
+              // per page. E.g. user is on page 1, return first 100,
+              // page 2, second 100, and so on. But havent implemented it.
+              // without this limit, we hit timeout errors b/c of too
+              // many records, or
+              return fullTableQuery.orderBy({index: 'id'});
             }
           }
         },
