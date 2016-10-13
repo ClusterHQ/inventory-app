@@ -42,7 +42,12 @@ module.exports.run = function (worker) {
         views: {
           alphabeticalView: {
             transform: function (fullTableQuery, r) {
-              return fullTableQuery.orderBy(r.asc('name'));
+              // This should really return the ammount of dealerships
+              // per page. E.g. user is on page 1, return first 100,
+              // page 2, second 100, and so on. But havent implemented it.
+              // without this limit, we hit timeout errors b/c of too
+              // many records, or
+              return fullTableQuery.orderBy({index: 'id'});
             }
           }
         },
@@ -67,7 +72,7 @@ module.exports.run = function (worker) {
               // Because we declared the dealer field above, it is available in here.
               // This allows us to tranform/filter the Product collection based on a specific dealer
               // ID provided by the frontend.
-              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership)).orderBy(r.asc('make'))
+              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
             }
           }
         },
