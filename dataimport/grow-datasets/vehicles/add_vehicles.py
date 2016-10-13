@@ -14,6 +14,9 @@ def get_random_vin():
     return ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(17))
 
 def run_loop(dealer_url, vehicle_url):
+        # Counter
+        count = 0
+
         # Request http://app:port/dealerships, select random dealer + id
         r = requests.get(dealer_url)
         dealers = r.json()
@@ -25,6 +28,20 @@ def run_loop(dealer_url, vehicle_url):
 
         # Loops eternally 
         while True:
+            # Refreshes the vehicles/dealers used to create new ones.
+            if count == 5000:
+                # Request http://app:port/dealerships, select random dealer + id
+                r = requests.get(dealer_url)
+                dealers = r.json()
+
+                # Request http://app:port/vehicles, select random vehicle
+                # and add it again as more inventory of the same vehicle.
+                r = requests.get(vehicle_url)
+                vehicles = r.json()
+
+                # Reset Counter
+                count = 0
+
             # Use existing dealers so its faster.
             dealer = randint(0, len(dealers)-1)
             dealer_id = dealers[dealer]['id']
@@ -66,6 +83,9 @@ def run_loop(dealer_url, vehicle_url):
             else:
                 print("Failed to add Vehicle: %s" % json.dumps(vehicle_dict))
                 print(r.status_code)
+
+            # Update counter
+            count = count + 1
 
 def main(args):
     if len(args) == 0:
