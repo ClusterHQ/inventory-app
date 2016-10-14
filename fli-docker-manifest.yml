@@ -1,0 +1,10 @@
+docker_app: docker-compose.yml
+
+flocker_hub:
+    endpoint: http://<insert-url>
+    tokenfile: /path/to/token.txt
+
+volumes:
+    - name: rethink-data
+      snapshot: 750kvehicles
+      volumeset: inventory-app
