@@ -74,7 +74,8 @@ module.exports.run = function (worker) {
               // ID provided by the frontend.
               // Artificially limit # of vehicles as to avoid timeouts on verhicle records
               // which can easily be greater than 1Mil
-              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
+              return fullTableQuery.orderBy({index: 'id'}).filter(r.row('dealership').eq(vehicleFields.dealership))
+              //return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
             }
           }
         },
