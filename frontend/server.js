@@ -13,7 +13,7 @@ var socketCluster = new SocketCluster({
   rebootWorkerOnCrash: argv['auto-reboot'] != false,
   pingTimeout: 60000,
   pingInterval: 2000,
-  ackTimeout: 10000,
+  ackTimeout: 60000,
   processTermTimeout: 60000,
 });
   
