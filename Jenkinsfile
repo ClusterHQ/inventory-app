@@ -49,7 +49,7 @@ node ('v8s-dpcli-prov') {
    // from a snapshot locally and taking snapshots of the DB test results
    // then pushing the data back up to Flocker Hub with metadata and 
    // start fresh each time.
-   //sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
+   sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
 }
 
 node ('v8s-dpcli-prov-staging') {
