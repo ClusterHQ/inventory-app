@@ -11,8 +11,10 @@ var socketCluster = new SocketCluster({
   brokerController: __dirname + '/broker.js',
   socketChannelLimit: 100,
   rebootWorkerOnCrash: argv['auto-reboot'] != false,
-  pingTimeout: 5000,
-  pingInterval: 2000
+  pingTimeout: 60000,
+  pingInterval: 2000,
+  ackTimeout: 10000,
+  processTermTimeout: 60000,
 });
   
 /* 
