@@ -38,6 +38,12 @@ module.exports.attach = function (expressApp) {
 	//(DELETE) Remove dealership
 	expressApp.delete('/dealerships/:name', require('../controllers/dealership.js').delDealership)
 
+	//(GET) Length of Dealerships
+	expressApp.get('/dealershipssize', require('../controllers/dealership.js').getDealershipsSize)
+
+	//(GET) Length of Vehicles
+	expressApp.get('/vehiclessize', require('../controllers/vehicles.js').getVehiclesSize)
+
 
 	/* TODO, remove from list when complete */
 

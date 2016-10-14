@@ -72,7 +72,9 @@ module.exports.run = function (worker) {
               // Because we declared the dealer field above, it is available in here.
               // This allows us to tranform/filter the Product collection based on a specific dealer
               // ID provided by the frontend.
-              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
+              // Artificially limit # of vehicles as to avoid timeouts on verhicle records
+              // which can easily be greater than 1Mil
+              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership)).limit(50)
             }
           }
         },
