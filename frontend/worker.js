@@ -47,7 +47,7 @@ module.exports.run = function (worker) {
               // page 2, second 100, and so on. But havent implemented it.
               // without this limit, we hit timeout errors b/c of too
               // many records, or
-              return fullTableQuery.orderBy({index: 'id'});
+              return fullTableQuery.orderBy({index: 'id'}).limit(50000);
             }
           }
         },
