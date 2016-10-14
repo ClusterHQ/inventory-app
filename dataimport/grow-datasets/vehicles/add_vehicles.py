@@ -29,7 +29,8 @@ def run_loop(dealer_url, vehicle_url):
         # Loops eternally 
         while True:
             # Refreshes the vehicles/dealers used to create new ones.
-            if count == 5000:
+            # so vehicles are more evenly spread.
+            if count == 20000:
                 # Request http://app:port/dealerships, select random dealer + id
                 r = requests.get(dealer_url)
                 dealers = r.json()
