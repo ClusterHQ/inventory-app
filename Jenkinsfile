@@ -74,7 +74,7 @@ node ('v8s-dpcli-prov-staging') {
 
    stage 'Staging: Git Clone'
    // Clone the inventory app with the Github Bot user.
-   sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app ${env.BRANCH_NAME}-inventory-app/"
+   //sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app ${env.BRANCH_NAME}-inventory-app/"
 
    stage 'Staging: Run staging environment'
    String staging_vs;
