@@ -49,7 +49,7 @@ node ('v8s-dpcli-prov') {
    // from a snapshot locally and taking snapshots of the DB test results
    // then pushing the data back up to Flocker Hub with metadata and 
    // start fresh each time.
-   sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
+   //sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
 }
 
 node ('v8s-dpcli-prov-staging') {
@@ -74,7 +74,7 @@ node ('v8s-dpcli-prov-staging') {
 
    stage 'Staging: Git Clone'
    // Clone the inventory app with the Github Bot user.
-   //sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app ${env.BRANCH_NAME}-inventory-app/"
+   sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app ${env.BRANCH_NAME}-inventory-app/"
 
    stage 'Staging: Run staging environment'
    String staging_vs;
