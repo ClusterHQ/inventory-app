@@ -73,8 +73,8 @@ module.exports.run = function (worker) {
               // This allows us to tranform/filter the Product collection based on a specific dealer
               // ID provided by the frontend.
               // Artificially limit # of vehicles as to avoid timeouts on verhicle records
-              // which can easily be greater than 1Mil
-              return fullTableQuery.orderBy({index: 'id'}).filter(r.row('dealership').eq(vehicleFields.dealership))
+              // which can easily be greater than 1Mil, but not necessary for demos.
+              return fullTableQuery.orderBy({index: 'id'}).limit(30000).filter(r.row('dealership').eq(vehicleFields.dealership))
               //return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
             }
           }
