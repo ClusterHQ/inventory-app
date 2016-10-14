@@ -1,0 +1,200 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/sc-field/sc-field.html">
+<link rel="import" href="/bower_components/sc-collection/sc-collection.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animatable-behavior.html">
+
+<dom-module id="page-vehicle-list">
+  <style>
+    .heading {
+      display: inline-block;
+      margin-bottom: 30px;
+    }
+    
+    .content-container {
+      width: 100%;
+      display: flex;
+      -webkit-display: flex;
+      flex-direction: column;
+      -webkit-flex-direction: column;
+      padding: 20px;
+    }
+
+    .content-row {
+      display: flex;
+      -webkit-display: flex;
+      width: 100%;
+    }
+
+    .content-col {
+      box-sizing: border-box;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .content-col-half {
+      box-sizing: border-box;
+      display: inline-block;
+      width: 50%;
+    }
+  </style>
+
+  <template>
+    <!-- local DOM for your element -->
+    <sc-collection id="vehicles" resource-type="Vehicle" resource-value="{{vehicles}}" resource-view="vehicleView" resource-view-params="null" disable-realtime="{{disableRealtime}}"></sc-collection>
+
+    <template is="dom-repeat" items="{{vehicles}}">
+      <sc-field resource-type="Vehicle" resource-id="{{item.id}}" resource-field="make" resource-value="{{item.make}}"></sc-field>
+      <sc-field resource-type="Vehicle" resource-id="{{item.id}}" resource-field="model" resource-value="{{item.model}}"></sc-field>
+      <sc-field resource-type="Vehicle" resource-id="{{item.id}}" resource-field="year" resource-value="{{item.year}}"></sc-field>
+      <sc-field resource-type="Vehicle" resource-id="{{item.id}}" resource-field="vin" resource-value="{{item.vin}}"></sc-field>
+      <sc-field resource-type="Vehicle" resource-id="{{item.id}}" resource-field="dealership" resource-value="{{item.dealership}}"></sc-field>
+    </template>
+
+    <div class="content-container">
+      <a href="/#!/"><< Back to dealership list</a>
+      <h2 class="content-row heading">Inventory Vehicles</h2>
+      <div class="content-body">
+        <div class="content-row">
+          <div class="content-col">
+            <table class="table">
+              <tr>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>VIN</th>
+                <th>Dealership</th>
+              </tr>
+              <template is="dom-repeat" items="{{vehicles}}" observe="make model year vin dealership">
+                <tr>
+                  <td>{{item.make}}</td>
+                  <td>{{item.model}}</td>
+                  <td>{{item.year}}</td>
+                  <td>{{item.vin}}</td>
+                  <td>{{item.dealership}}</td>
+                </tr>
+              </template>
+            </table>
+          </div>
+        </div>
+        <div class="content-row">
+          <div class="content-col-half">
+            Make:
+            <input type="text" value="{{newVehicleMake::input}}" on-keydown="keyPressed">
+            Model:
+            <input type="text" value="{{newVehicleModel::input}}" on-keydown="keyPressed">
+            Year:
+            <input type="text" value="{{newVehicleYear::input}}" on-keydown="keyPressed">
+            VIN:
+            <input type="text" value="{{newVehicleVin::input}}" on-keydown="keyPressed">
+            Dealership:
+            <input type="text" value="{{newDealershipId::input}}" on-keydown="keyPressed">
+          </div>
+          <div class="content-col-half">
+            <input type="button" class="btn" value="Add vehicle" on-click="addVehicle">
+            <input type="checkbox" class="checkbox" style="margin-left: 10px; margin-top: 0;" checked="{{realtime::change}}"> <span>Realtime collection</span>
+          </div>
+        </div>
+        <div class="content-row">
+          <div class="content-col">
+            <a href="javascript:void(0);" on-click="goToPrevPage">Prev page</a> | <a href="javascript:void(0);" on-click="goToNextPage">Next page</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // element registration
+    Polymer({
+      is: 'page-vehicle-list',
+
+      behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+      // add properties and methods on the element's prototype
+
+      properties: {
+        // declare properties for the element's public API
+        vehicles: {
+          type: Array
+        },
+        realtime: {
+          type: Boolean,
+          value: true
+        },
+        disableRealtime: {
+          type: Boolean,
+          computed: 'inverse(realtime)'
+        },
+        newVehicleMake: {
+          type: String,
+        },
+        newVehicleModel: {
+          type: String,
+        },
+        newVehicleYear: {
+          type: Number,
+        },
+        newVehicleVin: {
+          type: String,
+        },
+        newDealershipId: {
+          type: String,
+        }
+      },
+
+      inverse: function (bool) {
+        return !bool;
+      },
+
+      goToPrevPage: function () {
+        var vehicleListModel = this.$['vehicles'];
+        vehicleListModel.fetchPreviousPage();
+      },
+
+      goToNextPage: function () {
+        var vehicleListModel = this.$['vehicles'];
+        vehicleListModel.fetchNextPage();
+      },
+
+      saveValue: function (event) {
+        var targetModelName = event.target.dataset.saveTo;
+        var targetModel = this.$[targetModelName];
+        targetModel.fire('save', event.target.value);
+      },
+
+      keyPressed: function (e) {
+        if (e.keyCode == 13) {
+          this.addVehicle();
+        }
+      },
+
+      addVehicle: function () {
+        var self = this;
+
+        var vehicleListModel = this.$['vehicles'];
+
+        var newVehicle = {
+          make: this.newVehicleMake,
+          model: this.newVehicleModel,
+          year: this.newVehicleYear,
+          // VIN-like numbers can be generated
+          // (Math.random()*1e25).toString(36).toUpperCase()
+          vin: this.newVehicleVin,
+          dealership: this.newDealershipId
+        };
+
+        vehicleListModel.create(newVehicle, function (err, newId) {
+          if (err) {
+            // TODO: Handle error
+          } else {
+            self.newVehicleMake = '';
+            self.newVehicleModel = '';
+            self.newVehicleYear = '';
+            self.newVehicleVin = '';
+          }
+        });
+      }
+    });
+  </script>
+</dom-module>

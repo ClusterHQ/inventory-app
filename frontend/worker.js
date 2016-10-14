@@ -73,8 +73,13 @@ module.exports.run = function (worker) {
               // Artificially limit # of vehicles as to avoid timeouts on verhicle records
               // which can easily be greater than 1Mil, but not necessary for demos.
               // sample() allows to choose a random amount
-              return fullTableQuery.orderBy({index: 'id'}).limit(20000).filter(r.row('dealership').eq(vehicleFields.dealership));
+              return fullTableQuery.orderBy({index: 'id'}).limit(10000).filter(r.row('dealership').eq(vehicleFields.dealership));
               //return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
+            }
+          },
+          vehicleView: {
+            transform: function (fullTableQuery, r) {
+              return fullTableQuery.orderBy({index: 'id'}).limit(10000);
             }
           }
         },
