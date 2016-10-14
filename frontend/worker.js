@@ -45,9 +45,8 @@ module.exports.run = function (worker) {
               // This should really return the ammount of dealerships
               // per page. E.g. user is on page 1, return first 100,
               // page 2, second 100, and so on. But havent implemented it.
-              // without this limit, we hit timeout errors b/c of too
-              // many records, or
-              return fullTableQuery.orderBy({index: 'id'});
+              // without this limit, we hit timeout errorr
+              return fullTableQuery.orderBy({index: 'id'}).limit(5000);
             }
           }
         },
@@ -70,9 +69,15 @@ module.exports.run = function (worker) {
             paramFields: ['dealership'],
             transform: function (fullTableQuery, r, vehicleFields) {
               // Because we declared the dealer field above, it is available in here.
-              // This allows us to tranform/filter the Product collection based on a specific dealer
-              // ID provided by the frontend.
-              return fullTableQuery.filter(r.row('dealership').eq(vehicleFields.dealership))
+              // Artificially limit # of vehicles as to avoid timeouts on verhicle records
+              // which can easily be greater than 1Mil, but not necessary for demos.
+              return fullTableQuery.orderBy({index: 'id'}).limit(10000).filter(r.row('dealership').eq(vehicleFields.dealership));            }
+          },
+          vehicleView: {
+            transform: function (fullTableQuery, r) {
+              // Artificially limit # of vehicles as to avoid timeouts on verhicle records
+              // which can easily be greater than 1Mil, but not necessary for demos.
+              return fullTableQuery.orderBy({index: 'id'}).limit(10000);
             }
           }
         },

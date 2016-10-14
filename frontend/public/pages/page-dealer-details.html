@@ -10,12 +10,8 @@
       margin-bottom: 30px;
     }
 
-    .content-body {
-      width: 500px;
-    }
-
     .content-container {
-      width: 100%;
+      width: 90%;
       display: flex;
       -webkit-display: flex;
       flex-direction: column;
@@ -49,6 +45,12 @@
 
     <sc-field id="dealership-desc" resource-type="Dealership" resource-id="{{dealershipId}}" resource-field="desc" resource-value="{{dealershipDesc}}"></sc-field>
 
+    <!-- sc-collection time's out when fetching too many records. over 70k records
+         it seems. So this collection fetches all Vehicle's associated with a dealer_id 
+         but it could potentially sort through 800k records to do so, and it times out. 
+         not sure how to make this better so the query in worker.js limits to less data
+         but this makes the UI not see all vehicles.
+    -->
     <sc-collection id="dealership-vehicles" disable-realtime="{{!realtime}}" resource-type="Vehicle" resource-value="{{dealershipVehicles}}" resource-view="dealershipView" resource-view-params="{{dealershipViewParams}}" resource-page-offset="{{pageOffsetStart}}" resource-page-size="{{pageSize}}" resource-count="{{itemCount}}"></sc-collection>
 
     <!-- Generate some models dynamically -->

@@ -15,6 +15,7 @@ services:
       - 28015
       - 29015
       - 8080
+    command: rethinkdb --bind all --cache-size 2048
   frontend:
     networks:
       - net

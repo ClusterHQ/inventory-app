@@ -76,3 +76,20 @@ module.exports.delDealership = function (req, res) {
   var status = 200;
   res.status(status).send({ status: 'Delete Successful' })
 }
+
+module.exports.getDealershipsSize = function (req, res) {
+  console.log('Received GET /dealerships/size request')
+  dbconn = db.connect();
+  dbconn.then(function(conn) {
+    rdb.table('Dealership').count().run(conn, function(err, results){
+      conn.close();
+      if (err) {
+        var status = 500;
+        res.status(status).send({ status: 'Could not get size of Dealerhips: ' + err })
+      }else{
+        var status = 200;
+        res.status(status).send({ status: 'Size: ' + results })
+      }
+    });
+  });
+}
