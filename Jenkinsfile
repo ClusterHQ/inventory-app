@@ -1,7 +1,5 @@
 stage 'Run tests in parallel'
-parallel 
-    //run_group(test_to_run, Snapshot, VolumeSet)
-    'parallel tests 1':{
+parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_http_ping', 'initial_ia_snap', 'inventory-app')
     }
@@ -39,6 +37,7 @@ parallel
     }
 }
 
+//run_group(test_to_run, Snapshot, VolumeSet)
 def run_group(test, volsnap, volset) {
 
    def run_test = test
