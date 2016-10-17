@@ -24,7 +24,7 @@ def run_loop(dealer_url, vehicle_url):
 
         # Request http://app:port/vehicles, select random vehicle
         # and add it again as more inventory of the same vehicle.
-        print("Getting verhicles...")
+        print("Getting vehicles...")
         r = requests.get(vehicle_url, timeout=2000)
         vehicles = r.json()
 
