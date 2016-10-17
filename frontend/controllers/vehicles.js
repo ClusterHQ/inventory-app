@@ -52,6 +52,21 @@ module.exports.getVehicles = function (req, res) {
 	})
 }
 
+module.exports.getSizedVehicles = function (req, res) {
+	console.log('recieved /vehiclessized/:size request')
+	dbconn = db.connect();
+	dbconn.then(function(conn) { 
+		rdb.table('Vehicle').sample(parseInt(req.params.size)).run(conn, function(err, cursor) {
+			if (err) throw err;
+			cursor.toArray(function(err, result) {
+				if (err) throw err;
+				console.log("Sending back Vehicle results");
+				res.send(JSON.stringify(result, null, 2));
+			});
+		});
+	})
+}
+
 module.exports.getVehicle = function (req, res) {
 	console.log('recieved /vehicles/:id request')
 	dbconn = db.connect();

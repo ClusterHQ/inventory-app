@@ -1,22 +1,62 @@
-node ('v8s-dpcli-prov') {
+stage 'Run tests in parallel'
+parallel 'parallel tests 1':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_ping', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 2':{
+    node('v8s-dpcli-prov'){
+      run_group('test_db_dealer_numbers', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 3':{
+    node('v8s-dpcli-prov'){
+      run_group('test_db_vehicle_vins', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 4':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_dealers_getdealerships', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 5':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_dealers_postdealership', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 6':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_dealers_postgetdealers', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 7':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles_getvehicles', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 8':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles_postgetvehicle', '750kvehicles', 'inventory-app')
+    }
+}, 'parallel tests 9':{
+    node('v8s-dpcli-prov'){
+      run_group('test_http_vehicles_postvehicle', '750kvehicles', 'inventory-app')
+    }
+}
 
-   stage 'Make sure cloud-init done'
+//run_group(test_to_run, Snapshot, VolumeSet)
+def run_group(test, volsnap, volset) {
+
+   def run_test = test
+   def snapshot = volsnap
+   def volumeset = volset
+
+
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
-   stage 'See cloud-init log'
    // In case of failure, its nice to have this log
    sh 'cat /var/log/cloud-init.log'
 
-   stage 'Clean'
    // Remove the app in the same workspace to avoid reusing packages, node modules etc.
    sh 'sudo rm -rf inventory-app/'
 
-   stage 'Git Clone'
    // Clone the inventory app with the Github Bot user.
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
 
-   stage 'Run tests with snapshots'
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
    String vs;
    String snap;
@@ -29,17 +69,18 @@ node ('v8s-dpcli-prov') {
       vs = 'inventory-app'
       // Snapshot used for tests in branch
       snap = 'initial-ia-snap'
-      echo "Using Snapshot ${snap} for branch: master"
+      echo "Using Snapshot ${vs} for branch: master"
    }else{
       // **********************************************
       //  Set 'vs' and 'snap' below to use a different 
       //     branch for your build and tests in CI.
       // **********************************************
       // Volumeset the snapshot belongs to for dev branch
-      vs = 'inventory-app'
+      vs = "${volumeset}"
       // Snapshot used for tests in branch
-      snap = '750kvehicles'
-      echo "Using Snapshot: ${snap} Branch: ${env.BRANCH_NAME}"
+      // e.g. 7d3fca7e-376b-4a0d-a6a9-ffa7c4a333ae
+      snap = "${snapshot}"
+      echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
    }
    
    // Flocker Hub endpoint.
@@ -49,7 +90,10 @@ node ('v8s-dpcli-prov') {
    // from a snapshot locally and taking snapshots of the DB test results
    // then pushing the data back up to Flocker Hub with metadata and 
    // start fresh each time.
-   sh "sudo inventory-app/ci-utils/runtests.sh ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
+
+   // use ci-utils/runtest.sh (not runtests.sh)
+   sh "sudo inventory-app/ci-utils/runtest.sh ${run_test} ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
+
 }
 
 node ('v8s-dpcli-prov-staging') {

@@ -44,6 +44,12 @@ module.exports.attach = function (expressApp) {
 	//(GET) Length of Vehicles
 	expressApp.get('/vehiclessize', require('../controllers/vehicles.js').getVehiclesSize)
 
+	//(GET) Dealerships but a random sample of `size`
+	expressApp.get('/dealershipssized/:size', require('../controllers/dealership.js').getSizedDealerships)
+
+	//(GET) Vehicles but a random sample of `size`
+	expressApp.get('/vehiclessized/:size', require('../controllers/vehicles.js').getSizedVehicles)
+
 
 	/* TODO, remove from list when complete */
 

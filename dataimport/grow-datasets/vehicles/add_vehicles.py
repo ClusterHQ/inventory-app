@@ -13,17 +13,19 @@ import sys
 def get_random_vin():
     return ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(17))
 
-def run_loop(dealer_url, vehicle_url):
+def run_loop(post_vehicle_url, get_dealer_url, get_vehicle_url):
         # Counter
         count = 0
 
         # Request http://app:port/dealerships, select random dealer + id
-        r = requests.get(dealer_url)
+        print("Getting dealers...")
+        r = requests.get(get_dealer_url, timeout=2000)
         dealers = r.json()
 
         # Request http://app:port/vehicles, select random vehicle
         # and add it again as more inventory of the same vehicle.
-        r = requests.get(vehicle_url)
+        print("Getting vehicles...")
+        r = requests.get(get_vehicle_url, timeout=2000)
         vehicles = r.json()
 
         # Loops eternally 
@@ -32,12 +34,12 @@ def run_loop(dealer_url, vehicle_url):
             # so vehicles are more evenly spread.
             if count == 20000:
                 # Request http://app:port/dealerships, select random dealer + id
-                r = requests.get(dealer_url)
+                r = requests.get(get_dealer_url, timeout=2000)
                 dealers = r.json()
 
                 # Request http://app:port/vehicles, select random vehicle
                 # and add it again as more inventory of the same vehicle.
-                r = requests.get(vehicle_url)
+                r = requests.get(get_vehicle_url, timeout=2000)
                 vehicles = r.json()
 
                 # Reset Counter
@@ -78,7 +80,7 @@ def run_loop(dealer_url, vehicle_url):
             # time.sleep(50.0 / 1000.0)
 
             # Make Request to Add Vehicle
-            r = requests.post(vehicle_url, json=vehicle_dict)
+            r = requests.post(post_vehicle_url, json=vehicle_dict)
             if r.status_code == 201:
                 print("Added Vehicle: %s" % json.dumps(vehicle_dict))
             else:
@@ -92,9 +94,12 @@ def main(args):
     if len(args) == 0:
         print("Usage: add_vehicles.py <http://API_URL:PORT>")
     elif len(args) == 1:
-        dealer_url="%s/dealerships" % args[0]
-        vehicle_url="%s/vehicles" % args[0]
-        run_loop(dealer_url, vehicle_url)
+        # Get a sample of 50,000 only as larger number of
+        # vehicles takes too long to fetch.
+        get_dealer_url="%s/dealershipssized/50000" % args[0]
+        get_vehicle_url="%s/vehiclessized/50000" % args[0]
+        post_vehicle_url="%s/vehicles" % args[0]
+        run_loop(post_vehicle_url, get_dealer_url, get_vehicle_url)
     else:
         print("Usage: add_vehicles.py <http://API_URL:PORT>")
 
