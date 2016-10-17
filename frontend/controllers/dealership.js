@@ -49,6 +49,21 @@ module.exports.getDealerships = function (req, res) {
   })
 }
 
+module.exports.getSizedDealerships = function (req, res) {
+  console.log('Received GET /dealershipssized/:size request')
+  dbconn = db.connect();
+  dbconn.then(function(conn) {
+    rdb.table('Dealership').sample(req.params.size).run(conn, function(err, cursor) {
+      if (err) throw err;
+      cursor.toArray(function(err, result) {
+          if (err) throw err;
+          console.log("Sending back Dealership results");
+          res.send(JSON.stringify(result, null, 2));
+        });
+    });
+  })
+}
+
 module.exports.getDealership = function (req, res) {
   console.log('Received GET /dealerships/:name request')
   dbconn = db.connect();

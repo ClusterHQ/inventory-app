@@ -18,12 +18,14 @@ def run_loop(dealer_url, vehicle_url):
         count = 0
 
         # Request http://app:port/dealerships, select random dealer + id
-        r = requests.get(dealer_url)
+        print("Getting dealers...")
+        r = requests.get(dealer_url, timeout=2000)
         dealers = r.json()
 
         # Request http://app:port/vehicles, select random vehicle
         # and add it again as more inventory of the same vehicle.
-        r = requests.get(vehicle_url)
+        print("Getting verhicles...")
+        r = requests.get(vehicle_url, timeout=2000)
         vehicles = r.json()
 
         # Loops eternally 
@@ -32,12 +34,12 @@ def run_loop(dealer_url, vehicle_url):
             # so vehicles are more evenly spread.
             if count == 20000:
                 # Request http://app:port/dealerships, select random dealer + id
-                r = requests.get(dealer_url)
+                r = requests.get(dealer_url, timeout=2000)
                 dealers = r.json()
 
                 # Request http://app:port/vehicles, select random vehicle
                 # and add it again as more inventory of the same vehicle.
-                r = requests.get(vehicle_url)
+                r = requests.get(vehicle_url, timeout=2000)
                 vehicles = r.json()
 
                 # Reset Counter
@@ -92,8 +94,10 @@ def main(args):
     if len(args) == 0:
         print("Usage: add_vehicles.py <http://API_URL:PORT>")
     elif len(args) == 1:
-        dealer_url="%s/dealerships" % args[0]
-        vehicle_url="%s/vehicles" % args[0]
+        # Get a sample of 50,000 only as larger number of
+        # vehicles takes too long to fetch.
+        dealer_url="%s/dealershipssized/50000" % args[0]
+        vehicle_url="%s/vehiclessized/50000" % args[0]
         run_loop(dealer_url, vehicle_url)
     else:
         print("Usage: add_vehicles.py <http://API_URL:PORT>")
