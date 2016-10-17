@@ -1,39 +1,39 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_ping', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_ping', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 2':{
     node('v8s-dpcli-prov'){
-      run_group('test_db_dealer_numbers', 'initial_ia_snap', 'inventory-app')
+      run_group('test_db_dealer_numbers', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
-      run_group('test_db_vehicle_vins', 'initial_ia_snap', 'inventory-app')
+      run_group('test_db_vehicle_vins', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 4':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers_getdealerships', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_dealers_getdealerships', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 5':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers_postdealership', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_dealers_postdealership', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 6':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers_postgetdealers', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_dealers_postgetdealers', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 7':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles_getvehicles', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_vehicles_getvehicles', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 8':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles_postgetvehicle', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_vehicles_postgetvehicle', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 9':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles_postvehicle', 'initial_ia_snap', 'inventory-app')
+      run_group('test_http_vehicles_postvehicle', '750kvehicles', 'inventory-app')
     }
 }
 
@@ -68,7 +68,7 @@ def run_group(test, volsnap, volset) {
       // Volumeset the snapshot belongs to for master
       vs = 'inventory-app'
       // Snapshot used for tests in branch
-      snap = 'initial_ia_snap'
+      snap = 'initial-ia-snap'
       echo "Using Snapshot ${vs} for branch: master"
    }else{
       // **********************************************
@@ -131,7 +131,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for master
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = 'initial_ia_snap'
+      staging_snap = 'initial-ia-snap'
       echo "Using Snapshot ${staging_snap} for branch: master"
    }else{
       // **********************************************
@@ -141,7 +141,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for dev branch
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = 'initial_ia_snap'
+      staging_snap = '750kvehicles'
       echo "Using Snapshot: ${staging_snap} Branch: ${env.BRANCH_NAME}"
    }
 
