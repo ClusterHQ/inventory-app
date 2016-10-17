@@ -53,7 +53,7 @@ module.exports.getSizedDealerships = function (req, res) {
   console.log('Received GET /dealershipssized/:size request')
   dbconn = db.connect();
   dbconn.then(function(conn) {
-    rdb.table('Dealership').sample(req.params.size).run(conn, function(err, cursor) {
+    rdb.table('Dealership').sample(parseInt(req.params.size)).run(conn, function(err, cursor) {
       if (err) throw err;
       cursor.toArray(function(err, result) {
           if (err) throw err;

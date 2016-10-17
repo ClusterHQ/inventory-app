@@ -56,7 +56,7 @@ module.exports.getSizedVehicles = function (req, res) {
 	console.log('recieved /vehiclessized/:size request')
 	dbconn = db.connect();
 	dbconn.then(function(conn) { 
-		rdb.table('Vehicle').samepl(req.params.size).run(conn, function(err, cursor) {
+		rdb.table('Vehicle').samepl(parseInt(req.params.size)).run(conn, function(err, cursor) {
 			if (err) throw err;
 			cursor.toArray(function(err, result) {
 				if (err) throw err;
