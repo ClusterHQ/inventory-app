@@ -9,7 +9,7 @@ parallel 'parallel tests 1':{
     }
 }, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
-      run_group('test_db_vehicle_vins', '750kvehicles', 'inventory-app')
+      run_group('test_db_vehicle_vins', 'badvinnumber', 'inventory-app')
     }
 }, 'parallel tests 4':{
     node('v8s-dpcli-prov'){
