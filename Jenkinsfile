@@ -1,9 +1,9 @@
 stage 'Run tests in parallel'
-parallel 'parallel tests 1':{
+parallel /*'parallel tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_http_ping', '750kvehicles', 'inventory-app')
     }
-}, 'parallel tests 2':{
+}, */'parallel tests 2':{
     node('v8s-dpcli-prov'){
       run_group('test_db_dealer_numbers', 'badphonenumber', 'inventory-app')
     }
@@ -11,7 +11,7 @@ parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_db_vehicle_vins', 'badvinnumber', 'inventory-app')
     }
-}, 'parallel tests 4':{
+}/*, 'parallel tests 4':{
     node('v8s-dpcli-prov'){
       run_group('test_http_dealers_getdealerships', '750kvehicles', 'inventory-app')
     }
@@ -35,7 +35,7 @@ parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
       run_group('test_http_vehicles_postvehicle', '750kvehicles', 'inventory-app')
     }
-}
+}*/
 
 //run_group(test_to_run, Snapshot, VolumeSet)
 def run_group(test, volsnap, volset) {
