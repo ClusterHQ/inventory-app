@@ -43,6 +43,25 @@ VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch
 
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
+# If failed test, provide a manifest to re-create err state.
+if [ ${TEST} == "Failed-"* ]
+then
+  echo "\nUSE THIS MANIFEST TO PULL ERROR STATE";
+  echo "Hint: use with fli-docker and you may need to change the token\n"
+  echo "\n
+    docker_app: docker-compose.yml
+
+    flocker_hub:
+        endpoint: http://flockerhub.com
+        tokenfile: /path/to/your/authtoken.txt
+
+    volumes:
+        - name: rethink-data
+        snapshot: ${VOLSNAP}
+        volumeset: ${VOLUMESET}
+	\n"
+fi
+
 # Were we succesfull at getting VOL / SNAP?
 if [ -z "$VOLSNAP" ]; then
     echo "VOLSNAP was unset, exiting"
