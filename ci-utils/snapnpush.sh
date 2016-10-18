@@ -44,7 +44,7 @@ VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
 # If failed test, provide a manifest to re-create err state.
-if [ $TEST == *"Failed-"* ]
+if [[ "$TEST" == *"Failed-"* ]]
 then
 echo "Producing manifest for failed test: ${TEST}"
 cat >> testfailures.txt <<EOL
