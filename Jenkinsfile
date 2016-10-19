@@ -5,8 +5,8 @@ parallel 'parallel tests 1':{
     }
 }, 'parallel tests 2':{
     node('v8s-dpcli-prov'){
-      run_group('test_db_dealer_numbers', 'badphonenumber', 'inventory-app')
-      //run_group('test_db_dealer_numbers', '750kvehicles', 'inventory-app')
+      //run_group('test_db_dealer_numbers', 'badphonenumber', 'inventory-app')
+      run_group('test_db_dealer_numbers', '750kvehicles', 'inventory-app')
     }
 }, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
