@@ -2,7 +2,7 @@
 
 A sample application to showcase FlockerHub and `fli` that tracks inventory of Dealerships and Vehicles.
 
-![Build Status](http://jenkins-demo.flockerhub-jenkins.com:80/job/inventory-pipeline-multi/master/badge/icon)
+[![Build Status](http://jenkins-demo.flockerhub-jenkins.com:80/buildStatus/icon?job=inventory-pipeline-multi/master)](http://jenkins-demo.flockerhub-jenkins.com:80/job/inventory-pipeline-multi/job/master/)
 
 ### Credit
 
