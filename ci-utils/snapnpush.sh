@@ -37,9 +37,10 @@ fi
 
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
 PATH=$PATH:/usr/local/sbin/
+SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
 VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch ${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN} \
           -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
-          --description "a snapshot of ${WORKINGVOL} for test ${TEST}" snapshotOf-${WORKINGVOL}-${JENKINSBUILDN} | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+          --description "a snapshot of ${WORKINGVOL} for test ${TEST}" ${SNAPNAME} | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
@@ -59,7 +60,7 @@ cat >> testfailures.txt <<EOL
 
   volumes:
       - name: rethink-data
-      snapshot: ${VOLSNAP}
+      snapshot: ${SNAPNAME}
       volumeset: ${VOLUMESET}
 EOL
 fi
