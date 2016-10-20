@@ -21,7 +21,7 @@ BRANCH=$3
 ENV=$4
 BUILDN=$5
 
-alias fli='docker run --privileged -v /chq/:/chq/ -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+fli='docker run --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
 # Check for "needed" vars
 if [ -z "$VS" ]; then
@@ -34,10 +34,10 @@ if [ -z "$SNAP" ]; then
     exit 1
 fi
 
-fli sync $VS
-IDOFSNAP=$(fli list -s ${SNAP} | grep ${SNAP} | head -1 | awk '{print $1}')
-fli pull $VS:$IDOFSNAP
-VPATH=$(fli clone $VS:$IDOFSNAP volumeFrom-$SNAP-$BUILDN)
+$fli sync $VS
+IDOFSNAP=$($fli list -s ${SNAP} | grep ${SNAP} | head -1 | awk '{print $1}')
+$fli pull $VS:$IDOFSNAP
+VPATH=$($fli clone $VS:$IDOFSNAP volumeFrom-$SNAP-$BUILDN)
 
 # load the Volume Path into compose. later we can use `fli-docker`
 # to eliminate the need for this being bash. 

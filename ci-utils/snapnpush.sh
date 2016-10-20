@@ -29,7 +29,7 @@ JENKINSBUILDURL=$5
 TEST=$6
 JENKINSNODE=$7
 
-alias fli='docker run --privileged -v /chq/:/chq/ -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+fli='docker run --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
 # Check for "needed" vars
 if [ -z "$VOLUMESET" ]; then
@@ -40,7 +40,7 @@ fi
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
 SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
 BRANCHNAME="${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}"
-VOLSNAP=$(fli snapshot -b ${BRANCHNAME} \
+VOLSNAP=$($fli snapshot -b ${BRANCHNAME} \
           -a jenkins_build_number=${JENKINSBUILDN}, \
           build_id=${JENKINSBUILDID}, \
           build_URL=${JENKINSBUILDURL}, \
@@ -83,8 +83,8 @@ if [ -z "$WORKINGVOL" ]; then
     exit 1
 fi  
 
-fli sync $VOLUMESET
-fli push $VOLUMESET:$VOLSNAP
+$fli sync $VOLUMESET
+$fli push $VOLUMESET:$VOLSNAP
 echo "Showing specific snapshots for this builds branch"
-fli list -b ${BRANCHNAME}
+$fli list -b ${BRANCHNAME}
 

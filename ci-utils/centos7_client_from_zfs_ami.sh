@@ -73,7 +73,7 @@ install_fli() {
 docker login -e="." -u="clusterhq_prod+pull_fli" -p="${TOKEN}" quay.io
 docker pull quay.io/clusterhq_prod/fli:${TAG}
 docker tag quay.io/clusterhq_prod/fli:${TAG} clusterhq/fli
-sudo echo "alias fli='docker run --privileged -v /chq/:/chq/ -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'" >> /root/.bashrc
+sudo echo "alias fli='docker run --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'" >> /root/.bashrc
 }
 
 if [ "1" ] ; then

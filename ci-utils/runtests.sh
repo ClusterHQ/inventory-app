@@ -32,7 +32,7 @@ TEST=""
 FAILED=false
 FAILED_TESTS=()
 
-alias fli='docker run --privileged -v /chq/:/chq/ -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+fli='docker run --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
 check_for_failure() {
    if [ $? -eq 0 ]; then
@@ -46,20 +46,20 @@ check_for_failure() {
 init_fli(){
    # Check if init has been run or if its a new slave.
    if [ ! -f /tmp/fliinitdone ]; then
-      fli setup --zpool chq || true
+      $fli setup --zpool chq || true
       # **********************************
       # The first volume never seems to get
       # actually populated on the FS. (Dev Issue)
       # will likely remove this later on. (TODO)
-      fli init  someVolumeSet
-      fli create someVolumeSet someVolume
+      $fli init  someVolumeSet
+      $fli create someVolumeSet someVolume
       # **********************************
       touch /tmp/fliinitdone
       check_for_failure
       # vhut token is set as a secret inside the jenkins master
-      fli config -t /root/fh.token
+      $fli config -t /root/fh.token
       check_for_failure
-      fli config -u $HUBENDPOINT
+      $fli config -u $HUBENDPOINT
       check_for_failure
    fi
 }
