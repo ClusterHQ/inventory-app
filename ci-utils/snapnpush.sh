@@ -29,7 +29,7 @@ JENKINSBUILDURL=$5
 TEST=$6
 JENKINSNODE=$7
 
-fli='docker run --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
 # Check for "needed" vars
 if [ -z "$VOLUMESET" ]; then
@@ -37,9 +37,12 @@ if [ -z "$VOLUMESET" ]; then
     exit 1
 fi  
 
+echo "Getting the active volume from the application"
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
+echo "Volume being used was $WORKINGVOL"
 SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
 BRANCHNAME="${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}"
+echo "Creating snapshot $SNAPNAME"
 VOLSNAP=$($fli snapshot -b ${BRANCHNAME} \
           -a jenkins_build_number=${JENKINSBUILDN}, \
           build_id=${JENKINSBUILDID}, \
@@ -83,7 +86,9 @@ if [ -z "$WORKINGVOL" ]; then
     exit 1
 fi  
 
+echo "Syncing volumset back to FlockerHub"
 $fli sync $VOLUMESET
+echo "Pushing $VOLUMESET:$VOLSNAP to FlockerHub"
 $fli push $VOLUMESET:$VOLSNAP
 echo "Showing specific snapshots for this builds branch"
 $fli list -b ${BRANCHNAME}

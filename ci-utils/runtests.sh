@@ -32,7 +32,7 @@ TEST=""
 FAILED=false
 FAILED_TESTS=()
 
-fli='docker run --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
 check_for_failure() {
    if [ $? -eq 0 ]; then
@@ -51,8 +51,8 @@ init_fli(){
       # The first volume never seems to get
       # actually populated on the FS. (Dev Issue)
       # will likely remove this later on. (TODO)
-      $fli init  someVolumeSet
-      $fli create someVolumeSet someVolume
+      #$fli init  someVolumeSet
+      #$fli create someVolumeSet someVolume
       # **********************************
       touch /tmp/fliinitdone
       check_for_failure

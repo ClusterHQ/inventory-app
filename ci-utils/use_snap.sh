@@ -21,7 +21,7 @@ BRANCH=$3
 ENV=$4
 BUILDN=$5
 
-fli='docker run --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
 # Check for "needed" vars
 if [ -z "$VS" ]; then
@@ -34,11 +34,19 @@ if [ -z "$SNAP" ]; then
     exit 1
 fi
 
+echo "Syncing Volumeset $VS"
 $fli sync $VS
+echo "Getting ID of the Snapshot $SNAP"
 IDOFSNAP=$($fli list -s ${SNAP} | grep ${SNAP} | head -1 | awk '{print $1}')
+echo "ID of snapshot is $IDOFSNAP"
+echo "Pulling $VS:$IDOFSNAP"
 $fli pull $VS:$IDOFSNAP
+echo "Creating volume from Snapshot"
 VPATH=$($fli clone $VS:$IDOFSNAP volumeFrom-$SNAP-$BUILDN)
+echo "Volume $VPATH created"
 
+
+echo "Loading the path into the application."
 # load the Volume Path into compose. later we can use `fli-docker`
 # to eliminate the need for this being bash. 
 # will become 1) create manifest dynamically, 2)`fli-docker -f manifest.yml`
