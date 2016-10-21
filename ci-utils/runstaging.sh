@@ -37,13 +37,6 @@ init_fli(){
    # Check if init has been run or if its a new slave.
    if [ ! -f /tmp/fliinitdone ]; then
       $fli setup --zpool chq || true
-      # **********************************
-      # The first volume never seems to get
-      # actually populated on the FS. (Dev Issue)
-      # will likely remove this later on. (TODO)
-      #$fli init  someVolumeSet
-      #$fli create someVolumeSet someVolume
-      # **********************************
       touch /tmp/fliinitdone
       check_for_failure
       # vhut token is set as a secret inside the jenkins master
