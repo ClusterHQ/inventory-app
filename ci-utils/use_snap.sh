@@ -45,7 +45,6 @@ echo "Creating volume from Snapshot"
 VPATH=$($fli clone $VS:$IDOFSNAP volumeFrom-$SNAP-$BUILDN)
 echo "Volume $VPATH created"
 
-
 echo "Loading the path into the application."
 # load the Volume Path into compose. later we can use `fli-docker`
 # to eliminate the need for this being bash. 
