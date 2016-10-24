@@ -44,12 +44,12 @@ IDOFWORKINGVOL=$($fli list -v ${WORKINGVOL} | head -1 | awk '{print $1}')
 SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
 BRANCHNAME="${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}"
 echo "Creating snapshot $SNAPNAME"
+echo "Running: $fli snapshot -b ${BRANCHNAME} \
+          -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
+          -d a snapshot of ${WORKINGVOL} for test ${TEST} \
+          ${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})"
 VOLSNAP=$($fli snapshot -b ${BRANCHNAME} \
-          -a jenkins_build_number=${JENKINSBUILDN},\
-          build_id=${JENKINSBUILDID},\
-          build_URL=${JENKINSBUILDURL},\
-          ran_test=${TEST},\
-          built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
+          -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
           -d "a snapshot of ${WORKINGVOL} for test ${TEST}" \
           ${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})
 

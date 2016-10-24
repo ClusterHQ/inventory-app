@@ -1,41 +1,41 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_ping', '750k-records-snap', 'inventory-app')
+      run_group('test_http_ping', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 2':{
     node('v8s-dpcli-prov'){
       //run_group('test_db_dealer_numbers', 'badphonenumber', 'inventory-app')
-      run_group('test_db_dealer_numbers', '750k-records-snap', 'inventory-app')
+      run_group('test_db_dealer_numbers', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 3':{
     node('v8s-dpcli-prov'){
       //run_group('test_db_vehicle_vins', 'badvinnumber', 'inventory-app')
-      run_group('test_db_vehicle_vins', '750k-records-snap', 'inventory-app')
+      run_group('test_db_vehicle_vins', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 4':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers_getdealerships', '750k-records-snap', 'inventory-app')
+      run_group('test_http_dealers_getdealerships', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 5':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers_postdealership', '750k-records-snap', 'inventory-app')
+      run_group('test_http_dealers_postdealership', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 6':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_dealers_postgetdealers', '750k-records-snap', 'inventory-app')
+      run_group('test_http_dealers_postgetdealers', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 7':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles_getvehicles', '750k-records-snap', 'inventory-app')
+      run_group('test_http_vehicles_getvehicles', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 8':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles_postgetvehicle', '750k-records-snap', 'inventory-app')
+      run_group('test_http_vehicles_postgetvehicle', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 9':{
     node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles_postvehicle', '750k-records-snap', 'inventory-app')
+      run_group('test_http_vehicles_postvehicle', '750k-records-snap2', 'inventory-app')
     }
 }
 
@@ -70,7 +70,7 @@ def run_group(test, volsnap, volset) {
       // Volumeset the snapshot belongs to for master
       vs = 'inventory-app'
       // Snapshot used for tests in branch
-      snap = '750k-records-snap'
+      snap = '750k-records-snap2'
       echo "Using Snapshot ${vs} for branch: master"
    }else{
       // **********************************************
@@ -132,7 +132,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for master
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = '750k-records-snap'
+      staging_snap = '750k-records-snap2'
       echo "Using Snapshot ${staging_snap} for branch: master"
    }else{
       // **********************************************
@@ -142,7 +142,7 @@ node ('v8s-dpcli-prov-staging') {
       // Volumeset the snapshot belongs to for dev branch
       staging_vs = 'inventory-app'
       // Snapshot used for tests in master
-      staging_snap = '750k-records-snap'
+      staging_snap = '750k-records-snap2'
       echo "Using Snapshot: ${staging_snap} Branch: ${env.BRANCH_NAME}"
    }
 
