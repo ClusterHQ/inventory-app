@@ -40,18 +40,18 @@ fi
 echo "Getting the active volume from the application"
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
 echo "Volume being used was $WORKINGVOL"
-IDOFWORKINGVOL=$($fli list -v ${WORKINGVOL} | head -1 | awk '{print $1}')
+IDOFWORKINGVOL=$($fli list -v ${WORKINGVOL} | grep ${WORKINGVOL} | head -1 | awk '{print $1}')
 SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
 BRANCHNAME="${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}"
 echo "Creating snapshot $SNAPNAME"
-echo "Running: $fli snapshot -b ${BRANCHNAME} \
-          -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
-          -d a snapshot of ${WORKINGVOL} for test ${TEST} \
-          ${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})"
+echo "Running: fli snapshot -b ${BRANCHNAME} \
+-a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
+-d a snapshot of ${WORKINGVOL} for test ${TEST} \
+${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})"
 VOLSNAP=$($fli snapshot -b ${BRANCHNAME} \
-          -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
-          -d "a snapshot of ${WORKINGVOL} for test ${TEST}" \
-          ${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})
+-a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
+-d "a snapshot of ${WORKINGVOL} for test ${TEST}" \
+${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})
 
 echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
 
