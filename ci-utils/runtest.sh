@@ -35,7 +35,7 @@ TEST=$RUNTEST
 FAILED=false
 FAILED_TESTS=()
 
-fli='docker run --rm --privileged -v /chq/:/chq/ -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
 check_for_failure() {
    if [ $? -eq 0 ]; then
