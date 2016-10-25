@@ -2,6 +2,8 @@
 
 A sample application to showcase FlockerHub and `fli` that tracks inventory of Dealerships and Vehicles.
 
+[![Build Status](http://jenkins-demo.flockerhub-jenkins.com:80/buildStatus/icon?job=inventory-pipeline-multi/master)](http://jenkins-demo.flockerhub-jenkins.com:80/job/inventory-pipeline-multi/job/master/)
+
 ### Credit
 
 We are building off of https://github.com/SocketCluster/sc-sample-inventory for this application.
