@@ -53,7 +53,7 @@ VOLSNAP=$($fli snapshot -b ${BRANCHNAME} \
 -d "a snapshot of ${WORKINGVOL} for test ${TEST}" \
 ${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})
 
-echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
+echo "Took snapshot: ${SNAPNAME} of volume: ${IDOFWORKINGVOL}"
 
 # If failed test, provide a manifest to re-create err state.
 if [[ "$TEST" == *"Failed-"* ]]
@@ -89,8 +89,8 @@ fi
 
 echo "Syncing volumset back to FlockerHub"
 $fli sync $VOLUMESET
-echo "Pushing $VOLUMESET:$VOLSNAP to FlockerHub"
-$fli push $VOLUMESET:$VOLSNAP
+echo "Pushing $VOLUMESET:$SNAPNAME to FlockerHub"
+$fli push $VOLUMESET:$SNAPNAME
 echo "Showing specific snapshots for this builds branch"
 $fli list -b ${BRANCHNAME}
 
