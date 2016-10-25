@@ -22,6 +22,8 @@ JENKINSBUILDURL=$5
 JENKINSBUILDN=$6
 ENV="staging"
 
+fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+
 check_for_failure() {
    if [ $? -eq 0 ]; then
       echo "OK"
@@ -34,13 +36,13 @@ check_for_failure() {
 init_fli(){
    # Check if init has been run or if its a new slave.
    if [ ! -f /tmp/fliinitdone ]; then
-      /opt/clusterhq/bin/dpcli init --zpool chq -f || true
+      $fli setup --zpool chq || true
       touch /tmp/fliinitdone
       check_for_failure
       # vhut token is set as a secret inside the jenkins master
-      /opt/clusterhq/bin/dpcli set tokenfile /root/vhut.txt
+      $fli config -t /root/fh.token
       check_for_failure
-      /opt/clusterhq/bin/dpcli set volumehub $HUBENDPOINT
+      $fli config -u $HUBENDPOINT
       check_for_failure
    fi
 }

@@ -29,20 +29,31 @@ JENKINSBUILDURL=$5
 TEST=$6
 JENKINSNODE=$7
 
+fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
+
 # Check for "needed" vars
 if [ -z "$VOLUMESET" ]; then
     echo "VOLUMESET was unset, exiting"
     exit 1
 fi  
 
+echo "Getting the active volume from the application"
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
-PATH=$PATH:/usr/local/sbin/
+echo "Volume being used was $WORKINGVOL"
+IDOFWORKINGVOL=$($fli list -v ${WORKINGVOL} | grep ${WORKINGVOL} | head -1 | awk '{print $1}')
 SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
-VOLSNAP=$(/opt/clusterhq/bin/dpcli create snapshot --volume $WORKINGVOL --branch ${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN} \
-          -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
-          --description "a snapshot of ${WORKINGVOL} for test ${TEST}" ${SNAPNAME} | grep "New Snapshot ID:" | grep -E -o  '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+BRANCHNAME="${GITBRANCH}-test-${TEST}-build-${JENKINSBUILDN}"
+echo "Creating snapshot $SNAPNAME"
+echo "Running: fli snapshot -b ${BRANCHNAME} \
+-a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
+-d 'a snapshot of ${WORKINGVOL} for test ${TEST}' \
+${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME}"
+VOLSNAP=$($fli snapshot -b ${BRANCHNAME} \
+-a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
+-d "a snapshot of ${WORKINGVOL} for test ${TEST}" \
+${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})
 
-echo "Took snapshot: ${VOLSNAP} of volume: ${WORKINGVOL}"
+echo "Took snapshot: ${SNAPNAME} of volume: ${IDOFWORKINGVOL}"
 
 # If failed test, provide a manifest to re-create err state.
 if [[ "$TEST" == *"Failed-"* ]]
@@ -56,7 +67,7 @@ cat >> testfailures.txt <<EOL
 
   flocker_hub:
       endpoint: http://flockerhub.com
-      tokenfile: /path/to/your/authtoken.txt
+      tokenfile: /path/to/your/fhub.token
 
   volumes:
       - name: rethink-data
@@ -76,8 +87,10 @@ if [ -z "$WORKINGVOL" ]; then
     exit 1
 fi  
 
-/opt/clusterhq/bin/dpcli sync volumeset $VOLUMESET
-/opt/clusterhq/bin/dpcli push snapshot $VOLSNAP
-echo "Showing specific snapshots for this build"
-/opt/clusterhq/bin/dpcli show snapshot --volumeset $VOLUMESET | grep "${GITBRANCH}-test-.*-build-${JENKINSBUILDN}"
+echo "Syncing volumset back to FlockerHub"
+$fli sync $VOLUMESET
+echo "Pushing $VOLUMESET:$SNAPNAME to FlockerHub"
+$fli push $VOLUMESET:$SNAPNAME
+echo "Showing specific snapshots for this builds branch"
+$fli list -b ${BRANCHNAME}
 

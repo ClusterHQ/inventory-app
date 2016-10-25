@@ -11,18 +11,16 @@ if [ "$EUID" -ne 0 ]
   exit 1
 fi
 
-if [ $# -ne 4 ]
+if [ $# -ne 3 ]
   then
     echo "Wrong arguments supplied"
-    echo "./scipt.sh DEVICE TAG HASH CUSTOMER"
+    echo "./scipt.sh DEVICE TAG HASH"
     exit 1
 fi
 
 DEVICE="$1"
 TOKEN="$2"
 TAG="$3"
-# Matches $CUST_pull_dpcli robot in quay.io
-CUST="$4"
 
 EPELRELEASEURL="http://epel.mirror.net.in/epel/7/x86_64/e/epel-release-7-8.noarch.rpm"
 EPELRELEASE="epel-release-7-8.noarch.rpm"
@@ -57,7 +55,6 @@ modprobe zfs
 
 create_zfs_pool() {
 zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa chq ${DEVICE}
-zfs snapshot chq@empty
 }
 
 install_start_docker() {
@@ -79,20 +76,11 @@ curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose
 chmod +x /usr/local/bin/docker-compose
 }
 
-install_dpcli() {
-docker login -e="." -u="clusterhq_prod+${CUST}_pull_dpcli" -p="${TOKEN}" quay.io
-docker pull quay.io/clusterhq_prod/dpcli-rpm:${TAG}
-docker create --name dpcli quay.io/clusterhq_prod/dpcli-rpm:${TAG}
-docker cp dpcli:/opt/clusterhq/lib/dpcli-0.0.1-1.el7.centos.x86_64.rpm .
-rpm -Uvh dpcli-0.0.1-1.el7.centos.x86_64.rpm
-}
-
-install_bash_completion() {
-yum -y install bash-completion
-mkdir /etc/bashcompletion.d
-/opt/clusterhq/bin/dpcli completion --output=/etc/bashcompletion.d/dpcli 
-echo "source /etc/bashcompletion.d/dpcli" >> /root/.bashrc
-echo "export PATH=$PATH:/opt/clusterhq/bin" >> /root/.bash_profile
+install_fli() {
+docker login -e="." -u="clusterhq_prod+pull_fli" -p="${TOKEN}" quay.io
+docker pull quay.io/clusterhq_prod/fli:${TAG}
+docker tag quay.io/clusterhq_prod/fli:${TAG} clusterhq/fli
+sudo echo "alias fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'" >> /root/.bashrc
 }
 
 if [ "1" ] ; then
@@ -116,8 +104,7 @@ if [ "1" ] ; then
      install_docker_compose
   fi
 
-  install_dpcli
-  install_bash_completion
+  install_fli
 fi
 
 # No code is executed after the line -- some magic!
