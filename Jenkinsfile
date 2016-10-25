@@ -1,40 +1,40 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       run_group('test_http_ping', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 2':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       //run_group('test_db_dealer_numbers', 'badphonenumber', 'inventory-app')
       run_group('test_db_dealer_numbers', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 3':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       //run_group('test_db_vehicle_vins', 'badvinnumber', 'inventory-app')
       run_group('test_db_vehicle_vins', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 4':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       run_group('test_http_dealers_getdealerships', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 5':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       run_group('test_http_dealers_postdealership', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 6':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       run_group('test_http_dealers_postgetdealers', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 7':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       run_group('test_http_vehicles_getvehicles', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 8':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       run_group('test_http_vehicles_postgetvehicle', '750k-records-snap2', 'inventory-app')
     }
 }, 'parallel tests 9':{
-    node('v8s-dpcli-prov'){
+    node('v8s-fli-prov'){
       run_group('test_http_vehicles_postvehicle', '750k-records-snap2', 'inventory-app')
     }
 }
@@ -97,7 +97,7 @@ def run_group(test, volsnap, volset) {
 
 }
 
-node ('v8s-dpcli-prov-staging') {
+node ('v8s-fli-prov-staging') {
    stage 'Staging: Make sure cloud-init done'
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
