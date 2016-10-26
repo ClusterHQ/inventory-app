@@ -1,6 +1,6 @@
 # Sample Inventory-App for FlockerHub
 
-A sample application to showcase FlockerHub and `fli` that tracks inventory of Dealerships and Vehicles.
+A sample application to showcase FlockerHub and Fli that tracks inventory of Dealerships and Vehicles.
 
 [![Build Status](http://jenkinsdemo.clusterhq.com:80/buildStatus/icon?job=inventory-pipeline-multi/master)](http://jenkinsdemo.clusterhq.com:80/job/inventory-pipeline-multi/job/master/)
 
@@ -16,13 +16,13 @@ Read more [here](README_original.md)
 
 FlockerHub is a catalog and repository for all of your application’s Docker volumes.
 
-Designed to work with fli, a git-like CLI for snapshotting, pushing and pulling volumes, FlockerHub lets you keep track of and distribute your volumes to any host, all with access-controls that allow you to fulfill your data governance responsibilities.
+Designed to work with Fli, a git-like CLI for snapshotting, pushing and pulling volumes, FlockerHub lets you keep track of and distribute your volumes to any host, all with access-controls that allow you to fulfill your data governance responsibilities.
 
 FlockerHub is currently available as a hosted service. Contact us if you’d like to run FlockerHub in your own cloud or data center as a private repository.
 
-## What is `fli`?
+## What is Fli?
 
-fli is the CLI for FlockerHub. You can think of it like git, but for data. Fli lets you version control your Docker data volumes the way git lets you version control your code.
+Fli is the CLI for FlockerHub. You can think of it like git, but for data. Fli lets you version control your Docker data volumes the way git lets you version control your code.
 
 When combined with FlockerHub, you can share your data with any other user or computer on the Internet to which you’ve granted access, the way that GitHub lets you share your code version-controlled with git.
 
@@ -32,7 +32,7 @@ With version controlled data and fine grained access controls, you can speed up 
 
 This application has containerized microservice of RethinkDB and a NodeJS/ExpressJS/SocketCluster application.
 
-This repository is setup with scripts and CI/CD tools that take advantage of FlockerHub and `fli`.
+This repository is setup with scripts and CI/CD tools that take advantage of FlockerHub and Fli.
 
 #### docker and docker-compose
 
@@ -68,11 +68,13 @@ The main portion of the application. This is where public pages and tests are. S
 
 #### ci-utils/
 
-The `ci-utils` directory is the scripts that `Jenkinsfile` calls inside of a Jenkins CI/CD workflow to run the tests, call `fli` and push to staging.
+The `ci-utils` directory is the scripts that `Jenkinsfile` calls inside of a Jenkins CI/CD workflow to run the tests, call Fli and push to staging.
 
 #### `fli-docker`
 
 The fli-docker utility is designed to simplify the deployment of stateful applications inside Docker containers.
+
+https://github.com/ClusterHQ/fli-docker 
 
 This is achieved through creation of a Flocker Hub Stateful Application Manifest (SAM) file (aka. "manifest"), which is used side by side with the Docker Compose file. The SAM file is a YAML file that defines data volumes from ClusterHQ's Flocker Hub, synchronizes data snapshots locally, and maps them to Docker volumes in the Docker Compose file.
 

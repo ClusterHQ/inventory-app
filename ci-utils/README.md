@@ -9,7 +9,7 @@ The below Jenkins environment has Docker + Flocker + Flocker Docker Plugin on AW
 http://jenkinsdemo.clusterhq.com/
 
 ### Dynamic Nodes
- - Centos 7 (EC2 Jenkins Plugin is setup to dynamically deploy these with fli installed via cloud-init data)
+ - Centos 7 (EC2 Jenkins Plugin is setup to dynamically deploy these with Fli installed via cloud-init data)
 
 Caveat, is that builds using this tag must have the first built stage in pipelines must check for `/var/lib/cloud/instance/boot-finished` as it denoted cloud-init being finished and therefore dpcli installed. Otherwise jenkins will try to run a job before cloud-init is done.
 
@@ -76,13 +76,13 @@ http://jenkinsdemo.clusterhq.com/job/inventory-pipeline-multi/
 
 This is just to get us off the ground running. Pipeline syntax. This can be found here https://github.com/ClusterHQ/inventory-app/blob/master/Jenkinsfile. We will eventually switch this to use `docker.image('mysql').withRun {c ->` see https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/chapter-docker-workflow.html 
 
-In the above pipeline, there are Build Slaves labeled with ‘v8s-fli’, this denotes that they are available to use for voluminous use cases, meaning docker, docker-compose, and `fli` will be installed on them.
+In the above pipeline, there are Build Slaves labeled with ‘v8s-fli’, this denotes that they are available to use for voluminous use cases, meaning docker, docker-compose, and Fli will be installed on them.
 
-### fli Slaves with CentOS 7/fli (use cloud-init scripts)
+### Fli Slaves with CentOS 7/Fli (use cloud-init scripts)
 
 There are a few scripts in `ci-utils/` that can be used to boostrap CentOS 7 Jenkins slaves for them to be usable with docker, compose and dpcli. One is shown below.
 
-The script below is sent to `cloud-init` which will set some git/fli tokens/users and kick off a script to install `fli`.
+The script below is sent to `cloud-init` which will set some git/Fli tokens/users and kick off a script to install Fli.
 
 ```
 #!/bin/bash
@@ -96,7 +96,7 @@ echo "<token>" > /root/fh.token
 curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb TOKEN TAG
 ```
 
-EC2 Auto Provisioning Plugin needs this init script along with the above User Data. in order to work. DPCLI needs sudo therefore we allow without tty, also install java. We also need to timeout to wait for cloud-init to finish so that `fli` is installed before jenkins adds the slave.
+EC2 Auto Provisioning Plugin needs this init script along with the above User Data. in order to work. DPCLI needs sudo therefore we allow without tty, also install java. We also need to timeout to wait for cloud-init to finish so that Fli is installed before jenkins adds the slave.
 
 ```
 sudo mkdir /var/lib/jenkins
