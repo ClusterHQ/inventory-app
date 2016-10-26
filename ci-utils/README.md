@@ -2,23 +2,18 @@
 
 ## Jenkins Nodes
 
-The below jenkins nodes have Docker + Flocker + Flocker Docker Plugin on AWS
+The below Jenkins environment has Docker + Flocker + Flocker Docker Plugin on AWS
 
-- Master - i-966fcaa7: ec2-54-173-56-41.compute-1.amazonaws.com
+### Master 
 
-### Static Nodes (these may change or go away over time)
-
-- Ubuntu Slave - i-3f75d00e: ec2-52-91-245-179.compute-1.amazonaws.com
-   - (serves static, but used as Docker Cloud configured to run build slaves as container on these same -nodes to builds run in docker containers.)
+http://jenkinsdemo.clusterhq.com/
 
 ### Dynamic Nodes
- - Centos 7 (EC2 Jenkins Plugin is setup to dynamically deploy these with dpcli install cloud-init data)
+ - Centos 7 (EC2 Jenkins Plugin is setup to dynamically deploy these with fli installed via cloud-init data)
 
 Caveat, is that builds using this tag must have the first built stage in pipelines must check for `/var/lib/cloud/instance/boot-finished` as it denoted cloud-init being finished and therefore dpcli installed. Otherwise jenkins will try to run a job before cloud-init is done.
-This also makes builds take a minimum of (cloud-init-time) + (build-time) 
 
-## Jenkins Master
-http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/ 
+This also makes builds take a minimum of (cloud-init-time) + (build-time) 
 
 ### Jenkins Master Setup (Dogfooding ClusterHQ Flocker)
 Jenkins master was created with this compose.yml. It uses flocker volumes for certain parts of the jenkins master, such as plugins and backups.
@@ -77,24 +72,17 @@ All tests with `test-` are just to test a deployment tag, slaves etc. You can re
  
 ### Inventory App Pipeline (inventory-pipeline-multi)
 
-http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/ 
+http://jenkinsdemo.clusterhq.com/job/inventory-pipeline-multi/ 
 
 This is just to get us off the ground running. Pipeline syntax. This can be found here https://github.com/ClusterHQ/inventory-app/blob/master/Jenkinsfile. We will eventually switch this to use `docker.image('mysql').withRun {c ->` see https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/chapter-docker-workflow.html 
 
-In the above pipeline, there are Build Slaves labeled with ‘v8s-dpcli’, this denotes that they are available to use for voluminous use cases, meaning docker, docker-compose, and fs3/dpcli will be installed on them.
-
-Right now ‘v8s’ nodes only have nodejs, npm, docker, and flocker on them, only use them if not interested in fs3/dpcli.
-
+In the above pipeline, there are Build Slaves labeled with ‘v8s-fli’, this denotes that they are available to use for voluminous use cases, meaning docker, docker-compose, and `fli` will be installed on them.
 
 ### fli Slaves with CentOS 7/fli (use cloud-init scripts)
 
-There are a few scripts in `ci-utils/` that can be used to boostrap CentOS 7 Jenkins slaves for
-them to be usable with docker, compose and dpcli. One is shown below.
+There are a few scripts in `ci-utils/` that can be used to boostrap CentOS 7 Jenkins slaves for them to be usable with docker, compose and dpcli. One is shown below.
 
-NOTE: this is different than the one used for PoCs, it assumes ZFS is installed on it already. E.g. like the base AMI used by engineering.
-
-The script below is sent to `cloud-init` which will set some git/fli tokens/users and kick off
-a script to install `fli`.
+The script below is sent to `cloud-init` which will set some git/fli tokens/users and kick off a script to install `fli`.
 
 ```
 #!/bin/bash
@@ -103,13 +91,12 @@ echo "export GITUSER=<github-user>" >> /home/centos/.bashrc
 echo "export GITUSER=<github-user>" >> /root/.bashrc
 echo "export GITTOKEN=<token>" >> /home/centos/.bashrc
 echo "export GITTOKEN=<token>" >> /root/.bashrc
-# Set VHUT Token
-echo "<token>" > /root/vhut.txt
-curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb TOKEN TAG jenkinsdemo
+# Set FlockerHub Authentiaction Token for Jenkins Bot
+echo "<token>" > /root/fh.token
+curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb TOKEN TAG
 ```
 
-EC2 Auto Provisioning Plugin needs this init script along with the above User Data. in order to work. DPCLI needs sudo therefore we allow without tty, also install java. We also need to timeout to wait for cloud-init to finish so that DPCLI is installed before jenkins adds the slave.
-(We could substitute the dpcli install script in for a build stage, but then would have to build in “if already installed, skip” login into script, it’s more of an infrastructure thing)
+EC2 Auto Provisioning Plugin needs this init script along with the above User Data. in order to work. DPCLI needs sudo therefore we allow without tty, also install java. We also need to timeout to wait for cloud-init to finish so that `fli` is installed before jenkins adds the slave.
 
 ```
 sudo mkdir /var/lib/jenkins
@@ -123,37 +110,33 @@ fi
 This is all we need, we would need to use `sudo sed -i.bak '/Defaults    requiretty/d' /etc/sudoers` if our AMI didn’t already have this removed as jenkins can’t sudo on centos without TTY. Even with this setting it turned out to be flaky Jenkins might SSH and set this and not logout so therefore the tty setting wasn’t valid.
 
 ### Other
+
  - Creditials while running in slave.
 
 Test are running on the slave hosts right now and only using `docker run` to spin up the rethinkdb.
 When we modify Jenkins to run tests inside the container we will have to see about a few things
-How to connect to RethinkDB in the other docker container
-How to get correct environment variables for Git.
-Right now, we assume these are added as env variables for the Git robot user and accessible within the pipeline syntax vis `env.` via the Jenkins configurations for `environment` or through init/cloud-init like scripts for dynamic nodes created by Jenkins plugins.
+ - How to connect to RethinkDB in the other docker container
+ - How to get correct environment variables for Git.
+
+Right now, we assume these are added as env variables for the Git robot user and accessible within the pipeline syntax via `env.` via the Jenkins configurations for `environment` or through init/cloud-init like scripts for dynamic nodes created by Jenkins plugins.
 
 
 ### Average Build Times for database test isolation
 
 #### for Snapshots, Bulk Imports and Record by Record
 
-Re-instantiate the database and use a record by record import/insert into RethinkDB and run 3 isolated tests
-http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/recordbyrecord_example/
-  - Average Runtime: 10-12min
-  - https://github.com/ClusterHQ/inventory-app/tree/recordbyrecord_example
+**Longest**
+ - Re-instantiate the database and use a record by record import/insert into RethinkDB and run 3 isolated tests
 
-Re-instantiate the database and use  a bulk import/insert into RethinkDB and run 3 isolated tests
-http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/bulk_example/
-  - Average Runtime: 5-6 mins
-  - https://github.com/ClusterHQ/inventory-app/tree/bulk_example
+**A little faster**
+ - Re-instantiate the database and use  a bulk import/insert into RethinkDB and run 3 isolated tests
 
-Use a FlockerHub snapshot to repopulate the DB and run 3 isolated tests and push DB snapshots of tests state.
-http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/master/ 
-  - Average Runtime:  1-2 min
-  - https://github.com/ClusterHQ/inventory-app
+**Fastest**
+ - Use a FlockerHub snapshot to repopulate the DB and run isolated tests in parallel and push DB snapshots of tests state.
 
 ## Run tests in parallel
 
-Example can be found here: http://ec2-54-173-56-41.compute-1.amazonaws.com:8080/job/inventory-pipeline-multi/job/parallel-testing 
+Example can be found here: http://jenkinsdemo.clusterhq.com/job/inventory-pipeline-multi/job/master/
 
 A code snippet of passing `volumeset` and `snapshot` to a parallel test can be seen below. These 3 parallel runs each run a specific test as well as use a specific volumeset and snapshot.
 
@@ -167,27 +150,16 @@ Here are some links about why Parallel Testing is great.
 ```
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
-    node('v8s-dpcli-prov'){
-      run_group('test_http_ping', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
+    node('v8s-fli-prov'){
+      run_group('test_http_ping', 'snapshot', 'inventory-app')
     }
 }, 'parallel tests 2':{
-    node('v8s-dpcli-prov'){
-      run_group('test_http_dealers', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
+    node('v8s-fli-prov'){
+      run_group('test_http_dealers', 'snapshot', 'inventory-app')
     }
 }, 'parallel tests 3':{
-    node('v8s-dpcli-prov'){
-      run_group('test_http_vehicles', 'd6c5441a-9af2-47d5-9010-3c6e5ccad672', 'inventory-app')
+    node('v8s-fli-prov'){
+      run_group('test_http_vehicles', 'snapshot', 'inventory-app')
     }
 }
 ```
-
-Once you do this, each test will run on its own jenkins slave and run that specific test with that specific snapshot. See some screenshots below.
-
-Tests all run in one stage and run in parallel
-![alt text](http://i.imgur.com/RP3NpVf.png)
-
-Tests can be seen running in parallel on different slaves
-![alt text](http://i.imgur.com/L8pLxS8.png)
-
-Test output will show each "stream" bases on the labels within `parallel`
-![alt text](http://i.imgur.com/QcfhYKj.png)
