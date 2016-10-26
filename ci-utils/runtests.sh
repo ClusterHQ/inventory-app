@@ -124,6 +124,7 @@ check_if_failed() {
    if $FAILED ; then 
       echo "Found failed tests: ${FAILED_TESTS[@]}"
       cat testfailures.txt
+      rm -f testfailures.txt
       exit 1; 
    fi
 }
