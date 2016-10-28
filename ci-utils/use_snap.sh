@@ -10,10 +10,14 @@ set -e
 # -------------------- Params ---------------------------------------
 # VS     is a Flocker Hub Volumeset, which owns snapshots and variants
 # SNAP   is a Flocker Hub Snapshot
+# ENV    ci or staging?
 # --------------------- END -----------------------------------------
 
 VS=$1
 SNAP=$2
+ENV=$3
+
+PATH="inventory-app/"
 
 fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
@@ -28,8 +32,12 @@ if [ -z "$SNAP" ]; then
     exit 1
 fi
 
+if [ "${ENV}" == "staging" ]; then
+    PATH="${BRANCH}-inventory-app/"
+fi
+
 echo "Loading the path into the application."
-cat >> inventory-app/test-manifest.yml <<EOL
+cat >> ${PATH}test-manifest.yml <<EOL
 docker_app: docker-compose.yml
 
 flocker_hub:
@@ -42,5 +50,5 @@ volumes:
     volumeset: ${VS}
 EOL
 
-cd inventory-app/
+cd ${PATH}
 /usr/local/bin/fli-docker run -f test-manifest.yml 
