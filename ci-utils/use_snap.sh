@@ -11,11 +11,13 @@ set -e
 # VS     is a Flocker Hub Volumeset, which owns snapshots and variants
 # SNAP   is a Flocker Hub Snapshot
 # ENV    ci or staging?
+# BRANCH uses to identify path if in staging
 # --------------------- END -----------------------------------------
 
 VS=$1
 SNAP=$2
 ENV=$3
+BRANCH=$4
 
 APPPATH="inventory-app/"
 
