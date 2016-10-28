@@ -41,7 +41,7 @@ echo "Getting the active volume from the application"
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
 echo "Volume being used was $WORKINGVOL"
 IDOFWORKINGVOL=$($fli list -v ${WORKINGVOL} | grep ${WORKINGVOL} | head -1 | awk '{print $1}')
-SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
+SNAPNAME="${GITBRANCH}-snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
 BRANCHNAME="${GITBRANCH}-${TEST}-build-${JENKINSBUILDN}"
 echo "Creating snapshot $SNAPNAME"
 echo "Running: fli snapshot -b ${BRANCHNAME} \
