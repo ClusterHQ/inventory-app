@@ -37,7 +37,7 @@ if [ "${ENV}" == "staging" ]; then
 fi
 
 echo "Loading the path into the application."
-cat >> ${PATH}test-manifest.yml <<EOL
+cat >> "${PATH}test-manifest.yml" <<EOL
 docker_app: docker-compose.yml
 
 flocker_hub:
