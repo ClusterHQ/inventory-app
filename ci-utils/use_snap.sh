@@ -17,7 +17,7 @@ VS=$1
 SNAP=$2
 ENV=$3
 
-PATH="inventory-app/"
+APPPATH="inventory-app/"
 
 fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'
 
@@ -33,11 +33,11 @@ if [ -z "$SNAP" ]; then
 fi
 
 if [ "${ENV}" == "staging" ]; then
-    PATH="${BRANCH}-inventory-app/"
+    APPPATH="${BRANCH}-inventory-app/"
 fi
 
 echo "Loading the path into the application."
-cat >> "${PATH}test-manifest.yml" <<EOL
+cat >> "${APPPATH}test-manifest.yml" <<EOL
 docker_app: docker-compose.yml
 
 flocker_hub:
@@ -50,5 +50,5 @@ volumes:
     volumeset: ${VS}
 EOL
 
-cd ${PATH}
+cd ${APPPATH}
 /usr/local/bin/fli-docker run -f test-manifest.yml 
