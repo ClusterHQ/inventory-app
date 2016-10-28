@@ -52,7 +52,7 @@ use_snapshot() {
    # Run `use_snap.sh` which pulls and creates volume from snapshot.
    # this script with modify in place the docker-compose.yml file
    # and add the /chq/<UUID> volume.
-   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${GITBRANCH} ${ENV} ${JENKINSBUILDN}
+   ${GITBRANCH}-inventory-app/ci-utils/use_snap.sh ${VOLUMESET} ${SNAP} ${ENV} ${GITBRANCH}
 }
 
 start_app() {

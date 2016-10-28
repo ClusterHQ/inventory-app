@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Purpose: This script installs the Flocker Line Interface (fli) from Quay.io (SaaS Docker image repository)
+# Purpose: This script installs the Fli
 # This script is meant to be used on CentOS 7 nodes that don't have ZFS installed.
 # Author: Ryan Wallner
 
@@ -74,6 +74,7 @@ service docker start
 install_docker_compose(){
 curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
+cp /usr/local/bin/docker-compose /usr/bin/
 }
 
 install_fli() {
@@ -81,6 +82,13 @@ docker login -e="." -u="clusterhq_prod+pull_fli" -p="${TOKEN}" quay.io
 docker pull quay.io/clusterhq_prod/fli:${TAG}
 docker tag quay.io/clusterhq_prod/fli:${TAG} clusterhq/fli
 sudo echo "alias fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'" >> /root/.bashrc
+}
+
+install_fli_docker() {
+yum -y install wget
+wget https://s3.amazonaws.com/ryanwallner/fli-docker-0.0.1-dev/fli-docker
+chmod +x fli-docker 
+mv fli-docker /usr/local/bin/
 }
 
 if [ "1" ] ; then
@@ -104,6 +112,7 @@ if [ "1" ] ; then
      install_docker_compose
   fi
 
+  install_fli_docker
   install_fli
 fi
 

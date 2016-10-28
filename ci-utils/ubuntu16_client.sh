@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-# Purpose: This script installs the Fli
-# This script is meant to be used on CentOS 7 nodes that have ZFS installed already.
+# Purpose: This script installs the Fli (Fli) 
+# This script is meant to be used on Ubuntu 16.04 nodes that have ZFS installed already.
 # Author: Ryan Wallner
 
 set -eu
@@ -26,8 +26,8 @@ wait() {
 sleep 5
 }
 
-update_yum() {
-yum -y update
+update_apt() {
+apt-get -y update
 }
 
 command_exists() {
@@ -35,33 +35,14 @@ command_exists() {
 }
 
 create_zfs_pool() {
-# # Adding `cd` and `mkdir` with `zpool create -m` below 
-# becuase I am getting the bellow error from the command,
-# but chq pool was still created and mounted. Error was:
-# ```
-# cloud-init: mount: mount(2) failed: No such file or directory
-# cloud-init: cannot mount 'chq': No such device or address
-# ```
-export PATH=$PATH:/usr/local/sbin/
-echo "export PATH=$PATH:/usr/local/sbin/" >> /root/.bashrc
-cd /root
-mkdir /chq
-echo "Running: zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq ${DEVICE}"
-zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq "${DEVICE}"
+apt-get -y install zfsutils-linux
+echo "Running: zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa chq ${DEVICE}"
+zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa chq "${DEVICE}"
 }
 
 install_start_docker() {
-tee /etc/yum.repos.d/docker.repo <<-'EOF'
-[dockerrepo]
-name=Docker Repository
-baseurl=https://yum.dockerproject.org/repo/main/centos/7/
-enabled=1
-gpgcheck=1
-gpgkey=https://yum.dockerproject.org/gpg
-EOF
-
-yum -y install docker-engine
-service docker start
+apt-get -y install docker.io
+systemctl restart docker
 }
 
 install_docker_compose(){
@@ -78,7 +59,6 @@ sudo echo "alias fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:
 }
 
 install_fli_docker() {
-yum -y install wget
 wget https://s3.amazonaws.com/ryanwallner/fli-docker-0.0.1-dev/fli-docker
 chmod +x fli-docker 
 mv fli-docker /usr/local/bin/
@@ -86,7 +66,7 @@ mv fli-docker /usr/local/bin/
 
 if [ "1" ] ; then
   echo "Installing the client software"
-  update_yum
+  update_apt
   create_zfs_pool
 
   # Check whether docker is installed, if not, install.
@@ -101,8 +81,12 @@ if [ "1" ] ; then
   else
      install_docker_compose
   fi
+  if command_exists fli-docker; then
+     echo "Docker Compose already installed, skipping install"
+  else
+     install_fli_docker
+  fi
 
-  install_fli_docker
   install_fli
 fi
 
