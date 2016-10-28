@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-# Purpose: This script installs the Fli
-# This script is meant to be used on CentOS 7 nodes that don't have ZFS installed.
+# Purpose: This script installs the Fli (Fli) 
+# This script is meant to be used on Ubuntu 16.04 nodes that have ZFS installed already.
 # Author: Ryan Wallner
 
 set -eu
@@ -22,53 +22,27 @@ DEVICE="$1"
 TOKEN="$2"
 TAG="$3"
 
-EPELRELEASEURL="http://epel.mirror.net.in/epel/7/x86_64/e/epel-release-7-8.noarch.rpm"
-EPELRELEASE="epel-release-7-8.noarch.rpm"
-ZFSRELEASEURL="http://archive.zfsonlinux.org/epel/zfs-release.el7.noarch.rpm"
-ZFSRELEASE="zfs-release.el7.noarch.rpm"
-
 wait() {
 sleep 5
 }
 
-update_yum() {
-yum -y update
-}
-
-install_wget() {
-yum -y install wget
+update_apt() {
+apt-get -y update
 }
 
 command_exists() {
         command -v "$@" > /dev/null 2>&1
 }
 
-install_zfs(){
-wget --tries=20 --waitretry=5 ${EPELRELEASEURL} 
-yum -y localinstall ${EPELRELEASE} 
-wget --tries=20 --waitretry=5 ${ZFSRELEASEURL} 
-yum -y localinstall ${ZFSRELEASE} 
-yum -y install "kernel-devel-uname-r == $(uname -r)"
-yum -y install zfs
-modprobe zfs
-}
-
 create_zfs_pool() {
-zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa chq ${DEVICE}
+apt-get -y install zfsutils-linux
+echo "Running: zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa chq ${DEVICE}"
+zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa chq "${DEVICE}"
 }
 
 install_start_docker() {
-tee /etc/yum.repos.d/docker.repo <<-'EOF'
-[dockerrepo]
-name=Docker Repository
-baseurl=https://yum.dockerproject.org/repo/main/centos/7/
-enabled=1
-gpgcheck=1
-gpgkey=https://yum.dockerproject.org/gpg
-EOF
-
-yum -y install docker-engine
-service docker start
+apt-get -y install docker.io
+systemctl restart docker
 }
 
 install_docker_compose(){
@@ -84,7 +58,6 @@ sudo echo "alias fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:
 }
 
 install_fli_docker() {
-yum -y install wget
 wget https://s3.amazonaws.com/ryanwallner/fli-docker-0.0.1-dev/fli-docker
 chmod +x fli-docker 
 mv fli-docker /usr/local/bin/
@@ -92,10 +65,7 @@ mv fli-docker /usr/local/bin/
 
 if [ "1" ] ; then
   echo "Installing the client software"
-  update_yum
-  install_wget
-  install_zfs
-  wait
+  update_apt
   create_zfs_pool
 
   # Check whether docker is installed, if not, install.
@@ -110,8 +80,12 @@ if [ "1" ] ; then
   else
      install_docker_compose
   fi
+  if command_exists fli-docker; then
+     echo "Docker Compose already installed, skipping install"
+  else
+     install_fli_docker
+  fi
 
-  install_fli_docker
   install_fli
 fi
 
@@ -120,5 +94,5 @@ fi
 #
 # Example:
 #
-# cat ready_client_cntos7.sh [device] [token] [hash] [customer]
+# cat script.sh [device] [token] [hash] [customer]
 #
