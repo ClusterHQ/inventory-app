@@ -42,8 +42,7 @@ WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]
 echo "Volume being used was $WORKINGVOL"
 IDOFWORKINGVOL=$($fli list -v ${WORKINGVOL} | grep ${WORKINGVOL} | head -1 | awk '{print $1}')
 SNAPNAME="snapshotOfDb-${TEST}-build-${JENKINSBUILDN}"
-JENKINSNODEID=$(echo "${JENKINSNODE}" | grep -o -P '(?<=\().*(?=\))')
-BRANCHNAME="${GITBRANCH}-${JENKINSNODEID}-build-${JENKINSBUILDN}"
+BRANCHNAME="${GITBRANCH}-${TEST}-build-${JENKINSBUILDN}"
 echo "Creating snapshot $SNAPNAME"
 echo "Running: fli snapshot -b ${BRANCHNAME} \
 -a jenkins_build_number=${JENKINSBUILDN},build_id=${JENKINSBUILDID},build_URL=${JENKINSBUILDURL},ran_test=${TEST},built_on_jenkins_vm=${JENKINSNODE//[[:blank:]]/} \
