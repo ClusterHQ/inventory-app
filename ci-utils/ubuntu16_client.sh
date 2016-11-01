@@ -29,9 +29,9 @@ sleep 5
 
 update_apt() {
 n=0
-until [ $n -ge 5 ]
+until [ $n -ge 10 ]
 do
-  apt-get -y update && break  # substitute your command here
+  apt-get -y update && break
   n=$[$n+1]
   sleep 15
 done
