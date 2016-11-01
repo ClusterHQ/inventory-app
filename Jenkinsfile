@@ -52,6 +52,7 @@ def run_group(test, volsnap, volset) {
 
    // Remove the app in the same workspace to avoid reusing packages, node modules etc.
    sh 'sudo rm -rf inventory-app/'
+   sh "rm -f clonerepo*"
 
    // Clone the inventory app with the Github Bot user.
    sh "wget https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/clonerepo.sh"
@@ -111,6 +112,7 @@ node ('v8s-fli-prov-staging') {
    // container names to not overlap if running multiple staging environments on the same
    // staging node.
    sh "sudo rm -rf ${env.BRANCH_NAME}-inventory-app/"
+   sh "rm -f clonerepo*"
 
    stage 'Staging: Git Clone'
    // Clone the inventory app with the Github Bot user.
