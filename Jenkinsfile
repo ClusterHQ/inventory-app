@@ -56,8 +56,7 @@ def run_group(test, volsnap, volset) {
    // Clone the inventory app with the Github Bot user.
    sh "whoami"
    sh "env"
-   sh "/bin/bash -c 'source ~/.bashrc'"
-   sh "/bin/bash -c env"
+   sh "/bin/bash -c 'source ~/.bashrc && env'"
    sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
 
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
