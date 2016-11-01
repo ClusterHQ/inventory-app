@@ -81,7 +81,7 @@ def run_group(test, volsnap, volset) {
       vs = "${volumeset}"
       // Snapshot used for tests in branch
       snap = "${snapshot}"
-      echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
+      echo "Using Snapshot: ${snapshot} Branch: ${env.BRANCH_NAME}"
    }
    
    // Flocker Hub endpoint.
