@@ -51,6 +51,8 @@ def run_group(test, volsnap, volset) {
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
    // Clone the repo
+   sh "wget https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/clonerepo.sh"
+   sh "chmod +x clonerepo.sh"
    sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} inventory-app/"
 
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
@@ -100,7 +102,7 @@ node ('v8s-fli-prov-staging') {
    echo "Starting staging on: '${env.NODE_NAME}'"
 
    stage 'Staging: Clean and Clone'
-   sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} ${env.BRANCH_NAME}-inventory-app/'"
+   sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} ${env.BRANCH_NAME}-inventory-app/"
 
    stage 'Staging: Run staging environment'
    String staging_vs;
