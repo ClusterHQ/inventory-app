@@ -1,3 +1,4 @@
 node_modules/
 public/bower_components/
 .vscode/
+*.DS_Store

@@ -50,14 +50,10 @@ def run_group(test, volsnap, volset) {
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
-   // In case of failure, its nice to have this log
-   sh 'cat /var/log/cloud-init.log'
-
-   // Remove the app in the same workspace to avoid reusing packages, node modules etc.
-   sh 'sudo rm -rf inventory-app/'
-
-   // Clone the inventory app with the Github Bot user.
-   sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app"
+   // Clone the repo
+   sh "wget https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/clonerepo.sh"
+   sh "chmod +x clonerepo.sh"
+   sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} inventory-app/"
 
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
    String vs;
@@ -81,11 +77,11 @@ def run_group(test, volsnap, volset) {
       vs = "${volumeset}"
       // Snapshot used for tests in branch
       snap = "${snapshot}"
-      echo "Using Snapshot: ${vs} Branch: ${env.BRANCH_NAME}"
+      echo "Using Snapshot: ${snapshot} Branch: ${env.BRANCH_NAME}"
    }
    
    // Flocker Hub endpoint.
-   def ep = "https://ec2-35-160-163-24.us-west-2.compute.amazonaws.com"
+   def ep = "https://35.160.163.24"
 
    // Run the tests individually. This script is creating a new volume
    // from a snapshot locally and taking snapshots of the DB test results
@@ -102,24 +98,11 @@ node ('v8s-fli-prov-staging') {
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
-   stage 'Staging: See cloud-init log'
-   // In case of failure, its nice to have this log
-   sh 'cat /var/log/cloud-init.log'
-
    stage 'Staging: Announce'
    echo "Starting staging on: '${env.NODE_NAME}'"
 
-   stage 'Staging: Clean'
-   // Remove the app in the same workspace to avoid reusing packages, node modules etc.
-   // Staging will always create a <branch_name>-inventory-app/ directory instead
-   // of without a prefix so containers run with prefixes of that directory. This helps
-   // container names to not overlap if running multiple staging environments on the same
-   // staging node.
-   sh "sudo rm -rf ${env.BRANCH_NAME}-inventory-app/"
-
-   stage 'Staging: Git Clone'
-   // Clone the inventory app with the Github Bot user.
-   sh "git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app ${env.BRANCH_NAME}-inventory-app/"
+   stage 'Staging: Clean and Clone'
+   sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} ${env.BRANCH_NAME}-inventory-app/"
 
    stage 'Staging: Run staging environment'
    String staging_vs;
@@ -147,7 +130,7 @@ node ('v8s-fli-prov-staging') {
    }
 
    // Flocker Hub endpoint.
-   def staging_ep = "https://ec2-35-160-163-24.us-west-2.compute.amazonaws.com"
+   def staging_ep = "https://35.160.163.24"
 
    // Run staging
    sh "sudo ${env.BRANCH_NAME}-inventory-app/ci-utils/runstaging.sh ${staging_vs} ${staging_ep} ${staging_snap} ${env.BRANCH_NAME} ${env.BUILD_URL} ${env.BUILD_NUMBER}"

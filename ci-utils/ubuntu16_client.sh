@@ -28,7 +28,13 @@ sleep 5
 }
 
 update_apt() {
-apt-get -y update
+n=0
+until [ $n -ge 10 ]
+do
+  apt-get -y update && break
+  n=$[$n+1]
+  sleep 15
+done
 }
 
 command_exists() {
@@ -60,7 +66,7 @@ sudo echo "alias fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:
 }
 
 install_fli_docker() {
-wget https://s3.amazonaws.com/ryanwallner/fli-docker-0.0.1-dev/fli-docker
+wget https://s3.amazonaws.com/clusterhq-fli-docker/0.0.4-dev/fli-docker
 chmod +x fli-docker 
 mv fli-docker /usr/local/bin/
 }
