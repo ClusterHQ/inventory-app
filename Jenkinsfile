@@ -102,6 +102,8 @@ node ('v8s-fli-prov-staging') {
    echo "Starting staging on: '${env.NODE_NAME}'"
 
    stage 'Staging: Clean and Clone'
+   sh "wget https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/clonerepo.sh"
+   sh "chmod +x clonerepo.sh"
    sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} ${env.BRANCH_NAME}-inventory-app/"
 
    stage 'Staging: Run staging environment'
