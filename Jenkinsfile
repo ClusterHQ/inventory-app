@@ -54,7 +54,7 @@ def run_group(test, volsnap, volset) {
    sh 'sudo rm -rf inventory-app/'
 
    // Clone the inventory app with the Github Bot user.
-   sh "/bin/bash -c 'source ~/.bashrc && git clone -b ${env.BRANCH_NAME} https://${GITUSER}:${GITTOKEN}@github.com/ClusterHQ/inventory-app'"
+   sh "sudo inventory-app/ci-utils/clonerepo.sh inventory-app/"
 
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
    String vs;
@@ -112,7 +112,7 @@ node ('v8s-fli-prov-staging') {
 
    stage 'Staging: Git Clone'
    // Clone the inventory app with the Github Bot user.
-   sh "/bin/bash -c 'source ~/.bashrc && git clone -b ${env.BRANCH_NAME} https://${env.GITUSER}:${env.GITTOKEN}@github.com/ClusterHQ/inventory-app ${env.BRANCH_NAME}-inventory-app/'"
+   sh "sudo inventory-app/ci-utils/clonerepo.sh ${env.BRANCH_NAME}-inventory-app/'"
 
    stage 'Staging: Run staging environment'
    String staging_vs;
