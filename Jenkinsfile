@@ -50,13 +50,7 @@ def run_group(test, volsnap, volset) {
    // Cloud-init runs on new jenkins slaves to install dpcli and docker, make sure its done.
    sh "timeout 1080 /bin/bash -c   'until stat /var/lib/cloud/instance/boot-finished 2>/dev/null; do echo waiting for boot to finish ...; sleep 10; done'"
 
-   // Remove the app in the same workspace to avoid reusing packages, node modules etc.
-   sh 'sudo rm -rf inventory-app/'
-   sh "rm -f clonerepo*"
-
-   // Clone the inventory app with the Github Bot user.
-   sh "wget https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/clonerepo.sh"
-   sh "sudo chmod +x clonerepo.sh"
+   // Clone the repo
    sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} inventory-app/"
 
    // Now, instead of importing all the data from scripts, use a Flocker Hub Snapshot.
@@ -105,19 +99,7 @@ node ('v8s-fli-prov-staging') {
    stage 'Staging: Announce'
    echo "Starting staging on: '${env.NODE_NAME}'"
 
-   stage 'Staging: Clean'
-   // Remove the app in the same workspace to avoid reusing packages, node modules etc.
-   // Staging will always create a <branch_name>-inventory-app/ directory instead
-   // of without a prefix so containers run with prefixes of that directory. This helps
-   // container names to not overlap if running multiple staging environments on the same
-   // staging node.
-   sh "sudo rm -rf ${env.BRANCH_NAME}-inventory-app/"
-   sh "rm -f clonerepo*"
-
-   stage 'Staging: Git Clone'
-   // Clone the inventory app with the Github Bot user.
-   sh "wget https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/clonerepo.sh"
-   sh "sudo chmod +x clonerepo.sh"
+   stage 'Staging: Clean and Clone'
    sh "sudo ./clonerepo.sh ${env.BRANCH_NAME} ${env.BRANCH_NAME}-inventory-app/'"
 
    stage 'Staging: Run staging environment'
