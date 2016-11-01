@@ -85,7 +85,7 @@ def run_group(test, volsnap, volset) {
    }
    
    // Flocker Hub endpoint.
-   def ep = "https://ec2-35-160-163-24.us-west-2.compute.amazonaws.com"
+   def ep = "https://35.160.163.24"
 
    // Run the tests individually. This script is creating a new volume
    // from a snapshot locally and taking snapshots of the DB test results
@@ -147,7 +147,7 @@ node ('v8s-fli-prov-staging') {
    }
 
    // Flocker Hub endpoint.
-   def staging_ep = "https://ec2-35-160-163-24.us-west-2.compute.amazonaws.com"
+   def staging_ep = "https://35.160.163.24"
 
    // Run staging
    sh "sudo ${env.BRANCH_NAME}-inventory-app/ci-utils/runstaging.sh ${staging_vs} ${staging_ep} ${staging_snap} ${env.BRANCH_NAME} ${env.BUILD_URL} ${env.BUILD_NUMBER}"
