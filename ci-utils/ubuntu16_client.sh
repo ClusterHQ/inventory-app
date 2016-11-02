@@ -27,13 +27,11 @@ wait() {
 sleep 5
 }
 
-update_apt() {
-n=0
-until [ $n -ge 10 ]
+update_apt() { 
+until apt-get -y update
 do
-  apt-get -y update && break
-  n=$[$n+1]
-  sleep 15
+  sleep 30
+  echo "Try to update apt again"
 done
 }
 
