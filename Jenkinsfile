@@ -15,7 +15,7 @@ parallel 'parallel tests 1':{
     }
 }, 'parallel tests 4':{
     node('v8s-fli-prov'){
-      run_group('test_http_dealers_getdealerships', 'Ryans-Test-Snapshot01', 'inventory-app')
+      run_group('test_http_dealers_getdealerships', 'Ryans-Test-Snapshot1', 'inventory-app')
     }
 }, 'parallel tests 5':{
     node('v8s-fli-prov'){
