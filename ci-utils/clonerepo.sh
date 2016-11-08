@@ -7,4 +7,4 @@ DIR=$2
 rm -rf $DIR
 
 source ~/.bashrc
-git clone -b $BRANCH https://$GITUSER:$GITTOKEN@github.com/ClusterHQ/inventory-app $DIR
+git clone -b $BRANCH https://github.com/ClusterHQ/inventory-app $DIR

@@ -11,16 +11,14 @@ if [ "$EUID" -ne 0 ]
   exit 1
 fi
 
-if [ $# -ne 3 ]
+if [ $# -ne 1 ]
   then
     echo "Wrong arguments supplied"
-    echo "./scipt.sh DEVICE TAG HASH"
+    echo "./scipt.sh DEVICE"
     exit 1
 fi
 
 DEVICE="$1"
-TOKEN="$2"
-TAG="$3"
 
 EPELRELEASEURL="http://epel.mirror.net.in/epel/7/x86_64/e/epel-release-7-8.noarch.rpm"
 EPELRELEASE="epel-release-7-8.noarch.rpm"
@@ -78,17 +76,14 @@ cp /usr/local/bin/docker-compose /usr/bin/
 }
 
 install_fli() {
-docker login -e="." -u="clusterhq_prod+pull_fli" -p="${TOKEN}" quay.io
-docker pull quay.io/clusterhq_prod/fli:${TAG}
-docker tag quay.io/clusterhq_prod/fli:${TAG} clusterhq/fli
-sudo echo "alias fli='docker run --rm --privileged -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'" >> /root/.bashrc
+docker pull clusterhq/fli
+sudo echo "alias fli='docker run --rm --privileged -v /var/log/:/var/log/ -v /chq:/chq:shared -v /root:/root -v /lib/modules:/lib/modules clusterhq/fli'" >> /root/.bashrc
 }
 
 install_fli_docker() {
 yum -y install wget
-wget https://s3.amazonaws.com/ryanwallner/fli-docker-0.0.1-dev/fli-docker
-chmod +x fli-docker 
-mv fli-docker /usr/local/bin/
+wget -O /usr/local/bin/fli-docker https://s3.amazonaws.com/clusterhq-fli-docker/0.1.0/fli-docker
+chmod +x /usr/local/bin/fli-docker
 }
 
 if [ "1" ] ; then
