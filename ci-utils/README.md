@@ -86,14 +86,9 @@ The script below is sent to `cloud-init` which will set some git/Fli tokens/user
 
 ```
 #!/bin/bash
-# expose GIT USER and TOKEN for builds.
-echo "export GITUSER=<github-user>" >> /home/centos/.bashrc
-echo "export GITUSER=<github-user>" >> /root/.bashrc
-echo "export GITTOKEN=<token>" >> /home/centos/.bashrc
-echo "export GITTOKEN=<token>" >> /root/.bashrc
 # Set FlockerHub Authentiaction Token for Jenkins Bot
 echo "<token>" > /root/fh.token
-curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb TOKEN TAG
+curl https://s3-eu-west-1.amazonaws.com/clusterhq/flockerhub-client/centos7_client_from_zfs_ami.sh | sh -s /dev/xvdb
 ```
 
 EC2 Auto Provisioning Plugin needs this init script along with the above User Data. in order to work. DPCLI needs sudo therefore we allow without tty, also install java. We also need to timeout to wait for cloud-init to finish so that Fli is installed before jenkins adds the slave.
