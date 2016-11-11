@@ -53,9 +53,9 @@ init_fli(){
       touch /tmp/fliinitdone
       check_for_failure
       # vhut token is set as a secret inside the jenkins master
-      $fli config -t /root/fh.token
-      check_for_failure
       $fli config -u $HUBENDPOINT
+      check_for_failure
+      $fli config -t /root/fh.token
       check_for_failure
    fi
 }

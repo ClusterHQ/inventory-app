@@ -46,6 +46,8 @@ cd /root
 mkdir /chq
 echo "Running: zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq ${DEVICE}"
 zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq "${DEVICE}"
+### Allow non root to zfs/zpool list
+chmod 777 /dev/zfs
 }
 
 install_start_docker() {

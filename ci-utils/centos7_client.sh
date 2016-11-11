@@ -53,6 +53,8 @@ modprobe zfs
 
 create_zfs_pool() {
 zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa chq ${DEVICE}
+### Allow non root to zfs/zpool list
+chmod 777 /dev/zfs
 }
 
 install_start_docker() {
