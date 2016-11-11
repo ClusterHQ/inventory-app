@@ -82,7 +82,7 @@ sudo echo "alias fli='docker run --rm --privileged -v /var/log/:/var/log/ -v /ch
 
 install_fli_docker() {
 yum -y install wget
-wget -O /usr/local/bin/fli-docker https://s3.amazonaws.com/clusterhq-fli-docker/0.1.0/fli-docker
+wget -O /usr/local/bin/fli-docker https://s3.amazonaws.com/clusterhq-fli-docker/0.2.0/fli-docker
 chmod +x /usr/local/bin/fli-docker
 }
 
