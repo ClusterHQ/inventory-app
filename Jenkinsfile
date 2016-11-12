@@ -1,39 +1,35 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
     node('v8s-fli-prov'){
-      run_group('test_http_ping', '750k-records-snap', 'inventory-app')
-    }
-}, 'parallel tests 2':{
-    node('v8s-fli-prov'){
       //run_group('test_db_dealer_numbers', 'load-vol-bad-phone', 'inventory-app')
       run_group('test_db_dealer_numbers', '750k-records-snap', 'inventory-app')
     }
-}, 'parallel tests 3':{
+}, 'parallel tests 2':{
     node('v8s-fli-prov'){
       //run_group('test_db_vehicle_vins', 'load-vol-bad-vin-snap', 'inventory-app')
       run_group('test_db_vehicle_vins', '750k-records-snap', 'inventory-app')
     }
-}, 'parallel tests 4':{
+}, 'parallel tests 3':{
     node('v8s-fli-prov'){
       run_group('test_http_dealers_getdealerships', '750k-records-snap', 'inventory-app')
     }
-}, 'parallel tests 5':{
+}, 'parallel tests 4':{
     node('v8s-fli-prov'){
       run_group('test_http_dealers_postdealership', '750k-records-snap', 'inventory-app')
     }
-}, 'parallel tests 6':{
+}, 'parallel tests 5':{
     node('v8s-fli-prov'){
       run_group('test_http_dealers_postgetdealers', '750k-records-snap', 'inventory-app')
     }
-}, 'parallel tests 7':{
+}, 'parallel tests 6':{
     node('v8s-fli-prov'){
       run_group('test_http_vehicles_getvehicles', '750k-records-snap', 'inventory-app')
     }
-}, 'parallel tests 8':{
+}, 'parallel tests 7':{
     node('v8s-fli-prov'){
       run_group('test_http_vehicles_postgetvehicle', '750k-records-snap', 'inventory-app')
     }
-}, 'parallel tests 9':{
+}, 'parallel tests 8':{
     node('v8s-fli-prov'){
       run_group('test_http_vehicles_postvehicle', '750k-records-snap', 'inventory-app')
     }
