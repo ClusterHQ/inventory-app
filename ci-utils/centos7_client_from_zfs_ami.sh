@@ -46,6 +46,10 @@ cd /root
 mkdir /chq
 echo "Running: zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq ${DEVICE}"
 zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq "${DEVICE}"
+### Allow non root to zfs/zpool list
+chmod 777 /dev/zfs
+### allow access via sh -c
+cp /usr/local/sbin/zpool /usr/bin/
 }
 
 install_start_docker() {
@@ -75,7 +79,7 @@ sudo echo "alias fli='docker run --rm --privileged -v /var/log/:/var/log/ -v /ch
 
 install_fli_docker() {
 yum -y install wget
-wget -O /usr/local/bin/fli-docker https://s3.amazonaws.com/clusterhq-fli-docker/0.1.0/fli-docker
+wget -O /usr/local/bin/fli-docker https://s3.amazonaws.com/clusterhq-fli-docker/0.2.0/fli-docker
 chmod +x /usr/local/bin/fli-docker
 }
 

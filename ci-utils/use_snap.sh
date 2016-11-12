@@ -43,8 +43,7 @@ cat >> "${APPPATH}test-manifest.yml" <<EOL
 docker_app: docker-compose.yml
 
 flocker_hub:
-  endpoint: 
-  tokenfile: /root/fh.token
+  endpoint: https://data.flockerhub.clusterhq.com
 
 volumes:
   - name: rethink-data
@@ -53,4 +52,4 @@ volumes:
 EOL
 
 cd ${APPPATH}
-/usr/local/bin/fli-docker run -f test-manifest.yml 
+/usr/local/bin/fli-docker run -f test-manifest.yml -t /root/fh.token

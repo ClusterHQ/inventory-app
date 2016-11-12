@@ -69,8 +69,7 @@ cat >> testfailures.txt <<EOL
   docker_app: docker-compose.yml
 
   flocker_hub:
-      endpoint: http://flockerhub.com
-      tokenfile: /path/to/your/fhub.token
+      endpoint: https://data.flockerhub.clusterhq.com
 
   volumes:
       - name: rethink-data
