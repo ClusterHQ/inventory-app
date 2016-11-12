@@ -48,6 +48,8 @@ echo "Running: zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /c
 zpool create -f -o ashift=12 -O recordsize=128k -O xattr=sa -m /chq chq "${DEVICE}"
 ### Allow non root to zfs/zpool list
 chmod 777 /dev/zfs
+### allow access via sh -c
+cp /usr/local/sbin/zpool /usr/bin/
 }
 
 install_start_docker() {
