@@ -28,6 +28,7 @@ JENKINSBUILDN=$6
 JENKINSBUILDID=$7
 JENKINSBUILDURL=$8
 JENKINSNODE=$9
+NODE_MODULES_SNAP=${10}
 ENV="ci"
 
 # Test will be used as a holder for current test.
@@ -91,8 +92,14 @@ run_test() {
    echo "Build and run tests against snapshot data"
    # Run the tests against the application using the snapshot
    # (Should have same results as above, but with using a snapshot)
-   docker run --net=inventory_net -e FRONTEND_HOST="frontend" -e DATABASE_HOST="db" -e FRONTEND_PORT=8000 --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
-      "cd /app/frontend && rm -rf node_modules && npm install && mocha --debug test/${TEST}.js" || snap_with_failure
+   fli sync inventory-app
+   fli pull inventory-app:$NODE_MODULES_SNAP
+   NODE_MODULES_PATH=$($fli clone inventory-app:$NODE_MODULES_SNAP)
+   docker run --net=inventory_net -e FRONTEND_HOST="frontend" \
+      -e DATABASE_HOST="db" -e FRONTEND_PORT=8000 \
+      --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
+      -v ${NODE_MODULES_PATH}:/app/frontend/node_modules \
+      "cd /app/frontend && npm install && mocha --debug test/${TEST}.js" || snap_with_failure
 }
 
 teardown() {

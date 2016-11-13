@@ -75,17 +75,16 @@ def run_group(test, volsnap, volset) {
       snap = "${snapshot}"
       echo "Using Snapshot: ${snapshot} Branch: ${env.BRANCH_NAME}"
    }
+
+   // Snapshot for Node Modules
+   def nm = "node-modules-05120548"
    
    // Flocker Hub endpoint.
    def ep = "https://data.flockerhub.clusterhq.com"
 
-   // Run the tests individually. This script is creating a new volume
-   // from a snapshot locally and taking snapshots of the DB test results
-   // then pushing the data back up to Flocker Hub with metadata and 
-   // start fresh each time.
-
+   // Run the test
    // use ci-utils/runtest.sh (not runtests.sh)
-   sh "sudo inventory-app/ci-utils/runtest.sh ${run_test} ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}'"
+   sh "sudo inventory-app/ci-utils/runtest.sh ${run_test} ${vs} ${ep} ${snap} ${env.BRANCH_NAME} ${env.BUILD_NUMBER} ${env.BUILD_ID} ${env.BUILD_URL} '${env.NODE_NAME}' ${nm}"
 
 }
 
