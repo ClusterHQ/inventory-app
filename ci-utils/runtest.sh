@@ -92,7 +92,7 @@ run_test() {
    echo "Build and run tests against snapshot data"
    # Run the tests against the application using the snapshot
    # (Should have same results as above, but with using a snapshot)
-   $fli sync inventory-app
+   # use_snap.sh syncs, so no need to sync.
    $fli pull inventory-app:$NODE_MODULES_SNAP
    NODE_MODULES_PATH=$($fli clone inventory-app:$NODE_MODULES_SNAP)
    docker run --net=inventory_net -e FRONTEND_HOST="frontend" \
