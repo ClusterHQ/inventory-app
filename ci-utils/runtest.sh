@@ -96,9 +96,9 @@ run_test() {
    $fli pull inventory-app:$NODE_MODULES_SNAP
    NODE_MODULES_PATH=$($fli clone inventory-app:$NODE_MODULES_SNAP)
    docker run --net=inventory_net -e FRONTEND_HOST="frontend" \
-      -e DATABASE_HOST="db" -e FRONTEND_PORT=8000 \
-      --rm -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
-      -v ${NODE_MODULES_PATH}:/app/frontend/node_modules \
+      -e DATABASE_HOST="db" -e FRONTEND_PORT=8000 --rm \
+      v ${NODE_MODULES_PATH}:/app/frontend/node_modules \
+      -v ${PWD}/inventory-app/:/app/ clusterhq/mochatest \
       "cd /app/frontend && npm install && mocha --debug test/${TEST}.js" || snap_with_failure
 }
 
