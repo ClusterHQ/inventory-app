@@ -6,8 +6,8 @@ parallel 'parallel tests 1':{
     }
 }, 'parallel tests 2':{
     node('v8s-fli-prov'){
-      run_group('test_db_vehicle_vins', 'bad-vin-snap', 'inventory-app2')
-      //run_group('test_db_vehicle_vins', '750k-records-snap2', 'inventory-app2')
+      //run_group('test_db_vehicle_vins', 'bad-vin-snap', 'inventory-app2')
+      run_group('test_db_vehicle_vins', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 3':{
     node('v8s-fli-prov'){
