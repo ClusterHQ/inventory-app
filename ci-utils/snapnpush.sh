@@ -37,7 +37,12 @@ if [ -z "$VOLUMESET" ]; then
     exit 1
 fi  
 
-echo "Getting the active volume from the application"
+# If failed test, provide a manifest to re-create err state.
+echo "Checking for erros and snapshoting database on test failure."
+if [[ "$TEST" == *"Failed-"* ]]
+then
+echo "Found failed test."
+echo "Getting the active volume from the application."
 WORKINGVOL=$(cat inventory-app/docker-compose.yml | grep -E -o  '\/chq\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | rev |  cut -f1 -d"/" | rev)
 echo "Volume being used was $WORKINGVOL"
 
@@ -58,9 +63,6 @@ ${VOLUMESET}:${IDOFWORKINGVOL} ${SNAPNAME})
 
 echo "Took snapshot: ${SNAPNAME} of volume: ${IDOFWORKINGVOL}"
 
-# If failed test, provide a manifest to re-create err state.
-if [[ "$TEST" == *"Failed-"* ]]
-then
 echo "Producing manifest for failed test: ${TEST}"
 cat >> testfailures.txt <<EOL
   USE THIS MANIFEST TO PULL ERROR STATE for ${TEST}
@@ -76,27 +78,16 @@ cat >> testfailures.txt <<EOL
       snapshot: ${SNAPNAME}
       volumeset: ${VOLUMESET}
 EOL
-fi
-
-# Were we succesfull at getting VOL / SNAP?
-if [ -z "$VOLSNAP" ]; then
-    echo "VOLSNAP was unset, exiting"
-    exit 1
-fi  
-
-if [ -z "$WORKINGVOL" ]; then
-    echo "WORKINGVOL was unset, exiting"
-    exit 1
-fi  
 
 echo "Syncing volumset back to FlockerHub"
 $fli sync $VOLUMESET
-if [[ "$TEST" == *"Failed-"* ]]
-then
 # only push on failure, if everything is A OK, no need.
-echo "Pushing $VOLUMESET:$SNAPNAME to FlockerHub"
+echo "Pushing $VOLUMESET:$SNAPNAME to FlockerHub."
 $fli push $VOLUMESET:$SNAPNAME
-fi
-echo "Showing specific snapshots for this builds branch"
+echo "Showing specific snapshots for this builds branch."
 $fli list -b ${BRANCHNAME}
+else
+echo "No snapshots taken, no failures found."
+fi
+
 
