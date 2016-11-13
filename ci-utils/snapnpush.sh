@@ -91,8 +91,12 @@ fi
 
 echo "Syncing volumset back to FlockerHub"
 $fli sync $VOLUMESET
+if [[ "$TEST" == *"Failed-"* ]]
+then
+# only push on failure, if everything is A OK, no need.
 echo "Pushing $VOLUMESET:$SNAPNAME to FlockerHub"
 $fli push $VOLUMESET:$SNAPNAME
+fi
 echo "Showing specific snapshots for this builds branch"
 $fli list -b ${BRANCHNAME}
 
