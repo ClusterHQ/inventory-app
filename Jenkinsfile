@@ -2,36 +2,36 @@ stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
     node('v8s-fli-prov'){
       //run_group('test_db_dealer_numbers', 'load-vol-bad-phone', 'inventory-app')
-      run_group('test_db_dealer_numbers', '750k-records-snap', 'inventory-app')
+      run_group('test_db_dealer_numbers', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 2':{
     node('v8s-fli-prov'){
       //run_group('test_db_vehicle_vins', 'load-vol-bad-vin-snap', 'inventory-app')
-      run_group('test_db_vehicle_vins', '750k-records-snap', 'inventory-app')
+      run_group('test_db_vehicle_vins', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 3':{
     node('v8s-fli-prov'){
-      run_group('test_http_dealers_getdealerships', '750k-records-snap', 'inventory-app')
+      run_group('test_http_dealers_getdealerships', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 4':{
     node('v8s-fli-prov'){
-      run_group('test_http_dealers_postdealership', '750k-records-snap', 'inventory-app')
+      run_group('test_http_dealers_postdealership', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 5':{
     node('v8s-fli-prov'){
-      run_group('test_http_dealers_postgetdealers', '750k-records-snap', 'inventory-app')
+      run_group('test_http_dealers_postgetdealers', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 6':{
     node('v8s-fli-prov'){
-      run_group('test_http_vehicles_getvehicles', '750k-records-snap', 'inventory-app')
+      run_group('test_http_vehicles_getvehicles', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 7':{
     node('v8s-fli-prov'){
-      run_group('test_http_vehicles_postgetvehicle', '750k-records-snap', 'inventory-app')
+      run_group('test_http_vehicles_postgetvehicle', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 8':{
     node('v8s-fli-prov'){
-      run_group('test_http_vehicles_postvehicle', '750k-records-snap', 'inventory-app')
+      run_group('test_http_vehicles_postvehicle', '750k-records-snap2', 'inventory-app2')
     }
 }
 
@@ -60,9 +60,9 @@ def run_group(test, volsnap, volset) {
       //         that master use a new snapshot
       // **********************************************
       // Volumeset the snapshot belongs to for master
-      vs = 'inventory-app'
+      vs = 'inventory-app2'
       // Snapshot used for tests in branch
-      snap = '750k-records-snap'
+      snap = '750k-records-snap2'
       echo "Using Snapshot ${vs} for branch: master"
    }else{
       // **********************************************
@@ -110,9 +110,9 @@ node ('v8s-fli-prov-staging') {
       //         that master use a new snapshot
       // **********************************************
       // Volumeset the snapshot belongs to for master
-      staging_vs = 'inventory-app'
+      staging_vs = 'inventory-app2'
       // Snapshot used for tests in master
-      staging_snap = '750k-records-snap'
+      staging_snap = '750k-records-snap2'
       echo "Using Snapshot ${staging_snap} for branch: master"
    }else{
       // **********************************************
@@ -120,9 +120,9 @@ node ('v8s-fli-prov-staging') {
       //     branch for your build and tests in CI.
       // **********************************************
       // Volumeset the snapshot belongs to for dev branch
-      staging_vs = 'inventory-app'
+      staging_vs = 'inventory-app2'
       // Snapshot used for tests in master
-      staging_snap = '750k-records-snap'
+      staging_snap = '750k-records-snap2'
       echo "Using Snapshot: ${staging_snap} Branch: ${env.BRANCH_NAME}"
    }
 
