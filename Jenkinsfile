@@ -1,8 +1,8 @@
 stage 'Run tests in parallel'
 parallel 'parallel tests 1':{
     node('v8s-fli-prov'){
-      run_group('test_db_dealer_numbers', 'bad-phone-snap', 'inventory-app2')
-      //run_group('test_db_dealer_numbers', '750k-records-snap2', 'inventory-app2')
+      //run_group('test_db_dealer_numbers', 'bad-phone-snap', 'inventory-app2')
+      run_group('test_db_dealer_numbers', '750k-records-snap2', 'inventory-app2')
     }
 }, 'parallel tests 2':{
     node('v8s-fli-prov'){
